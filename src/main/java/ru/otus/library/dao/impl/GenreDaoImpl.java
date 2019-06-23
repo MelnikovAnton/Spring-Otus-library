@@ -1,12 +1,16 @@
 package ru.otus.library.dao.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsertOperations;
 import org.springframework.stereotype.Repository;
 import ru.otus.library.dao.GenreDao;
 import ru.otus.library.dao.mappers.GenreMapper;
 import ru.otus.library.model.Genre;
 
+import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,17 +24,29 @@ public class GenreDaoImpl implements GenreDao {
 
     private final GenreMapper mapper;
 
+
+    private SimpleJdbcInsertOperations simpleJdbcInsert;
+
+
+    @Autowired
+    public void setSimpleJdbcInsert(DataSource dataSource) {
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("genre")
+                .usingGeneratedKeyColumns("id");
+    }
+
     @Override
     public int count() {
         return jdbc.queryForObject("select count(*) from genre;", new HashMap<>(), Integer.class);
     }
 
     @Override
-    public int insert(Genre genre) {
+    public Genre insert(Genre genre) {
         final Map<String, Object> params = new HashMap<>(1);
-        params.put("id", genre.getId());
         params.put("name", genre.getName());
-        return jdbc.update("insert into genre (id, 'name') values (:id, :name);", params);
+        int id = simpleJdbcInsert.executeAndReturnKey(params).intValue();
+        genre.setId(id);
+        return genre;
     }
 
     @Override
@@ -57,6 +73,6 @@ public class GenreDaoImpl implements GenreDao {
     public List<Genre> findByName(String name) {
         final Map<String, Object> params = new HashMap<>(1);
         params.put("title", "%" + name + "%");
-        return jdbc.query("select * from genre where 'name' like :title;", params, mapper);
+        return jdbc.query("select * from genre where name like :title;", params, mapper);
     }
 }

@@ -13,6 +13,7 @@ public class BookMapper implements RowMapper<Book> {
     public Book mapRow(ResultSet resultSet, int i) throws SQLException {
         int id = resultSet.getInt("id");
         String title=resultSet.getString("title");
-        return new Book(id,title);
+        String contentPath=resultSet.getString("content_path");
+        return new Book(id,title,contentPath);
     }
 }

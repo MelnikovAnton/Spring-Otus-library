@@ -5,8 +5,11 @@ import ru.otus.library.model.Book;
 import java.util.List;
 
 public interface BookService {
-    int saveBook(Book book);
+    Book saveBook(Book book);
     List<Book> findBooksByTitle(String title);
-    List<Book> findBooksByTitleAuthor(String author);
-    List<Book> findBooksByTitleGenre(String genre);
+    List<Book> findBooksByAuthor(String author);
+    List<Book> findBooksByGenre(String genre);
+    Book findById(int id);
+    int delete(Book book);
+    List<Book> findAll();
 }

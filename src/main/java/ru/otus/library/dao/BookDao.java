@@ -9,7 +9,7 @@ import java.util.List;
 public interface BookDao {
 
     int count();
-    int insert(Book book);
+    Book insert(Book book);
     Book getById(int id);
     List<Book> getAll();
     int delete(Book book);

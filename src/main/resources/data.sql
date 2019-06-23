@@ -26,4 +26,13 @@ values (1, 1),
        (3, 2);
 
 
+--
+--        select * from book b
+-- left outer join author_book ab on b.id=ab.book_id
+-- left outer join author a on a.id=ab.author_id
+--
+-- left outer join genre_book gb on gb.book_id=b.id
+-- left outer join genre g on g.id=gb.genre_id
+
+
 
