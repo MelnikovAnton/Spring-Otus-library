@@ -7,6 +7,7 @@ import ru.otus.library.model.Author;
 import ru.otus.library.services.AuthorService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Author findById(int id) {
+    public Optional<Author> findById(int id) {
         return authorDao.getById(id);
     }
 

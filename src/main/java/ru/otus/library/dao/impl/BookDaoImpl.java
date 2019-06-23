@@ -19,12 +19,14 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @SuppressWarnings("SqlResolve")
 @Repository
 @RequiredArgsConstructor
 @Transactional
+//TODO Exceptions throws when wrong ID
 public class BookDaoImpl implements BookDao {
 
     private final NamedParameterJdbcOperations jdbc;
@@ -57,11 +59,11 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public Book getById(int id) {
+    public Optional<Book> getById(int id) {
         final Map<String, Object> params = new HashMap<>(1);
         params.put("id", id);
         Book book = jdbc.queryForObject("select * from book where id =:id;", params, bookMapper);
-        return addAuthorAndGenre(book);
+        return Optional.ofNullable(addAuthorAndGenre(book));
     }
 
     @Override
@@ -76,6 +78,8 @@ public class BookDaoImpl implements BookDao {
     public int delete(Book book) {
         final Map<String, Object> params = new HashMap<>(1);
         params.put("id", book.getId());
+        deleteGenreRelation(book);
+        deleteAuthorRelation(book);
         return jdbc.update("delete from book where id=:id;", params);
     }
 
@@ -132,7 +136,8 @@ public class BookDaoImpl implements BookDao {
                 "(select author_id from author_book where book_id=:id);", params, authorMapper);
     }
 
-    private void addRelations(Book book) {
+    @Override
+    public void addRelations(Book book) {
         addAuthorRelations(book);
         addGenreRelations(book);
     }
@@ -141,7 +146,8 @@ public class BookDaoImpl implements BookDao {
         final Map<String, Object> params = new HashMap<>(2);
         params.put("bookId", book.getId());
         List<Author> authors = book.getAuthors();
-        if (authors==null || authors.isEmpty()) return;
+        deleteAuthorRelation(book);
+        if (authors == null || authors.isEmpty()) return;
         String query = "insert into author_book (book_id, author_id)\n" +
                 "values (:bookId, :authorId);";
         authors.forEach(a -> {
@@ -154,13 +160,29 @@ public class BookDaoImpl implements BookDao {
         final Map<String, Object> params = new HashMap<>(2);
         params.put("bookId", book.getId());
         List<Genre> genres = book.getGenres();
-        if (genres==null || genres.isEmpty()) return;
+        deleteGenreRelation(book);
+        if (genres == null || genres.isEmpty()) return;
         String query = "insert into genre_book (book_id, genre_id)\n" +
                 "values (:bookId, :genreId);";
         genres.forEach(a -> {
             params.put("genreId", a.getId());
             jdbc.update(query, params);
         });
+    }
+
+
+    private void deleteAuthorRelation(Book book) {
+        final Map<String, Object> params = new HashMap<>(1);
+        params.put("bookId", book.getId());
+        String query = "delete from author_book where book_id = :bookId;";
+        jdbc.update(query, params);
+    }
+
+    private void deleteGenreRelation(Book book) {
+        final Map<String, Object> params = new HashMap<>(1);
+        params.put("bookId", book.getId());
+        String query = "delete from genre_book where book_id = :bookId;";
+        jdbc.update(query, params);
     }
 
 

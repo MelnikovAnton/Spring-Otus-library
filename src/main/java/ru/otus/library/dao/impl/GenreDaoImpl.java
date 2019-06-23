@@ -14,10 +14,12 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @SuppressWarnings("SqlResolve")
 @Repository
 @RequiredArgsConstructor
+//TODO Exceptions throws when wrong ID
 public class GenreDaoImpl implements GenreDao {
 
     private final NamedParameterJdbcOperations jdbc;
@@ -50,10 +52,10 @@ public class GenreDaoImpl implements GenreDao {
     }
 
     @Override
-    public Genre getById(int id) {
+    public Optional<Genre> getById(int id) {
         final Map<String, Object> params = new HashMap<>(1);
         params.put("id", id);
-        return jdbc.queryForObject("select * from genre where id =:id;", params, mapper);
+        return Optional.ofNullable(jdbc.queryForObject("select * from genre where id =:id;", params, mapper));
     }
 
     @Override
@@ -66,6 +68,7 @@ public class GenreDaoImpl implements GenreDao {
     public int delete(Genre genre) {
         final Map<String, Object> params = new HashMap<>(1);
         params.put("id", genre.getId());
+        deleteGenreRelation(genre);
         return jdbc.update("delete from genre where id=:id;", params);
     }
 
@@ -74,5 +77,12 @@ public class GenreDaoImpl implements GenreDao {
         final Map<String, Object> params = new HashMap<>(1);
         params.put("title", "%" + name + "%");
         return jdbc.query("select * from genre where name like :title;", params, mapper);
+    }
+
+    private void deleteGenreRelation(Genre genre) {
+        final Map<String, Object> params = new HashMap<>(1);
+        params.put("genreId", genre.getId());
+        String query = "delete from genre_book where genre_id = :genreId;";
+        jdbc.update(query, params);
     }
 }

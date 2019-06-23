@@ -14,6 +14,7 @@ import ru.otus.library.services.GenreService;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,7 +65,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book findById(int id) {
+    public Optional<Book> findById(int id) {
         return bookDao.getById(id);
     }
 
@@ -76,5 +77,10 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> findAll() {
         return bookDao.getAll();
+    }
+
+    @Override
+    public void addRelations(Book book) {
+        bookDao.addRelations(book);
     }
 }

@@ -3,6 +3,7 @@ package ru.otus.library.services;
 import ru.otus.library.model.Genre;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GenreService {
     Genre saveGenre(Genre genre);
@@ -11,7 +12,7 @@ public interface GenreService {
 
     List<Genre> findAll();
 
-    Genre findById(int id);
+    Optional<Genre> findById(int id);
 
     int delete(Genre genre);
 

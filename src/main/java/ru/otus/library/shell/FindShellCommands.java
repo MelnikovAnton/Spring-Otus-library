@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@ShellComponent(value = "Library shell")
+@ShellComponent(value = "Find shell commands")
 @RequiredArgsConstructor
 @ShellCommandGroup("Find commands")
 @Slf4j
@@ -39,7 +39,7 @@ public class FindShellCommands {
                             @ShellOption(value = {"-an", "--author-name"}, defaultValue = "") String author) {
 
         List<Book> books = new ArrayList<>();
-        if (id > 0) books.add(bookService.findById(id));
+        if (id > 0) books.add(bookService.findById(id).orElseThrow());
         if (!title.isEmpty()) books.addAll(bookService.findBooksByTitle(title));
         if (!genre.isEmpty()) books.addAll(bookService.findBooksByGenre(genre));
         if (!author.isEmpty()) books.addAll(bookService.findBooksByAuthor(author));
@@ -52,7 +52,7 @@ public class FindShellCommands {
                               @ShellOption(value = {"-n", "--name"}, defaultValue = "") String name) {
 
         List<Author> authors = new ArrayList<>();
-        if (id > 0) authors.add(authorService.findById(id));
+        if (id > 0) authors.add(authorService.findById(id).orElseThrow());
         if (!name.isEmpty()) authors.addAll(authorService.findAuthorsByName(name));
         return getAuthorsTable(authors);
     }
@@ -63,7 +63,9 @@ public class FindShellCommands {
                               @ShellOption(value = {"-n", "--name"}, defaultValue = "") String name) {
 
         List<Genre> genres = new ArrayList<>();
-        if (id > 0) genres.add(genreService.findById(id));
+        if (id > 0) genres.add(genreService.findById(id).orElseThrow(()->{
+           throw  new NumberFormatException("Test");
+        }));
         if (!name.isEmpty()) genres.addAll(genreService.findGenresByName(name));
         return getGenresTable(genres);
     }

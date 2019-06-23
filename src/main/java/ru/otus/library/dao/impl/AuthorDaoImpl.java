@@ -15,11 +15,13 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @SuppressWarnings("SqlResolve")
 @Slf4j
 @RequiredArgsConstructor
 @Repository
+//TODO Exceptions throws when wrong ID
 public class AuthorDaoImpl implements AuthorDao {
 
     private final NamedParameterJdbcOperations jdbc;
@@ -50,10 +52,10 @@ public class AuthorDaoImpl implements AuthorDao {
     }
 
     @Override
-    public Author getById(int id) {
+    public Optional<Author> getById(int id) {
         final Map<String, Object> params = new HashMap<>(1);
         params.put("id", id);
-        return jdbc.queryForObject("select * from author where id =:id;", params, mapper);
+        return Optional.ofNullable(jdbc.queryForObject("select * from author where id =:id;", params, mapper));
     }
 
     @Override
@@ -66,6 +68,7 @@ public class AuthorDaoImpl implements AuthorDao {
     public int delete(Author author) {
         final Map<String, Object> params = new HashMap<>(1);
         params.put("id", author.getId());
+        deleteAuthorRelation(author);
         return jdbc.update("delete from author where id=:id;", params);
     }
 
@@ -74,5 +77,12 @@ public class AuthorDaoImpl implements AuthorDao {
         final Map<String, Object> params = new HashMap<>(1);
         params.put("name", "%" + name + "%");
         return jdbc.query("select * from author where name like :name;", params, mapper);
+    }
+
+    private void deleteAuthorRelation(Author genre) {
+        final Map<String, Object> params = new HashMap<>(1);
+        params.put("authorId", genre.getId());
+        String query = "delete from author_book where author_id = :authorId;";
+        jdbc.update(query, params);
     }
 }

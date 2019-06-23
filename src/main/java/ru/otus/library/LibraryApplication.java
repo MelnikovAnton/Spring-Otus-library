@@ -18,6 +18,8 @@ import java.util.List;
 public class LibraryApplication {
 
     public static void main(String[] args) throws SQLException {
+        Console.main(args);
+
         ApplicationContext ctx = SpringApplication.run(LibraryApplication.class, args);
 
 

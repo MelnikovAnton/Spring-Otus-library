@@ -7,6 +7,7 @@ import ru.otus.library.model.Genre;
 import ru.otus.library.services.GenreService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public Genre findById(int id) {
+    public Optional<Genre> findById(int id) {
         return genreDao.getById(id);
     }
 
