@@ -35,7 +35,7 @@ import static org.mockito.Mockito.*;
         InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=false"})
 class FindShellCommandsTest {
 
-    private final List<String> COMMANDS = Arrays.asList("fa", "faa", "fab", "fag", "fb", "fg");
+    private final List<String> COMMANDS = Arrays.asList("fa", "faa", "fba", "fga", "fb", "fg");
 
     @Autowired
     private Shell shell;
@@ -165,7 +165,7 @@ class FindShellCommandsTest {
     @Test
     @DisplayName("Получить все книги")
     void getAllBooks(){
-        shell.evaluate(()->"fab");
+        shell.evaluate(()->"fba");
         verify(bookService,times(1)).findAll();
     }
 
@@ -179,7 +179,7 @@ class FindShellCommandsTest {
     @Test
     @DisplayName("Получить все жанры")
     void getAllGenres(){
-        shell.evaluate(()->"fag");
+        shell.evaluate(()->"fga");
         verify(genreService,times(1)).findAll();
     }
 

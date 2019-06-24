@@ -70,13 +70,13 @@ public class FindShellCommands {
         return getGenresTable(genres);
     }
 
-    @ShellMethod(value = "find all Book", key = {"findAllBook", "fab"})
+    @ShellMethod(value = "find all Book", key = {"findAllBook", "fba"})
     private Table findAllBooks() {
         List<Book> books = bookService.findAll();
         return getBooksTable(books);
     }
 
-    @ShellMethod(value = "find all Genres", key = {"findAllGenres", "fag"})
+    @ShellMethod(value = "find all Genres", key = {"findAllGenres", "fga"})
     private Table findAllGenres() {
         List<Genre> genres = genreService.findAll();
         return getGenresTable(genres);
