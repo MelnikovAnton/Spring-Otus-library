@@ -26,8 +26,6 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -102,7 +100,7 @@ class FindShellCommandsTest {
 
     @TestFactory
     @DisplayName("Поиск авторов")
-    List<DynamicTest> findAuthors(){
+    List<DynamicTest> findAuthors() {
         DynamicTest byIdExists = DynamicTest.dynamicTest("Поиск по ID автор есть", () -> {
             when(authorService.findById(anyInt())).thenReturn(Optional.of(getTestAuthor()));
             Table r = (Table) shell.evaluate(() -> "fa -i 1");
@@ -128,12 +126,12 @@ class FindShellCommandsTest {
             assertEquals(1, id);
         });
 
-        return Arrays.asList(byIdExists, byIdNotExists,byName);
+        return Arrays.asList(byIdExists, byIdNotExists, byName);
     }
 
     @TestFactory
     @DisplayName("Поиск жанров")
-    List<DynamicTest> findGenres(){
+    List<DynamicTest> findGenres() {
         DynamicTest byIdExists = DynamicTest.dynamicTest("Поиск по ID жанр есть", () -> {
             when(genreService.findById(anyInt())).thenReturn(Optional.of(getTestGenre()));
             Table r = (Table) shell.evaluate(() -> "fg -i 1");
@@ -159,28 +157,28 @@ class FindShellCommandsTest {
             assertEquals(1, id);
         });
 
-        return Arrays.asList(byIdExists, byIdNotExists,byName);
+        return Arrays.asList(byIdExists, byIdNotExists, byName);
     }
 
     @Test
     @DisplayName("Получить все книги")
-    void getAllBooks(){
-        shell.evaluate(()->"fba");
-        verify(bookService,times(1)).findAll();
+    void getAllBooks() {
+        shell.evaluate(() -> "fba");
+        verify(bookService, times(1)).findAll();
     }
 
     @Test
     @DisplayName("Получить всех авторов")
-    void getAllAuthors(){
-        shell.evaluate(()->"faa");
-        verify(authorService,times(1)).findAll();
+    void getAllAuthors() {
+        shell.evaluate(() -> "faa");
+        verify(authorService, times(1)).findAll();
     }
 
     @Test
     @DisplayName("Получить все жанры")
-    void getAllGenres(){
-        shell.evaluate(()->"fga");
-        verify(genreService,times(1)).findAll();
+    void getAllGenres() {
+        shell.evaluate(() -> "fga");
+        verify(genreService, times(1)).findAll();
     }
 
     private Book getTestBook() {
@@ -195,11 +193,11 @@ class FindShellCommandsTest {
         return testBook;
     }
 
-    private Author getTestAuthor(){
-        return new Author(1,"Test");
+    private Author getTestAuthor() {
+        return new Author(1, "Test");
     }
 
-    private Genre getTestGenre(){
-        return new Genre(1,"Test");
+    private Genre getTestGenre() {
+        return new Genre(1, "Test");
     }
 }

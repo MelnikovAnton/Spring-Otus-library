@@ -46,9 +46,7 @@ class AuthorDaoTest {
             Author author = assertDoesNotThrow(() -> authorDao.getById(1).orElseThrow());
             assertEquals(author.getId(), 1);
         });
-        DynamicTest author2 = DynamicTest.dynamicTest("ID = 10", () -> {
-            assertThrows(EmptyResultDataAccessException.class, () -> authorDao.getById(10));
-        });
+        DynamicTest author2 = DynamicTest.dynamicTest("ID = 10", () -> assertThrows(EmptyResultDataAccessException.class, () -> authorDao.getById(10)));
         return Arrays.asList(author1, author2);
     }
 

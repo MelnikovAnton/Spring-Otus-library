@@ -20,7 +20,6 @@ import ru.otus.library.services.GenreService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @ShellComponent(value = "Find shell commands")
@@ -65,7 +64,7 @@ public class FindShellCommands {
                              @ShellOption(value = {"-n", "--name"}, defaultValue = "") String name) {
 
         List<Genre> genres = new ArrayList<>();
-        if (id > 0)genreService.findById(id).ifPresent(genres::add);
+        if (id > 0) genreService.findById(id).ifPresent(genres::add);
         if (!name.isEmpty()) genres.addAll(genreService.findGenresByName(name));
         return getGenresTable(genres);
     }
@@ -107,7 +106,6 @@ public class FindShellCommands {
                             .addValue(b.getGenres().stream()
                                     .map(Genre::getName)
                                     .collect(Collectors.joining(",")));
-                    ;
                 }
         );
 
@@ -121,11 +119,9 @@ public class FindShellCommands {
         modelBuilder.addRow()
                 .addValue("id")
                 .addValue("Name");
-        genres.forEach(g -> {
-                    modelBuilder.addRow()
-                            .addValue(g.getId())
-                            .addValue(g.getName());
-                }
+        genres.forEach(g -> modelBuilder.addRow()
+                .addValue(g.getId())
+                .addValue(g.getName())
         );
 
         TableBuilder builder = new TableBuilder(modelBuilder.build());
@@ -138,11 +134,9 @@ public class FindShellCommands {
         modelBuilder.addRow()
                 .addValue("id")
                 .addValue("Name");
-        authors.forEach(a -> {
-                    modelBuilder.addRow()
-                            .addValue(a.getId())
-                            .addValue(a.getName());
-                }
+        authors.forEach(a -> modelBuilder.addRow()
+                .addValue(a.getId())
+                .addValue(a.getName())
         );
 
         TableBuilder builder = new TableBuilder(modelBuilder.build());

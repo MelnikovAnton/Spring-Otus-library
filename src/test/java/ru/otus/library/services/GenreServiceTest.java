@@ -12,7 +12,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.shell.jline.InteractiveShellApplicationRunner;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.library.dao.GenreDao;
-import ru.otus.library.model.Author;
 import ru.otus.library.model.Genre;
 
 import java.util.Arrays;
@@ -21,11 +20,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.doThrow;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(properties = {

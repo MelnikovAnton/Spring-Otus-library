@@ -4,9 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import ru.otus.library.dao.AuthorDao;
 import ru.otus.library.dao.BookDao;
-import ru.otus.library.dao.GenreDao;
 import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Genre;
@@ -71,10 +69,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Optional<Book> findById(int id) {
-        try{
+        try {
             return bookDao.getById(id);
-        }catch (EmptyResultDataAccessException e){
-            log.warn("Return Empty result.",e);
+        } catch (EmptyResultDataAccessException e) {
+            log.warn("Return Empty result.", e);
             return Optional.empty();
         }
 

@@ -8,7 +8,7 @@ import java.sql.SQLException;
 @SpringBootApplication
 public class LibraryApplication {
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args)  {
         SpringApplication.run(LibraryApplication.class, args);
     }
 

@@ -4,14 +4,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.library.dao.impl.BookDaoImpl;
 import ru.otus.library.dao.mappers.AuthorMapper;
 import ru.otus.library.dao.mappers.BookMapper;
@@ -54,9 +50,7 @@ class BookDaoTest {
             Book book = assertDoesNotThrow(() -> bookDao.getById(1).orElseThrow());
             assertEquals(book.getId(), 1);
         });
-        DynamicTest book2 = DynamicTest.dynamicTest("ID = 10", () -> {
-            assertThrows(EmptyResultDataAccessException.class, () -> bookDao.getById(10));
-        });
+        DynamicTest book2 = DynamicTest.dynamicTest("ID = 10", () -> assertThrows(EmptyResultDataAccessException.class, () -> bookDao.getById(10)));
         return Arrays.asList(book1, book2);
     }
 
@@ -81,11 +75,11 @@ class BookDaoTest {
 
         DynamicTest delDoseNotExists = DynamicTest.dynamicTest("Удаление не существующей книги", () -> {
             book.setId(10);
-            int c1=assertDoesNotThrow(() -> bookDao.delete(book));
+            int c1 = assertDoesNotThrow(() -> bookDao.delete(book));
             assertEquals(c1, 0);
         });
 
-        return Arrays.asList(delExists,delDoseNotExists);
+        return Arrays.asList(delExists, delDoseNotExists);
     }
 
     @TestFactory

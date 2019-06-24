@@ -8,11 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.EmptyResultDataAccessException;
-import ru.otus.library.dao.impl.AuthorDaoImpl;
 import ru.otus.library.dao.impl.GenreDaoImpl;
-import ru.otus.library.dao.mappers.AuthorMapper;
 import ru.otus.library.dao.mappers.GenreMapper;
-import ru.otus.library.model.Author;
 import ru.otus.library.model.Genre;
 
 import java.util.Arrays;
@@ -49,10 +46,8 @@ class GenreDaoTest {
             Genre genre = assertDoesNotThrow(() -> genreDao.getById(1).orElseThrow());
             assertEquals(genre.getId(), 1);
         });
-        DynamicTest genre2 = DynamicTest.dynamicTest("ID = 10", () -> {
-            assertThrows(EmptyResultDataAccessException.class, () -> genreDao.getById(10));
-        });
-        return Arrays.asList(genre1,genre2);
+        DynamicTest genre2 = DynamicTest.dynamicTest("ID = 10", () -> assertThrows(EmptyResultDataAccessException.class, () -> genreDao.getById(10)));
+        return Arrays.asList(genre1, genre2);
     }
 
     @Test
