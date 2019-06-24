@@ -21,7 +21,6 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @Repository
-//TODO Exceptions throws when wrong ID
 public class AuthorDaoImpl implements AuthorDao {
 
     private final NamedParameterJdbcOperations jdbc;

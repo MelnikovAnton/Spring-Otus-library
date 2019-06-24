@@ -4,9 +4,9 @@ values (1, 'Test1', 'No Content1'),
        (3, 'Test3', 'No Content3');
 
 insert into genre (id, name)
-values (1, 'Ужасы'),
-       (2, 'Фантастика'),
-       (3, 'Эротика');
+values (1, 'Genre1'),
+       (2, 'Genre2'),
+       (3, 'Genre3');
 
 insert into Author (id, name)
 values (1, 'Author1'),

@@ -3,7 +3,6 @@ package ru.otus.library.shell;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.h2.tools.Console;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -15,7 +14,7 @@ import ru.otus.library.services.AuthorService;
 import ru.otus.library.services.BookService;
 import ru.otus.library.services.GenreService;
 
-import java.sql.SQLException;
+import java.util.Optional;
 
 @ShellComponent(value = "Insert shell commands")
 @RequiredArgsConstructor
@@ -52,8 +51,15 @@ public class InsertShellCommands {
     @ShellMethod(value = "set Genre to book", key = {"setGenre", "setg"})
     private String setGenre(@ShellOption(value = {"-b", "--book"}) int bookId,
                             @ShellOption(value = {"-g", "--genre"}) int genreId) {
-        Book book = bookService.findById(bookId).orElseThrow();
-        Genre genre = genreService.findById(genreId).orElseThrow();
+
+        Optional<Book> oBook = bookService.findById(bookId);
+        if (oBook.isEmpty()) return "no book with id " + bookId;
+        Book book = oBook.get();
+
+        Optional<Genre> oGenre = genreService.findById(genreId);
+        if (oGenre.isEmpty()) return "no Genre with id " + genreId;
+        Genre genre = oGenre.get();
+
         book.addGenre(genre);
         bookService.addRelations(book);
         return "Genre added to book ";
@@ -63,8 +69,15 @@ public class InsertShellCommands {
     @ShellMethod(value = "set Author to book", key = {"setAuthor", "seta"})
     private String setAuthor(@ShellOption(value = {"-b", "--book"}) int bookId,
                              @ShellOption(value = {"-a", "--author"}) int authorId) {
-        Book book = bookService.findById(bookId).orElseThrow();
-        Author author = authorService.findById(authorId).orElseThrow();
+
+        Optional<Book> oBook = bookService.findById(bookId);
+        if (oBook.isEmpty()) return "no book with id " + bookId;
+        Book book = oBook.get();
+
+        Optional<Author> oAuthor = authorService.findById(authorId);
+        if (oAuthor.isEmpty()) return "no Author with id " + authorId;
+        Author author = oAuthor.get();
+
         book.addAuthor(author);
         bookService.addRelations(book);
         return "Author added to book ";

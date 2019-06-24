@@ -1,6 +1,8 @@
 package ru.otus.library.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import ru.otus.library.dao.AuthorDao;
 import ru.otus.library.dao.BookDao;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BookServiceImpl implements BookService {
 
     private final BookDao bookDao;
@@ -51,6 +54,7 @@ public class BookServiceImpl implements BookService {
                 .stream()
                 .map(bookDao::getByAuthor)
                 .flatMap(Collection::stream)
+                .distinct()
                 .collect(Collectors.toList());
 
     }
@@ -61,12 +65,19 @@ public class BookServiceImpl implements BookService {
                 .stream()
                 .map(bookDao::getByGenre)
                 .flatMap(Collection::stream)
+                .distinct()
                 .collect(Collectors.toList());
     }
 
     @Override
     public Optional<Book> findById(int id) {
-        return bookDao.getById(id);
+        try{
+            return bookDao.getById(id);
+        }catch (EmptyResultDataAccessException e){
+            log.warn("Return Empty result.",e);
+            return Optional.empty();
+        }
+
     }
 
     @Override

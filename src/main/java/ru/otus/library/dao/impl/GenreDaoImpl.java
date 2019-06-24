@@ -19,7 +19,6 @@ import java.util.Optional;
 @SuppressWarnings("SqlResolve")
 @Repository
 @RequiredArgsConstructor
-//TODO Exceptions throws when wrong ID
 public class GenreDaoImpl implements GenreDao {
 
     private final NamedParameterJdbcOperations jdbc;

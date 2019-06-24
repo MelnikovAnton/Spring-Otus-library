@@ -26,7 +26,6 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 @Transactional
-//TODO Exceptions throws when wrong ID
 public class BookDaoImpl implements BookDao {
 
     private final NamedParameterJdbcOperations jdbc;
@@ -97,7 +96,7 @@ public class BookDaoImpl implements BookDao {
         final Map<String, Object> params = new HashMap<>(1);
         params.put("id", author.getId());
         List<Book> books = jdbc.query("select * from book where id in " +
-                "(select book_id from author_book where author_id=:id);", params, bookMapper);
+                "(select distinct book_id from author_book where author_id=:id);", params, bookMapper);
         books.forEach(this::addAuthorAndGenre);
         return books;
     }
@@ -107,7 +106,7 @@ public class BookDaoImpl implements BookDao {
         final Map<String, Object> params = new HashMap<>(1);
         params.put("id", genre.getId());
         List<Book> books = jdbc.query("select * from book where id in " +
-                "(select book_id from genre_book where genre_id=:id);", params, bookMapper);
+                "(select distinct book_id from genre_book where genre_id=:id);", params, bookMapper);
         books.forEach(this::addAuthorAndGenre);
         return books;
     }

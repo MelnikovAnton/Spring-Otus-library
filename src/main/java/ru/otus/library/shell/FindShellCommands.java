@@ -20,6 +20,7 @@ import ru.otus.library.services.GenreService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @ShellComponent(value = "Find shell commands")
@@ -39,7 +40,8 @@ public class FindShellCommands {
                             @ShellOption(value = {"-an", "--author-name"}, defaultValue = "") String author) {
 
         List<Book> books = new ArrayList<>();
-        if (id > 0) books.add(bookService.findById(id).orElseThrow());
+
+        if (id > 0) bookService.findById(id).ifPresent(books::add);
         if (!title.isEmpty()) books.addAll(bookService.findBooksByTitle(title));
         if (!genre.isEmpty()) books.addAll(bookService.findBooksByGenre(genre));
         if (!author.isEmpty()) books.addAll(bookService.findBooksByAuthor(author));
@@ -52,7 +54,7 @@ public class FindShellCommands {
                               @ShellOption(value = {"-n", "--name"}, defaultValue = "") String name) {
 
         List<Author> authors = new ArrayList<>();
-        if (id > 0) authors.add(authorService.findById(id).orElseThrow());
+        if (id > 0) authorService.findById(id).ifPresent(authors::add);
         if (!name.isEmpty()) authors.addAll(authorService.findAuthorsByName(name));
         return getAuthorsTable(authors);
     }
@@ -60,12 +62,10 @@ public class FindShellCommands {
 
     @ShellMethod(value = "find Genres", key = {"findGenres", "fg"})
     private Table findGenres(@ShellOption(value = {"-i", "--id"}, defaultValue = "-1") int id,
-                              @ShellOption(value = {"-n", "--name"}, defaultValue = "") String name) {
+                             @ShellOption(value = {"-n", "--name"}, defaultValue = "") String name) {
 
         List<Genre> genres = new ArrayList<>();
-        if (id > 0) genres.add(genreService.findById(id).orElseThrow(()->{
-           throw  new NumberFormatException("Test");
-        }));
+        if (id > 0)genreService.findById(id).ifPresent(genres::add);
         if (!name.isEmpty()) genres.addAll(genreService.findGenresByName(name));
         return getGenresTable(genres);
     }

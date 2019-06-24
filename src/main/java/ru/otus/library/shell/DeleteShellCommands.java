@@ -14,11 +14,12 @@ import ru.otus.library.services.AuthorService;
 import ru.otus.library.services.BookService;
 import ru.otus.library.services.GenreService;
 
+import java.util.Optional;
+
 @ShellComponent(value = "Delete shell commands")
 @RequiredArgsConstructor
 @ShellCommandGroup("Delete commands")
 @Slf4j
-//TODO Logs...
 public class DeleteShellCommands {
 
 
@@ -28,22 +29,26 @@ public class DeleteShellCommands {
 
     @ShellMethod(value = "delete Author", key = {"deleteAuthor", "dela"})
     private String deleteAuthor(@ShellOption(value = {"-i", "--id"}) int id) {
-        Author author = authorService.findById(id).orElseThrow();
-        authorService.delete(author);
-        return "Author deleted" + author;
+        Optional<Author> oAuthor = authorService.findById(id);
+        if (oAuthor.isEmpty()) return "no author with id " + id;
+        int r = authorService.delete(oAuthor.get());
+        return "Author deleted rows=" + r;
     }
 
     @ShellMethod(value = "delete Author", key = {"deleteGenre", "delg"})
     private String deleteGenre(@ShellOption(value = {"-i", "--id"}) int id) {
-        Genre genre = genreService.findById(id).orElseThrow();
-        genreService.delete(genre);
-        return "Genre deleted " + genre;
+        Optional<Genre> oGenre = genreService.findById(id);
+        if (oGenre.isEmpty()) return "no genre with id " + id;
+        int r = genreService.delete(oGenre.get());
+        return "Genre deleted rows=" + r;
     }
 
     @ShellMethod(value = "delete Book", key = {"deleteBook", "delb"})
     private String deleteBook(@ShellOption(value = {"-i", "--id"}) int id) {
-        Book book = bookService.findById(id).orElseThrow();
-        bookService.delete(book);
-        return "Book deleted " + book;
+
+        Optional<Book> oBook = bookService.findById(id);
+        if (oBook.isEmpty()) return "no book with id " + id;
+        int r = bookService.delete(oBook.get());
+        return "Book deleted rows=" + r;
     }
 }

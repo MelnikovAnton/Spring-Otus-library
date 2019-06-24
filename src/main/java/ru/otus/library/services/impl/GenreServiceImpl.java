@@ -1,6 +1,8 @@
 package ru.otus.library.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import ru.otus.library.dao.GenreDao;
 import ru.otus.library.model.Genre;
@@ -11,6 +13,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GenreServiceImpl implements GenreService {
 
     private final GenreDao genreDao;
@@ -27,7 +30,12 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public Optional<Genre> findById(int id) {
-        return genreDao.getById(id);
+        try {
+            return genreDao.getById(id);
+        } catch (EmptyResultDataAccessException e) {
+            log.warn("Return Empty result.", e);
+            return Optional.empty();
+        }
     }
 
     @Override
