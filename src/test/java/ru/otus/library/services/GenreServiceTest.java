@@ -18,8 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -35,20 +34,32 @@ class GenreServiceTest {
 
     @Test
     void saveGenre() {
-        genreService.saveGenre(new Genre("test"));
-        verify(genreDao, times(1)).insert(any(Genre.class));
+        Genre genre = new Genre("test");
+
+        when(genreDao.insert(any(Genre.class))).thenAnswer(invocation -> {
+            Genre g = invocation.getArgument(0);
+            g.setId(1);
+            return g;
+        });
+
+        Genre g  = assertDoesNotThrow(() -> genreService.saveGenre(genre));
+        assertEquals(g, genre);
+        assertEquals(1, g.getId());
     }
 
     @Test
     void findGenresByName() {
-        genreService.findGenresByName("test");
-        verify(genreDao, times(1)).findByName(anyString());
+        when(genreDao.findByName(anyString())).thenReturn(getTestGenres());
+        List<Genre> genres = genreService.findGenresByName("test");
+        assertEquals(getTestGenres(), genres);
     }
 
     @Test
     void findAll() {
-        genreService.findAll();
-        verify(genreDao, times(1)).getAll();
+        when(genreDao.getAll()).thenReturn(getTestGenres());
+
+        List<Genre> genres = assertDoesNotThrow(() -> genreService.findAll());
+        assertEquals(getTestGenres(), genres);
     }
 
     @TestFactory
@@ -69,7 +80,21 @@ class GenreServiceTest {
 
     @Test
     void delete() {
-        genreService.delete(new Genre("test"));
-        verify(genreDao, times(1)).delete(any(Genre.class));
+        when(genreDao.delete(any(Genre.class))).thenAnswer(invocation -> {
+            Genre g = invocation.getArgument(0);
+            return g.getId();
+        });
+
+        Genre genre = new Genre("Test");
+        genre.setId(1);
+
+        int id = assertDoesNotThrow(() -> genreService.delete(genre));
+        assertEquals(1, id);
+    }
+
+    private List<Genre> getTestGenres() {
+        return List.of(new Genre("Genre1"),
+                new Genre("Genre3"),
+                new Genre("Genre3"));
     }
 }

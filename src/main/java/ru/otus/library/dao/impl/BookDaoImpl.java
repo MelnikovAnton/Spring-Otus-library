@@ -7,10 +7,10 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsertOperations;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.library.dao.AuthorDao;
 import ru.otus.library.dao.BookDao;
-import ru.otus.library.dao.mappers.AuthorMapper;
+import ru.otus.library.dao.GenreDao;
 import ru.otus.library.dao.mappers.BookMapper;
-import ru.otus.library.dao.mappers.GenreMapper;
 import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Genre;
@@ -30,8 +30,8 @@ public class BookDaoImpl implements BookDao {
 
     private final NamedParameterJdbcOperations jdbc;
     private final BookMapper bookMapper;
-    private final GenreMapper genreMapper;
-    private final AuthorMapper authorMapper;
+    private final GenreDao genreDao;
+    private final AuthorDao authorDao;
     private SimpleJdbcInsertOperations simpleJdbcInsert;
 
     @Autowired
@@ -62,7 +62,7 @@ public class BookDaoImpl implements BookDao {
         final Map<String, Object> params = new HashMap<>(1);
         params.put("id", id);
         Book book = jdbc.queryForObject("select * from book where id =:id;", params, bookMapper);
-        return Optional.ofNullable(addAuthorAndGenre(book));
+        return Optional.of(addAuthorAndGenre(book));
     }
 
     @Override
@@ -119,20 +119,12 @@ public class BookDaoImpl implements BookDao {
         return book;
     }
 
-
     private List<Genre> findGenre(int bookId) {
-        final Map<String, Object> params = new HashMap<>(1);
-        params.put("id", bookId);
-        return jdbc.query("select * from genre where id in " +
-                "(select genre_id from genre_book where book_id=:id);", params, genreMapper);
+        return genreDao.findByBookId(bookId);
     }
 
-
     private List<Author> findAuthor(int bookId) {
-        final Map<String, Object> params = new HashMap<>(1);
-        params.put("id", bookId);
-        return jdbc.query("select * from author where id in " +
-                "(select author_id from author_book where book_id=:id);", params, authorMapper);
+        return authorDao.findByBookId(bookId);
     }
 
     @Override

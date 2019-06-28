@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.EmptyResultDataAccessException;
+import ru.otus.library.dao.impl.AuthorDaoImpl;
 import ru.otus.library.dao.impl.BookDaoImpl;
+import ru.otus.library.dao.impl.GenreDaoImpl;
 import ru.otus.library.dao.mappers.AuthorMapper;
 import ru.otus.library.dao.mappers.BookMapper;
 import ru.otus.library.dao.mappers.GenreMapper;
@@ -23,7 +25,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @JdbcTest
-@Import({BookDaoImpl.class, BookMapper.class, GenreMapper.class, AuthorMapper.class})
+@Import({BookDaoImpl.class, BookMapper.class, GenreMapper.class, AuthorMapper.class,
+        GenreDaoImpl.class, AuthorDaoImpl.class})
 class BookDaoTest {
 
     @Autowired

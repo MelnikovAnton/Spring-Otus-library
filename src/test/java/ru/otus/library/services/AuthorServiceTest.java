@@ -18,8 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -34,15 +33,26 @@ class AuthorServiceTest {
 
     @Test
     void saveAuthor() {
-        authorService.saveAuthor(new Author("test"));
-        verify(authorDao, times(1)).insert(any(Author.class));
+        Author author = new Author("test");
+
+        when(authorDao.insert(any(Author.class))).thenAnswer(invocation -> {
+            Author a = invocation.getArgument(0);
+            a.setId(1);
+            return a;
+        });
+
+        Author a = assertDoesNotThrow(() -> authorService.saveAuthor(author));
+        assertEquals(a, author);
+        assertEquals(1, a.getId());
     }
 
     @Test
     void findAuthorsByName() {
-        authorService.findAuthorsByName("test");
-        verify(authorDao, times(1)).findByName(anyString());
+        when(authorDao.findByName(anyString())).thenReturn(getTestAuthors());
+        List<Author> authors = authorService.findAuthorsByName("test");
+        assertEquals(getTestAuthors(), authors);
     }
+
 
     @TestFactory
     @DisplayName("Поиск по ID")
@@ -62,13 +72,29 @@ class AuthorServiceTest {
 
     @Test
     void delete() {
-        authorService.delete(new Author("test"));
-        verify(authorDao, times(1)).delete(any(Author.class));
+        when(authorDao.delete(any(Author.class))).thenAnswer(invocation -> {
+            Author a = invocation.getArgument(0);
+            return a.getId();
+        });
+
+        Author author = new Author("Test");
+        author.setId(1);
+
+        int id = assertDoesNotThrow(() -> authorService.delete(author));
+        assertEquals(1, id);
     }
 
     @Test
     void findAll() {
-        authorService.findAll();
-        verify(authorDao, times(1)).getAll();
+        when(authorDao.getAll()).thenReturn(getTestAuthors());
+
+        List<Author> authors = assertDoesNotThrow(() -> authorService.findAll());
+        assertEquals(getTestAuthors(), authors);
+    }
+
+    private List<Author> getTestAuthors() {
+        return List.of(new Author("Auth1"),
+                new Author("Auth2"),
+                new Author("Auth3"));
     }
 }

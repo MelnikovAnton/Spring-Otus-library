@@ -78,6 +78,14 @@ public class AuthorDaoImpl implements AuthorDao {
         return jdbc.query("select * from author where name like :name;", params, mapper);
     }
 
+    @Override
+    public List<Author> findByBookId(int id) {
+        final Map<String, Object> params = new HashMap<>(1);
+        params.put("id", id);
+        return jdbc.query("select * from author where id in " +
+                "(select author_id from author_book where book_id=:id);", params, mapper);
+    }
+
     private void deleteAuthorRelation(Author genre) {
         final Map<String, Object> params = new HashMap<>(1);
         params.put("authorId", genre.getId());

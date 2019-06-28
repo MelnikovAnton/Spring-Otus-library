@@ -78,6 +78,15 @@ public class GenreDaoImpl implements GenreDao {
         return jdbc.query("select * from genre where name like :title;", params, mapper);
     }
 
+
+    @Override
+    public List<Genre> findByBookId(int id) {
+        final Map<String, Object> params = new HashMap<>(1);
+        params.put("id", id);
+        return jdbc.query("select * from genre where id in " +
+                "(select genre_id from genre_book where book_id=:id);", params, mapper);
+    }
+
     private void deleteGenreRelation(Genre genre) {
         final Map<String, Object> params = new HashMap<>(1);
         params.put("genreId", genre.getId());

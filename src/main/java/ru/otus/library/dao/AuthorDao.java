@@ -13,4 +13,5 @@ public interface AuthorDao {
     List<Author> getAll();
     int delete(Author author);
     List<Author> findByName(String name);
+    List<Author> findByBookId(int id);
 }
