@@ -23,7 +23,7 @@ import java.util.Optional;
 @ShellCommandGroup("Author commands")
 @Slf4j
 public class AuthorShellCommands {
-//TODO Implements Tests
+
     private final AuthorService authorService;
 
     @ShellMethod(value = "delete Author", key = {"deleteAuthor", "dela"})

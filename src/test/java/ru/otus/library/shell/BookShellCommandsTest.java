@@ -102,15 +102,50 @@ class BookShellCommandsTest {
     @Test
     @DisplayName("Получить все книги")
     void getAllBooks() {
-        shell.evaluate(() -> "fba");
-        verify(bookService, times(1)).findAll();
+        when(bookService.findAll()).thenReturn(List.of(getTestBook()));
+
+        Table r = (Table) shell.evaluate(() -> "fba");
+        int rowCount = r.getModel().getRowCount();
+        assertEquals(2, rowCount);
+        int id = (int) r.getModel().getValue(1, 0);
+        assertEquals(1, id);
+
     }
+
+    @TestFactory
+    @DisplayName("Удаление книги")
+    List<DynamicTest> testDeleteBook() {
+        DynamicTest delBook = DynamicTest.dynamicTest("Удаление книги", () -> {
+            when(bookService.findById(anyInt())).thenReturn(Optional.of(getTestBook()));
+
+            String r = (String) shell.evaluate(() -> "delb 1");
+            assertTrue(r.contains("Book deleted rows="));
+
+        });
+        DynamicTest delWrongBook = DynamicTest.dynamicTest("Удаление книги с неверным ID", () -> {
+            when(bookService.findById(anyInt())).thenReturn(Optional.empty());
+            String r = (String) shell.evaluate(() -> "delb -i 1");
+            assertTrue(r.contains("no book with id"));
+
+        });
+
+        return Arrays.asList(delWrongBook, delBook);
+    }
+
 
     @Test
     @DisplayName("Добавление книги.")
     void testAddBook() {
-        assertDoesNotThrow(() -> shell.evaluate(() -> "addb -t Title -c Content"));
-        verify(bookService, times(1)).saveBook(any(Book.class));
+        when(bookService.saveBook(any(Book.class))).thenAnswer(invocation -> {
+            Book b = (Book) invocation.getArgument(0);
+            b.setId(1);
+            return b;
+        });
+
+        String r= (String) shell.evaluate(() -> "addb -t Title -c Content");
+
+        assertEquals("Book added id=1",r);
+
     }
 
 

@@ -23,7 +23,7 @@ import java.util.Optional;
 @ShellCommandGroup("Genre commands")
 @Slf4j
 public class GenreShellCommands {
-    //TODO Implements Tests
+
     private final GenreService genreService;
 
 
