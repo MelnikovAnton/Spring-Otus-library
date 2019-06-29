@@ -20,7 +20,8 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Author saveAuthor(Author author) {
-        return authorDao.insert(author);
+        authorDao.insert(author);
+        return author;
     }
 
     @Override
@@ -40,7 +41,8 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public int delete(Author author) {
-        return authorDao.delete(author);
+        authorDao.delete(author);
+        return author.getId();
     }
 
     @Override

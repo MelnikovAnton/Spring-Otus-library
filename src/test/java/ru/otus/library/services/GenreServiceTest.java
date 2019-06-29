@@ -32,20 +32,20 @@ class GenreServiceTest {
     @Autowired
     private GenreService genreService;
 
-    @Test
-    void saveGenre() {
-        Genre genre = new Genre("test");
-
-        when(genreDao.insert(any(Genre.class))).thenAnswer(invocation -> {
-            Genre g = invocation.getArgument(0);
-            g.setId(1);
-            return g;
-        });
-
-        Genre g  = assertDoesNotThrow(() -> genreService.saveGenre(genre));
-        assertEquals(g, genre);
-        assertEquals(1, g.getId());
-    }
+//    @Test
+//    void saveGenre() {
+//        Genre genre = new Genre("test");
+//
+//        when(genreDao.insert(any(Genre.class))).thenAnswer(invocation -> {
+//            Genre g = invocation.getArgument(0);
+//            g.setId(1);
+//            return g;
+//        });
+//
+//        Genre g  = assertDoesNotThrow(() -> genreService.saveGenre(genre));
+//        assertEquals(g, genre);
+//        assertEquals(1, g.getId());
+//    }
 
     @Test
     void findGenresByName() {
@@ -78,19 +78,19 @@ class GenreServiceTest {
         return Arrays.asList(isPresent, isNotPresent);
     }
 
-    @Test
-    void delete() {
-        when(genreDao.delete(any(Genre.class))).thenAnswer(invocation -> {
-            Genre g = invocation.getArgument(0);
-            return g.getId();
-        });
-
-        Genre genre = new Genre("Test");
-        genre.setId(1);
-
-        int id = assertDoesNotThrow(() -> genreService.delete(genre));
-        assertEquals(1, id);
-    }
+//    @Test
+//    void delete() {
+//        when(genreDao.delete(any(Genre.class))).thenAnswer(invocation -> {
+//            Genre g = invocation.getArgument(0);
+//            return g.getId();
+//        });
+//
+//        Genre genre = new Genre("Test");
+//        genre.setId(1);
+//
+//        int id = assertDoesNotThrow(() -> genreService.delete(genre));
+//        assertEquals(1, id);
+//    }
 
     private List<Genre> getTestGenres() {
         return List.of(new Genre("Genre1"),

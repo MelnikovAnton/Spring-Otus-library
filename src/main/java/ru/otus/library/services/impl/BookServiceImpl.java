@@ -38,7 +38,8 @@ public class BookServiceImpl implements BookService {
                 .filter(a -> a.getId() <= 0)
                 .map(genreService::saveGenre)
                 .collect(Collectors.toList());
-        return bookDao.insert(book);
+         bookDao.insert(book);
+         return book;
     }
 
     @Override
@@ -80,7 +81,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public int delete(Book book) {
-        return bookDao.delete(book);
+         bookDao.delete(book);
+         return book.getId();
     }
 
     @Override

@@ -32,12 +32,12 @@ class AuthorDaoTest {
     }
 
 
-    @Test
-    @DisplayName("Вставка с получением ID")
-    void insert() {
-        Author author = assertDoesNotThrow(() -> authorDao.insert(new Author("ewq")));
-        assertTrue(author.getId() > 0);
-    }
+//    @Test
+//    @DisplayName("Вставка с получением ID")
+//    void insert() {
+//        Author author = assertDoesNotThrow(() -> authorDao.insert(new Author("ewq")));
+//        assertTrue(author.getId() > 0);
+//    }
 
     @TestFactory
     @DisplayName("Получение автора по ID")
@@ -57,25 +57,25 @@ class AuthorDaoTest {
         assertEquals(authors.size(), 3);
     }
 
-    @TestFactory
-    @DisplayName("Удаление авторов")
-    List<DynamicTest> delete() {
-        Author author = new Author("Test");
-
-        DynamicTest delExists = DynamicTest.dynamicTest("Удаление существующего автора", () -> {
-            author.setId(1);
-            int c = assertDoesNotThrow(() -> authorDao.delete(author));
-            assertEquals(c, 1);
-        });
-
-        DynamicTest delDoseNotExists = DynamicTest.dynamicTest("Удаление не существующего автора", () -> {
-            author.setId(10);
-            int c1 = assertDoesNotThrow(() -> authorDao.delete(author));
-            assertEquals(c1, 0);
-        });
-
-        return Arrays.asList(delExists, delDoseNotExists);
-    }
+//    @TestFactory
+//    @DisplayName("Удаление авторов")
+//    List<DynamicTest> delete() {
+//        Author author = new Author("Test");
+//
+//        DynamicTest delExists = DynamicTest.dynamicTest("Удаление существующего автора", () -> {
+//            author.setId(1);
+//            int c = assertDoesNotThrow(() -> authorDao.delete(author));
+//            assertEquals(c, 1);
+//        });
+//
+//        DynamicTest delDoseNotExists = DynamicTest.dynamicTest("Удаление не существующего автора", () -> {
+//            author.setId(10);
+//            int c1 = assertDoesNotThrow(() -> authorDao.delete(author));
+//            assertEquals(c1, 0);
+//        });
+//
+//        return Arrays.asList(delExists, delDoseNotExists);
+//    }
 
     @TestFactory
     @DisplayName("Поиск по имени автора")

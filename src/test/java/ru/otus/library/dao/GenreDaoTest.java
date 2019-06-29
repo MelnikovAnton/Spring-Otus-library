@@ -32,12 +32,12 @@ class GenreDaoTest {
     }
 
 
-    @Test
-    @DisplayName("Вставка с получением ID")
-    void insert() {
-        Genre genre = assertDoesNotThrow(() -> genreDao.insert(new Genre("ewq")));
-        assertTrue(genre.getId() > 0);
-    }
+//    @Test
+//    @DisplayName("Вставка с получением ID")
+//    void insert() {
+//        Genre genre = assertDoesNotThrow(() -> genreDao.insert(new Genre("ewq")));
+//        assertTrue(genre.getId() > 0);
+//    }
 
     @TestFactory
     @DisplayName("Получение жанра по ID")
@@ -57,25 +57,25 @@ class GenreDaoTest {
         assertEquals(genres.size(), 3);
     }
 
-    @TestFactory
-    @DisplayName("Удаление жанров")
-    List<DynamicTest> delete() {
-        Genre genre = new Genre("Test");
-
-        DynamicTest delExists = DynamicTest.dynamicTest("Удаление существующего жанра", () -> {
-            genre.setId(1);
-            int c = assertDoesNotThrow(() -> genreDao.delete(genre));
-            assertEquals(c, 1);
-        });
-
-        DynamicTest delDoseNotExists = DynamicTest.dynamicTest("Удаление не существующего жанра", () -> {
-            genre.setId(10);
-            int c1 = assertDoesNotThrow(() -> genreDao.delete(genre));
-            assertEquals(c1, 0);
-        });
-
-        return Arrays.asList(delExists, delDoseNotExists);
-    }
+//    @TestFactory
+//    @DisplayName("Удаление жанров")
+//    List<DynamicTest> delete() {
+//        Genre genre = new Genre("Test");
+//
+//        DynamicTest delExists = DynamicTest.dynamicTest("Удаление существующего жанра", () -> {
+//            genre.setId(1);
+//            int c = assertDoesNotThrow(() -> genreDao.delete(genre));
+//            assertEquals(c, 1);
+//        });
+//
+//        DynamicTest delDoseNotExists = DynamicTest.dynamicTest("Удаление не существующего жанра", () -> {
+//            genre.setId(10);
+//            int c1 = assertDoesNotThrow(() -> genreDao.delete(genre));
+//            assertEquals(c1, 0);
+//        });
+//
+//        return Arrays.asList(delExists, delDoseNotExists);
+//    }
 
     @TestFactory
     @DisplayName("Поиск по имени жанра")

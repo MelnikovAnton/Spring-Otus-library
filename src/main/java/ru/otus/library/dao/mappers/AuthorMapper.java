@@ -13,6 +13,9 @@ public class AuthorMapper implements RowMapper<Author> {
     public Author mapRow(ResultSet resultSet, int i) throws SQLException {
         int id = resultSet.getInt("id");
         String name = resultSet.getString("name");
-        return new Author(id, name);
+        Author auth = new Author();
+        auth.setId(id);
+        auth.setName(name);
+        return auth;
     }
 }

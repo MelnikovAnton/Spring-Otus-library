@@ -9,13 +9,13 @@ public interface GenreDao {
 
     int count();
 
-    Genre insert(Genre genre);
+    void insert(Genre genre);
 
     Optional<Genre> getById(int id);
 
     List<Genre> getAll();
 
-    int delete(Genre genre);
+    void delete(Genre genre);
 
     List<Genre> findByName(String name);
 

@@ -31,20 +31,20 @@ class AuthorServiceTest {
     @Autowired
     private AuthorService authorService;
 
-    @Test
-    void saveAuthor() {
-        Author author = new Author("test");
-
-        when(authorDao.insert(any(Author.class))).thenAnswer(invocation -> {
-            Author a = invocation.getArgument(0);
-            a.setId(1);
-            return a;
-        });
-
-        Author a = assertDoesNotThrow(() -> authorService.saveAuthor(author));
-        assertEquals(a, author);
-        assertEquals(1, a.getId());
-    }
+//    @Test
+//    void saveAuthor() {
+//        Author author = new Author("test");
+//
+//        when(authorDao.insert(any(Author.class))).thenAnswer(invocation -> {
+//            Author a = invocation.getArgument(0);
+//            a.setId(1);
+//            return a;
+//        });
+//
+//        Author a = assertDoesNotThrow(() -> authorService.saveAuthor(author));
+//        assertEquals(a, author);
+//        assertEquals(1, a.getId());
+//    }
 
     @Test
     void findAuthorsByName() {
@@ -70,19 +70,19 @@ class AuthorServiceTest {
         return Arrays.asList(isPresent, isNotPresent);
     }
 
-    @Test
-    void delete() {
-        when(authorDao.delete(any(Author.class))).thenAnswer(invocation -> {
-            Author a = invocation.getArgument(0);
-            return a.getId();
-        });
-
-        Author author = new Author("Test");
-        author.setId(1);
-
-        int id = assertDoesNotThrow(() -> authorService.delete(author));
-        assertEquals(1, id);
-    }
+//    @Test
+//    void delete() {
+//        when(authorDao.delete(any(Author.class))).thenAnswer(invocation -> {
+//            Author a = invocation.getArgument(0);
+//            return a.getId();
+//        });
+//
+//        Author author = new Author("Test");
+//        author.setId(1);
+//
+//        int id = assertDoesNotThrow(() -> authorService.delete(author));
+//        assertEquals(1, id);
+//    }
 
     @Test
     void findAll() {

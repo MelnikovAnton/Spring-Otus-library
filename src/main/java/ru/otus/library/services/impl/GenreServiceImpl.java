@@ -20,7 +20,8 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public Genre saveGenre(Genre genre) {
-        return genreDao.insert(genre);
+        genreDao.insert(genre);
+        return genre;
     }
 
     @Override
@@ -40,7 +41,8 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public int delete(Genre genre) {
-        return genreDao.delete(genre);
+        genreDao.delete(genre);
+        return genre.getId();
     }
 
     @Override
