@@ -7,7 +7,9 @@ import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -28,7 +30,7 @@ public class Book {
             inverseJoinColumns = {@JoinColumn(name = "author_id")}
     )
     @Fetch(FetchMode.SUBSELECT)
-    private List<Author> authors = new ArrayList<>();
+    private Set<Author> authors = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -37,7 +39,7 @@ public class Book {
             inverseJoinColumns = {@JoinColumn(name = "genre_id")}
     )
     @Fetch(FetchMode.JOIN)
-    private List<Genre> genres = new ArrayList<>();
+    private Set<Genre> genres = new HashSet<>();
 
     @Column
     private String contentPath;

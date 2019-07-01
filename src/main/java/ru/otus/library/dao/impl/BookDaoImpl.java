@@ -46,6 +46,9 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public void delete(Book book) {
+        Query query = em.createQuery("delete from Comment c where c.book = :book");// Ничего лучше не придумал
+        query.setParameter("book",book);
+        query.executeUpdate();
         em.remove(em.contains(book)?book:em.merge(book));
     }
 
