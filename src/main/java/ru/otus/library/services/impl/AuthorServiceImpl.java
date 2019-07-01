@@ -30,7 +30,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Optional<Author> findById(int id) {
+    public Optional<Author> findById(long id) {
         try {
             return authorDao.getById(id);
         } catch (EmptyResultDataAccessException e) {
@@ -40,7 +40,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public int delete(Author author) {
+    public long delete(Author author) {
         authorDao.delete(author);
         return author.getId();
     }

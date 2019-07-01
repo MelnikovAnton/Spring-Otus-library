@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.EmptyResultDataAccessException;
 import ru.otus.library.dao.impl.GenreDaoImpl;
-import ru.otus.library.dao.mappers.GenreMapper;
 import ru.otus.library.model.Genre;
 
 import java.util.Arrays;
@@ -18,7 +17,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @JdbcTest
-@Import({GenreDaoImpl.class, GenreMapper.class})
+@Import({GenreDaoImpl.class})
 class GenreDaoTest {
 
     @Autowired
@@ -27,7 +26,7 @@ class GenreDaoTest {
     @Test
     @DisplayName("Получениене количества жанров")
     void count() {
-        int count = genreDao.count();
+        long count = genreDao.count();
         assertEquals(count, 3);
     }
 

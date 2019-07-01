@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.EmptyResultDataAccessException;
 import ru.otus.library.dao.impl.AuthorDaoImpl;
-import ru.otus.library.dao.mappers.AuthorMapper;
 import ru.otus.library.model.Author;
 
 import java.util.Arrays;
@@ -18,7 +17,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @JdbcTest
-@Import({AuthorDaoImpl.class, AuthorMapper.class})
+@Import({AuthorDaoImpl.class})
 class AuthorDaoTest {
 
     @Autowired
@@ -27,7 +26,7 @@ class AuthorDaoTest {
     @Test
     @DisplayName("Получениене количества авторов")
     void count() {
-        int count = authorDao.count();
+        long count = authorDao.count();
         assertEquals(count, 3);
     }
 

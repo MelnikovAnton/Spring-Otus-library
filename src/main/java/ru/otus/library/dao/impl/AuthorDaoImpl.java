@@ -24,8 +24,8 @@ public class AuthorDaoImpl implements AuthorDao {
     private EntityManager em;
 
     @Override
-    public int count() {
-        return (int) em.createQuery("select count(a) from Author a").getSingleResult();
+    public long count() {
+        return (long) em.createQuery("select count(a) from Author a").getSingleResult();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class AuthorDaoImpl implements AuthorDao {
     }
 
     @Override
-    public Optional<Author> getById(int id) {
+    public Optional<Author> getById(long id) {
         return Optional.ofNullable(em.find(Author.class, id));
     }
 
@@ -56,7 +56,7 @@ public class AuthorDaoImpl implements AuthorDao {
     }
 
     @Override
-    public List<Author> findByBookId(int id) {
+    public List<Author> findByBookId(long id) {
         Query query = em.createQuery("select a from Author a " +
                 "join Book b" +
                 " where b.id = :id");

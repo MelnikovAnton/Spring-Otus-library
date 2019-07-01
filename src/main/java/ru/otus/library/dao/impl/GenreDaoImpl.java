@@ -23,8 +23,8 @@ public class GenreDaoImpl implements GenreDao {
     private EntityManager em;
 
     @Override
-    public int count() {
-        return (int) em.createQuery("select count(g) from Genre g").getSingleResult();
+    public long count() {
+        return (long) em.createQuery("select count(g) from Genre g").getSingleResult();
     }
 
     @Override
@@ -33,7 +33,7 @@ public class GenreDaoImpl implements GenreDao {
     }
 
     @Override
-    public Optional<Genre> getById(int id) {
+    public Optional<Genre> getById(long id) {
         return Optional.ofNullable(em.find(Genre.class, id));
     }
 
@@ -55,7 +55,7 @@ public class GenreDaoImpl implements GenreDao {
     }
 
     @Override
-    public List<Genre> findByBookId(int id) {
+    public List<Genre> findByBookId(long id) {
         Query query = em.createQuery("select g from Genre g " +
                 "join Book b" +
                 " where b.id = :id");

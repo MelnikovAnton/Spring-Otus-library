@@ -30,7 +30,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public Optional<Genre> findById(int id) {
+    public Optional<Genre> findById(long id) {
         try {
             return genreDao.getById(id);
         } catch (EmptyResultDataAccessException e) {
@@ -40,7 +40,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public int delete(Genre genre) {
+    public long delete(Genre genre) {
         genreDao.delete(genre);
         return genre.getId();
     }

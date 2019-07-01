@@ -1,0 +1,99 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2019-30-06-genre
+      author: MelnikovAnton
+      createTable:
+        tableName: genre
+        columns:
+          - column:
+              name: id
+              type: bigint
+              autoIncrement: true
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: pk_genre
+          - column:
+              name: name
+              type: varchar(50)
+
+  - changeSet:
+      id: 2019-30-06-author
+      author: MelnikovAnton
+      createTable:
+        tableName: author
+        columns:
+          - column:
+              name: id
+              type: bigint
+              autoIncrement: true
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: pk_author
+          - column:
+              name: name
+              type: varchar(50)
+
+  - changeSet:
+      id: 2019-30-06-book
+      author: MelnikovAnton
+      createTable:
+        tableName: book
+        columns:
+          - column:
+              name: id
+              type: bigint
+              autoIncrement: true
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: pk_book
+          - column:
+              name: title
+              type: varchar(50)
+          - column:
+              name: content_path
+              type: varchar(50)
+
+  - changeSet:
+      id: 2019-30-06-author_book
+      author: MelnikovAnton
+      createTable:
+        tableName: author_book
+        columns:
+          - column:
+              name: book_id
+              type: bigint
+              constraints:
+                nullable: false
+                foreignKeyName: fk_book_author
+                references: book(id)
+          - column:
+              name: author_id
+              type: bigint
+              constraints:
+                nullable: false
+                foreignKeyName: fk_author_book
+                references: author(id)
+
+  - changeSet:
+      id: 2019-30-06-genre_book
+      author: MelnikovAnton
+      createTable:
+        tableName: genre_book
+        columns:
+          - column:
+              name: book_id
+              type: bigint
+              constraints:
+                nullable: false
+                foreignKeyName: fk_book_genre
+                references: book(id)
+          - column:
+              name: genre_id
+              type: bigint
+              constraints:
+                nullable: false
+                foreignKeyName: fk_genre_book
+                references: genre(id)

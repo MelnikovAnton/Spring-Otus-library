@@ -27,10 +27,10 @@ public class AuthorShellCommands {
     private final AuthorService authorService;
 
     @ShellMethod(value = "delete Author", key = {"deleteAuthor", "dela"})
-    private String deleteAuthor(@ShellOption(value = {"-i", "--id"}) int id) {
+    private String deleteAuthor(@ShellOption(value = {"-i", "--id"}) long id) {
         Optional<Author> oAuthor = authorService.findById(id);
         if (oAuthor.isEmpty()) return "no author with id " + id;
-        int r = authorService.delete(oAuthor.get());
+        long r = authorService.delete(oAuthor.get());
         return "Author deleted rows=" + r;
     }
 
@@ -42,7 +42,7 @@ public class AuthorShellCommands {
     }
 
     @ShellMethod(value = "find Authors", key = {"findAuthors", "fa"})
-    private Table findAuthors(@ShellOption(value = {"-i", "--id"}, defaultValue = "-1") int id,
+    private Table findAuthors(@ShellOption(value = {"-i", "--id"}, defaultValue = "-1") long id,
                               @ShellOption(value = {"-n", "--name"}, defaultValue = "") String name) {
 
         List<Author> authors = new ArrayList<>();

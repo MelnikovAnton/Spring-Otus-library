@@ -12,8 +12,8 @@ public interface GenreService {
 
     List<Genre> findAll();
 
-    Optional<Genre> findById(int id);
+    Optional<Genre> findById(long id);
 
-    int delete(Genre genre);
+    long delete(Genre genre);
 
 }

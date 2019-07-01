@@ -44,8 +44,18 @@
         </dependency>
 
         <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.springframework.shell/spring-shell-starter -->
@@ -59,6 +69,9 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
+
+<!--        TESTS-->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>

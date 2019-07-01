@@ -7,11 +7,11 @@ import java.util.Optional;
 
 public interface GenreDao {
 
-    int count();
+    long count();
 
     void insert(Genre genre);
 
-    Optional<Genre> getById(int id);
+    Optional<Genre> getById(long id);
 
     List<Genre> getAll();
 
@@ -19,5 +19,5 @@ public interface GenreDao {
 
     List<Genre> findByName(String name);
 
-    List<Genre> findByBookId(int id);
+    List<Genre> findByBookId(long id);
 }

@@ -25,8 +25,8 @@ public class BookDaoImpl implements BookDao {
     private EntityManager em;
 
     @Override
-    public int count() {
-        return (int) em.createQuery("select count(b) from Book b").getSingleResult();
+    public long count() {
+        return (long) em.createQuery("select count(b) from Book b").getSingleResult();
     }
 
     @Override
@@ -35,7 +35,7 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public Optional<Book> getById(int id) {
+    public Optional<Book> getById(long id) {
         return Optional.ofNullable(em.find(Book.class, id));
     }
 
