@@ -1,4 +1,4 @@
-package ru.otus.library.services.impl;
+package ru.otus.library.services;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(properties = {
         InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=false"})
-class CommentServiceImplTest {
+class CommentServiceTest {
 
     @MockBean
     private CommentDao commentDao;
