@@ -74,8 +74,8 @@ public class CommentShellCommands {
 
     @ShellMethod(value = "find all Comments", key = {"findAllComments", "fca"})
     private Table findAllComments() {
-        List<Comment> genres = commentService.findAll();
-        return getGenresTable(genres);
+        List<Comment> comments = commentService.findAll();
+        return getGenresTable(comments);
     }
 
     private Table getGenresTable(List<Comment> comments) {

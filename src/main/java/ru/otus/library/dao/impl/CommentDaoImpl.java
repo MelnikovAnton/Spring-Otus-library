@@ -34,11 +34,10 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public List<Comment> findByBook(Book book) {
+    public List<Comment> findByBookId(long id) {
         Query query = em.createQuery("select c from Comment c " +
-                "join c.book b" +
-                " where b= :book");
-        query.setParameter("book", book);
+                " where c.book.id = :id");
+        query.setParameter("id", id);
         return query.getResultList();
     }
 

@@ -56,9 +56,8 @@ public class GenreDaoImpl implements GenreDao {
 
     @Override
     public List<Genre> findByBookId(long id) {
-        Query query = em.createQuery("select g from Genre g " +
-                "join Book b" +
-                " where b.id = :id");
+        Query query = em.createQuery("select b.genres from Book b " +
+                "where  b.id = :id");
         query.setParameter("id", id);
         return query.getResultList();
     }

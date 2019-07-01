@@ -49,4 +49,9 @@ public class GenreServiceImpl implements GenreService {
     public List<Genre> findAll() {
         return genreDao.getAll();
     }
+
+    @Override
+    public List<Genre> findByBookId(long id) {
+        return genreDao.findByBookId(id);
+    }
 }

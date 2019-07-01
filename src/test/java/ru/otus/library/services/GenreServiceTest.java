@@ -32,20 +32,20 @@ class GenreServiceTest {
     @Autowired
     private GenreService genreService;
 
-//    @Test
-//    void saveGenre() {
-//        Genre genre = new Genre("test");
-//
-//        when(genreDao.insert(any(Genre.class))).thenAnswer(invocation -> {
-//            Genre g = invocation.getArgument(0);
-//            g.setId(1);
-//            return g;
-//        });
-//
-//        Genre g  = assertDoesNotThrow(() -> genreService.saveGenre(genre));
-//        assertEquals(g, genre);
-//        assertEquals(1, g.getId());
-//    }
+    @Test
+    void saveGenre() {
+        Genre genre = new Genre("test");
+
+        doAnswer(inv -> {
+            Genre g = inv.getArgument(0);
+            g.setId(1);
+            return null;
+        }).when(genreDao).insert(any(Genre.class));
+
+        Genre g  = assertDoesNotThrow(() -> genreService.saveGenre(genre));
+        assertEquals(g, genre);
+        assertEquals(1, g.getId());
+    }
 
     @Test
     void findGenresByName() {
@@ -66,31 +66,37 @@ class GenreServiceTest {
     @DisplayName("Поиск по ID")
     List<DynamicTest> findById() {
         DynamicTest isPresent = DynamicTest.dynamicTest("Жанр найден", () -> {
-            when(genreDao.getById(anyInt())).thenReturn(Optional.of(new Genre("test")));
+            when(genreDao.getById(anyLong())).thenReturn(Optional.of(new Genre("test")));
             Optional<Genre> genre = genreService.findById(1);
             assertTrue(genre.isPresent());
         });
         DynamicTest isNotPresent = DynamicTest.dynamicTest("Жанр не найден", () -> {
-            doThrow(new EmptyResultDataAccessException(1)).when(genreDao).getById(anyInt());
+            doThrow(new EmptyResultDataAccessException(1)).when(genreDao).getById(anyLong());
             Optional<Genre> genre = assertDoesNotThrow(() -> genreService.findById(1));
             assertTrue(genre.isEmpty());
         });
         return Arrays.asList(isPresent, isNotPresent);
     }
 
-//    @Test
-//    void delete() {
-//        when(genreDao.delete(any(Genre.class))).thenAnswer(invocation -> {
-//            Genre g = invocation.getArgument(0);
-//            return g.getId();
-//        });
-//
-//        Genre genre = new Genre("Test");
-//        genre.setId(1);
-//
-//        int id = assertDoesNotThrow(() -> genreService.delete(genre));
-//        assertEquals(1, id);
-//    }
+    @Test
+    void delete() {
+        doAnswer(invocation -> {
+            Genre g = invocation.getArgument(0);
+            assertEquals(1, g.getId());
+            return null;
+        }).when(genreDao).delete(any(Genre.class));
+
+        Genre genre = new Genre("Test");
+        genre.setId(1);
+
+        assertDoesNotThrow(() -> genreService.delete(genre));
+    }
+
+    @Test
+    void findByBookId() {
+        when(genreDao.findByBookId(anyLong())).thenReturn(getTestGenres());
+        assertEquals(getTestGenres(),genreService.findByBookId(1));
+    }
 
     private List<Genre> getTestGenres() {
         return List.of(new Genre("Genre1"),

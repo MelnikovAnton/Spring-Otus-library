@@ -1,5 +1,6 @@
 package ru.otus.library.dao;
 
+import org.h2.tools.Console;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import ru.otus.library.dao.impl.AuthorDaoImpl;
 import ru.otus.library.model.Author;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -101,5 +103,20 @@ class AuthorDaoTest {
             assertEquals(authors.size(), 0);
         });
         return Arrays.asList(empty, part, full, noMatch);
+    }
+
+    @TestFactory
+    @DisplayName("Поиск по Id книги")
+    List<DynamicTest> findByBookId() {
+        DynamicTest auth1 = DynamicTest.dynamicTest("ID = 1", () -> {
+            List<Author> authors = assertDoesNotThrow(() -> authorDao.findByBookId(1));
+            assertEquals(1, authors.size());
+            assertEquals(authors.get(0).getId(), 1);
+        });
+        DynamicTest auth2 = DynamicTest.dynamicTest("ID = Integer.MAX_VALUE+1", () -> {
+            List<Author> authors = assertDoesNotThrow(() -> authorDao.findByBookId(Integer.MAX_VALUE + 1));
+            assertTrue(authors.isEmpty());
+        });
+        return Arrays.asList(auth1, auth2);
     }
 }

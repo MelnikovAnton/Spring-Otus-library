@@ -63,15 +63,11 @@ class CommentDaoTest {
     @DisplayName("Получение коментария по книге")
     List<DynamicTest> findByBook() {
         DynamicTest comment1 = DynamicTest.dynamicTest("ID = 1", () -> {
-            Book book = new Book();
-            book.setId(1);
-            List<Comment> comments = assertDoesNotThrow(() -> commentDao.findByBook(book));
+            List<Comment> comments = assertDoesNotThrow(() -> commentDao.findByBookId(1));
             assertEquals(comments.get(0).getId(), 1);
         });
         DynamicTest comment2 = DynamicTest.dynamicTest("ID = Integer.MAX_VALUE+1", () -> {
-            Book book = new Book();
-            book.setId(Integer.MAX_VALUE + 1);
-            List<Comment> comment = assertDoesNotThrow(() -> commentDao.findByBook(book));
+            List<Comment> comment = assertDoesNotThrow(() -> commentDao.findByBookId(Integer.MAX_VALUE + 1));
             assertTrue(comment.isEmpty());
         });
         return Arrays.asList(comment1, comment2);

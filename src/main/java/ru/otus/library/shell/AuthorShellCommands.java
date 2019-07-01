@@ -43,10 +43,12 @@ public class AuthorShellCommands {
 
     @ShellMethod(value = "find Authors", key = {"findAuthors", "fa"})
     private Table findAuthors(@ShellOption(value = {"-i", "--id"}, defaultValue = "-1") long id,
+                              @ShellOption(value = {"-b", "--book-id"}, defaultValue = "-1") long book_id,
                               @ShellOption(value = {"-n", "--name"}, defaultValue = "") String name) {
 
         List<Author> authors = new ArrayList<>();
         if (id > 0) authorService.findById(id).ifPresent(authors::add);
+        if (book_id > 0) authors.addAll(authorService.findByBookId(book_id));
         if (!name.isEmpty()) authors.addAll(authorService.findAuthorsByName(name));
         return getAuthorsTable(authors);
     }

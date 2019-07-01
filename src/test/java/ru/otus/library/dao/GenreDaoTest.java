@@ -101,4 +101,19 @@ class GenreDaoTest {
         });
         return Arrays.asList(empty, part, full, noMatch);
     }
+
+    @TestFactory
+    @DisplayName("Поиск по Id книги")
+    List<DynamicTest> findByBookId() {
+        DynamicTest auth1 = DynamicTest.dynamicTest("ID = 1", () -> {
+            List<Genre> authors = assertDoesNotThrow(() -> genreDao.findByBookId(1));
+            assertEquals(1, authors.size());
+            assertEquals(authors.get(0).getId(), 1);
+        });
+        DynamicTest auth2 = DynamicTest.dynamicTest("ID = Integer.MAX_VALUE+1", () -> {
+            List<Genre> authors = assertDoesNotThrow(() -> genreDao.findByBookId(Integer.MAX_VALUE + 1));
+            assertTrue(authors.isEmpty());
+        });
+        return Arrays.asList(auth1, auth2);
+    }
 }

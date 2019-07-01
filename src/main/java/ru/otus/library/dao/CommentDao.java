@@ -1,6 +1,5 @@
 package ru.otus.library.dao;
 
-import ru.otus.library.model.Book;
 import ru.otus.library.model.Comment;
 
 import java.util.List;
@@ -11,7 +10,7 @@ public interface CommentDao {
 
     void insert(Comment comment);
 
-    List<Comment> findByBook(Book book);
+    List<Comment> findByBookId(long id);
 
     List<Comment> findAll();
 

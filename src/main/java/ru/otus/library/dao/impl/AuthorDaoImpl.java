@@ -57,9 +57,8 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public List<Author> findByBookId(long id) {
-        Query query = em.createQuery("select a from Author a " +
-                "join Book b" +
-                " where b.id = :id");
+        Query query = em.createQuery("select b.authors from Book b " +
+                "where  b.id = :id");
         query.setParameter("id", id);
         return query.getResultList();
     }
