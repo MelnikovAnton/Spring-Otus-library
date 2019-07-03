@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.library.dao.GenreDao;
-import ru.otus.library.model.Author;
 import ru.otus.library.model.Genre;
 
 import javax.persistence.EntityManager;
@@ -44,7 +43,7 @@ public class GenreDaoImpl implements GenreDao {
 
     @Override
     public void delete(Genre genre) {
-        em.remove(em.contains(genre)?genre:em.merge(genre));
+        em.remove(em.contains(genre) ? genre : em.merge(genre));
     }
 
     @Override

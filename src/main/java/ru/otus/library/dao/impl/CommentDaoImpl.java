@@ -30,7 +30,7 @@ public class CommentDaoImpl implements CommentDao {
 
     @Override
     public void insert(Comment comment) {
-        em.persist(comment);
+       em.persist(comment);
     }
 
     @Override

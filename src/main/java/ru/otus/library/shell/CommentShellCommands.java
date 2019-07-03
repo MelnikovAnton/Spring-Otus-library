@@ -31,7 +31,7 @@ public class CommentShellCommands {
 
 
     @ShellMethod(value = "delete Comment", key = {"deleteComment", "delc"})
-    private String deleteGenre(@ShellOption(value = {"-i", "--id"}) long id) {
+    private String deleteComment(@ShellOption(value = {"-i", "--id"}) long id) {
         Optional<Comment> oComment = commentService.findById(id);
         if (oComment.isEmpty()) return "no comment with id " + id;
         long r = commentService.delete(oComment.get());
@@ -65,20 +65,20 @@ public class CommentShellCommands {
             Optional<Book> book = bookService.findById(book_id);
             if (book.isEmpty()) {
                 log.warn("No book with id {}", book_id);
-                return getGenresTable(comments);
+                return getCommentTable(comments);
             }
             comments.addAll(commentService.findCommentsByBook(book.get()));
         }
-        return getGenresTable(comments);
+        return getCommentTable(comments);
     }
 
     @ShellMethod(value = "find all Comments", key = {"findAllComments", "fca"})
     private Table findAllComments() {
         List<Comment> comments = commentService.findAll();
-        return getGenresTable(comments);
+        return getCommentTable(comments);
     }
 
-    private Table getGenresTable(List<Comment> comments) {
+    private Table getCommentTable(List<Comment> comments) {
         TableModelBuilder<Object> modelBuilder = new TableModelBuilder<>();
         modelBuilder.addRow()
                 .addValue("id")

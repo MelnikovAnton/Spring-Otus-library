@@ -45,7 +45,7 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public void delete(Author author) {
-        em.remove(em.contains(author)?author:em.merge(author));
+        em.remove(em.contains(author) ? author : em.merge(author));
     }
 
     @Override
@@ -62,11 +62,4 @@ public class AuthorDaoImpl implements AuthorDao {
         query.setParameter("id", id);
         return query.getResultList();
     }
-
-//    private void deleteAuthorRelation(Author genre) {
-//        final Map<String, Object> params = new HashMap<>(1);
-//        params.put("authorId", genre.getId());
-//        String query = "delete from author_book where author_id = :authorId;";
-//        jdbc.update(query, params);
-//    }
 }

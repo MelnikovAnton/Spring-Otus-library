@@ -13,6 +13,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import ru.otus.library.dao.impl.AuthorDaoImpl;
 import ru.otus.library.model.Author;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +29,9 @@ class AuthorDaoTest {
     @Autowired
     private AuthorDao authorDao;
 
+    @PersistenceContext
+    private EntityManager em;
+
     @Test
     @DisplayName("Получениене количества авторов")
     void count() {
@@ -40,7 +45,13 @@ class AuthorDaoTest {
     void insert() {
         Author author = new Author("ewq");
         assertDoesNotThrow(() -> authorDao.insert(author));
-        assertTrue(author.getId() > 0);
+
+        em.refresh(author);
+        em.detach(author);
+        Optional<Author> result = assertDoesNotThrow(() -> authorDao.getById(author.getId()));
+        assertTrue(result.isPresent());
+        assertEquals(author,result.get());
+
     }
 
     @TestFactory
@@ -72,10 +83,12 @@ class AuthorDaoTest {
         DynamicTest delExists = DynamicTest.dynamicTest("Удаление существующего автора", () -> {
             author.setId(1);
             assertDoesNotThrow(() -> authorDao.delete(author));
+            Optional<Author> result = assertDoesNotThrow(() -> authorDao.getById(1));
+            assertTrue(result.isEmpty());
         });
 
         DynamicTest delDoseNotExists = DynamicTest.dynamicTest("Удаление не существующего автора", () -> {
-            author.setId(10);
+            author.setId(Integer.MAX_VALUE+1);
             assertDoesNotThrow(() -> authorDao.delete(author));
         });
 

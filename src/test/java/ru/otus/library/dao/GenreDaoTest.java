@@ -11,6 +11,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import ru.otus.library.dao.impl.GenreDaoImpl;
 import ru.otus.library.model.Genre;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +25,9 @@ class GenreDaoTest {
 
     @Autowired
     private GenreDao genreDao;
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Test
     @DisplayName("Получениене количества жанров")
@@ -37,7 +42,12 @@ class GenreDaoTest {
     void insert() {
         Genre genre = new Genre("ewq");
         assertDoesNotThrow(() -> genreDao.insert(genre));
-        assertTrue(genre.getId() > 0);
+
+        em.refresh(genre);
+        em.detach(genre);
+        Optional<Genre> result = assertDoesNotThrow(() -> genreDao.getById(genre.getId()));
+        assertTrue(result.isPresent());
+        assertEquals(genre,result.get());
     }
 
     @TestFactory
@@ -69,6 +79,8 @@ class GenreDaoTest {
         DynamicTest delExists = DynamicTest.dynamicTest("Удаление существующего жанра", () -> {
             genre.setId(1);
             assertDoesNotThrow(() -> genreDao.delete(genre));
+            Optional<Genre> result = assertDoesNotThrow(() -> genreDao.getById(1));
+            assertTrue(result.isEmpty());
         });
 
         DynamicTest delDoseNotExists = DynamicTest.dynamicTest("Удаление не существующего жанра", () -> {

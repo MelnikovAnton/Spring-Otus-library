@@ -22,9 +22,6 @@ public class Genre {
     @Column
     private String name;
 
-//    @ManyToMany(mappedBy = "books")
-//    private Set<Book> books = new HashSet<>();
-
     public Genre(String name) {
         this.name = name;
     }

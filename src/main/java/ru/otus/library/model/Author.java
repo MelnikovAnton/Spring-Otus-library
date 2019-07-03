@@ -22,10 +22,6 @@ public class Author {
     @Column
     private String name;
 
-
-//    @ManyToMany(mappedBy = "books")
-//    private Set<Book> books = new HashSet<>();
-
     public Author(String name) {
         this.name = name;
     }

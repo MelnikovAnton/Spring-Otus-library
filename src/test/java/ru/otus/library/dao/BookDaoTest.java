@@ -16,6 +16,8 @@ import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Genre;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +33,9 @@ class BookDaoTest {
     @Autowired
     private BookDao bookDao;
 
+    @PersistenceContext
+    private EntityManager em;
+
     @Test
     @DisplayName("Получениене количества книг")
     void count() {
@@ -43,7 +48,13 @@ class BookDaoTest {
     void insert() {
         Book book = new Book("qwe", "ewq");
         assertDoesNotThrow(() -> bookDao.insert(book));
-        assertTrue(book.getId() > 0);
+
+        em.refresh(book);
+        em.detach(book);
+
+        Optional<Book> result = assertDoesNotThrow(() -> bookDao.getById(book.getId()));
+        assertTrue(result.isPresent());
+        assertEquals(book,result.get());
     }
 
     @TestFactory
@@ -76,6 +87,7 @@ class BookDaoTest {
         DynamicTest delExists = DynamicTest.dynamicTest("Удаление существующей книги", () -> {
             book.setId(1);
            assertDoesNotThrow(() -> bookDao.delete(book));
+           assertTrue(bookDao.getById(1).isEmpty());
 
         });
 

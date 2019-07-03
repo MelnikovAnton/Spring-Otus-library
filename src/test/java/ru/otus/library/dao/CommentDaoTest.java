@@ -11,6 +11,8 @@ import ru.otus.library.dao.impl.CommentDaoImpl;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Comment;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +26,9 @@ class CommentDaoTest {
     @Autowired
     private CommentDao commentDao;
 
+    @PersistenceContext
+    private EntityManager em;
+
     @Test
     @DisplayName("Получениене количества комментариев")
     void count() {
@@ -34,15 +39,21 @@ class CommentDaoTest {
     @TestFactory
     @DisplayName("Добавление коментария")
     List<DynamicTest> insert() {
-        DynamicTest correct = DynamicTest.dynamicTest("Добавление коментария к существующей книге", () -> {
+        DynamicTest correct = DynamicTest.dynamicTest("Добавление коментария и чтение к существующей книге", () -> {
             Book book = new Book();
             book.setId(1);
             Comment comment = new Comment();
             comment.setBook(book);
             assertDoesNotThrow(() -> commentDao.insert(comment));
-            assertTrue(comment.getId() > 0);
+
+            em.refresh(comment);
+            em.detach(comment);
+
+            Optional<Comment> result = commentDao.findById(comment.getId());
+            assertTrue(result.isPresent());
+            assertEquals(comment, result.get());
         });
-        DynamicTest commentWithoutBook = DynamicTest.dynamicTest("Добавление коментария без книге", () -> {
+        DynamicTest commentWithoutBook = DynamicTest.dynamicTest("Добавление коментария без книги", () -> {
             Comment comment = new Comment();
             assertThrows(RuntimeException.class, () -> commentDao.insert(comment));
             assertFalse(comment.getId() > 0);
@@ -103,12 +114,14 @@ class CommentDaoTest {
         DynamicTest delExists = DynamicTest.dynamicTest("Удаление существующего коментария", () -> {
             comment.setId(1);
             assertDoesNotThrow(() -> commentDao.delete(comment));
+            assertTrue(commentDao.findByBookId(1).isEmpty());
 
         });
 
         DynamicTest delDoseNotExists = DynamicTest.dynamicTest("Удаление не существующего коментария", () -> {
             comment.setId(Integer.MAX_VALUE + 1);
             assertDoesNotThrow(() -> commentDao.delete(comment));
+            assertTrue(commentDao.findById(Integer.MAX_VALUE + 1).isEmpty());
         });
 
         return Arrays.asList(delExists, delDoseNotExists);
