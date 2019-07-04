@@ -61,7 +61,7 @@ public class BookShellCommands {
         Optional<Book> oBook = bookService.findById(id);
         if (oBook.isEmpty()) return "no book with id " + id;
         long r = bookService.delete(oBook.get());
-        return "Book deleted rows=" + r;
+        return "Book deleted id=" + r;
     }
 
     @ShellMethod(value = "add Book", key = {"addBook", "addb"})

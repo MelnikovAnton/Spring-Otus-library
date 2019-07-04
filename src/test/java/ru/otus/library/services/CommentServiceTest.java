@@ -11,7 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.shell.jline.InteractiveShellApplicationRunner;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.otus.library.dao.CommentDao;
+import ru.otus.library.repository.CommentRepository;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Comment;
 
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.*;
 class CommentServiceTest {
 
     @MockBean
-    private CommentDao commentDao;
+    private CommentRepository commentRepository;
     @Autowired
     private CommentService commentService;
 
@@ -42,7 +42,7 @@ class CommentServiceTest {
             Comment c = inv.getArgument(0);
             c.setId(1);
             return c;
-        }).when(commentDao).save(any(Comment.class));
+        }).when(commentRepository).save(any(Comment.class));
 
         Comment c  = assertDoesNotThrow(() -> commentService.saveComment(comment));
         assertEquals(c, comment);
@@ -52,14 +52,14 @@ class CommentServiceTest {
     @Test
     void findCommentsByBook() {
         Book book = new Book("Test","Test");
-        when(commentDao.findByBookId(anyLong())).thenReturn(getTestComments());
+        when(commentRepository.findByBookId(anyLong())).thenReturn(getTestComments());
         assertEquals(getTestComments(),commentService.findCommentsByBook(book));
     }
 
 
     @Test
     void findAll() {
-        when(commentDao.findAll()).thenReturn(getTestComments());
+        when(commentRepository.findAll()).thenReturn(getTestComments());
 
         List<Comment> comments = assertDoesNotThrow(() -> commentService.findAll());
         assertEquals(getTestComments(), comments);
@@ -69,12 +69,12 @@ class CommentServiceTest {
     @DisplayName("Поиск по ID")
     List<DynamicTest> findById() {
         DynamicTest isPresent = DynamicTest.dynamicTest("Коментарий найден", () -> {
-            when(commentDao.findById(anyLong())).thenReturn(Optional.of(new Comment()));
+            when(commentRepository.findById(anyLong())).thenReturn(Optional.of(new Comment()));
             Optional<Comment> genre = commentService.findById(1);
             assertTrue(genre.isPresent());
         });
         DynamicTest isNotPresent = DynamicTest.dynamicTest("Коментарий не найден", () -> {
-            doThrow(new EmptyResultDataAccessException(1)).when(commentDao).findById(anyLong());
+            doThrow(new EmptyResultDataAccessException(1)).when(commentRepository).findById(anyLong());
             Optional<Comment> genre = assertDoesNotThrow(() -> commentService.findById(1));
             assertTrue(genre.isEmpty());
         });
@@ -87,7 +87,7 @@ class CommentServiceTest {
             Comment c = invocation.getArgument(0);
             assertEquals(1, c.getId());
             return null;
-        }).when(commentDao).delete(any(Comment.class));
+        }).when(commentRepository).delete(any(Comment.class));
 
         Comment comment = new Comment();
         comment.setId(1);

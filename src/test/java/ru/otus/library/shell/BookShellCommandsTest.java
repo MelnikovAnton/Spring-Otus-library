@@ -119,7 +119,7 @@ class BookShellCommandsTest {
             when(bookService.findById(anyLong())).thenReturn(Optional.of(getTestBook()));
 
             String r = (String) shell.evaluate(() -> "delb 1");
-            assertTrue(r.contains("Book deleted rows="));
+            assertTrue(r.contains("Book deleted id="));
 
         });
         DynamicTest delWrongBook = DynamicTest.dynamicTest("Удаление книги с неверным ID", () -> {

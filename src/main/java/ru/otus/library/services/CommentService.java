@@ -16,4 +16,6 @@ public interface CommentService {
     Optional<Comment> findById(long id);
 
     long delete(Comment comment);
+
+    void deleteAll(List<Comment> comments);
 }

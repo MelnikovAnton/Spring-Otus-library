@@ -113,7 +113,7 @@ class GenreShellCommandsTest {
             when(genreService.findById(anyLong())).thenReturn(Optional.of(getTestGenre()));
 
             String r = (String) shell.evaluate(() -> "delg 1");
-            assertTrue(r.contains("Genre deleted rows="));
+            assertTrue(r.contains("Genre deleted id="));
 
         });
         DynamicTest delWrongBook = DynamicTest.dynamicTest("Удаление жанра с неверным ID", () -> {

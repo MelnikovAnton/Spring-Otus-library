@@ -31,7 +31,7 @@ public class AuthorShellCommands {
         Optional<Author> oAuthor = authorService.findById(id);
         if (oAuthor.isEmpty()) return "no author with id " + id;
         long r = authorService.delete(oAuthor.get());
-        return "Author deleted rows=" + r;
+        return "Author deleted id=" + r;
     }
 
     @ShellMethod(value = "add Author", key = {"addAuthor", "adda"})

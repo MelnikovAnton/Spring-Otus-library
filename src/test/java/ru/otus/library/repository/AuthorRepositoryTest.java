@@ -1,34 +1,36 @@
-package ru.otus.library.dao;
+package ru.otus.library.repository;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.library.model.Author;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(SpringExtension.class)
 @DataJpaTest
-class AuthorDaoTest {
+class AuthorRepositoryTest {
 
     @Autowired
-    private AuthorDao authorDao;
+    private AuthorRepository authorRepository;
 
-    @PersistenceContext
-    private EntityManager em;
+    @Autowired
+    private TestEntityManager em;
 
     @Test
     @DisplayName("Получениене количества авторов")
     void count() {
-        long count = authorDao.count();
+        long count = authorRepository.count();
         assertEquals(count, 3);
     }
 
@@ -37,11 +39,11 @@ class AuthorDaoTest {
     @DisplayName("Вставка с получением ID")
     void insert() {
         Author author = new Author("ewq");
-        assertDoesNotThrow(() -> authorDao.save(author));
+        assertDoesNotThrow(() -> authorRepository.save(author));
 
         em.refresh(author);
         em.detach(author);
-        Optional<Author> result = assertDoesNotThrow(() -> authorDao.findById(author.getId()));
+        Optional<Author> result = assertDoesNotThrow(() -> authorRepository.findById(author.getId()));
         assertTrue(result.isPresent());
         assertEquals(author, result.get());
 
@@ -51,11 +53,11 @@ class AuthorDaoTest {
     @DisplayName("Получение автора по ID")
     List<DynamicTest> getById() {
         DynamicTest author1 = DynamicTest.dynamicTest("ID = 1", () -> {
-            Author author = assertDoesNotThrow(() -> authorDao.findById(1L).orElseThrow());
+            Author author = assertDoesNotThrow(() -> authorRepository.findById(1L).orElseThrow());
             assertEquals(author.getId(), 1);
         });
         DynamicTest author2 = DynamicTest.dynamicTest("ID = Integer.MAX_VALUE+1", () -> {
-            assertTrue(authorDao.findById(Integer.MAX_VALUE + 1L).isEmpty());
+            assertTrue(authorRepository.findById(Integer.MAX_VALUE + 1L).isEmpty());
 
         });
         return Arrays.asList(author1, author2);
@@ -64,7 +66,7 @@ class AuthorDaoTest {
     @Test
     @DisplayName("Получение всех авторов")
     void getAll() {
-        List<Author> authors = assertDoesNotThrow(() -> authorDao.findAll());
+        List<Author> authors = assertDoesNotThrow(() -> authorRepository.findAll());
         assertEquals(authors.size(), 3);
     }
 
@@ -75,14 +77,14 @@ class AuthorDaoTest {
 
         DynamicTest delExists = DynamicTest.dynamicTest("Удаление существующего автора", () -> {
             author.setId(1);
-            assertDoesNotThrow(() -> authorDao.delete(author));
-            Optional<Author> result = assertDoesNotThrow(() -> authorDao.findById(1L));
+            assertDoesNotThrow(() -> authorRepository.delete(author));
+            Optional<Author> result = assertDoesNotThrow(() -> authorRepository.findById(1L));
             assertTrue(result.isEmpty());
         });
 
         DynamicTest delDoseNotExists = DynamicTest.dynamicTest("Удаление не существующего автора", () -> {
             author.setId(Integer.MAX_VALUE + 1);
-            assertDoesNotThrow(() -> authorDao.delete(author));
+            assertDoesNotThrow(() -> authorRepository.delete(author));
         });
 
         return Arrays.asList(delExists, delDoseNotExists);
@@ -92,20 +94,20 @@ class AuthorDaoTest {
     @DisplayName("Поиск по имени автора")
     List<DynamicTest> findAuthorsByName() {
         DynamicTest empty = DynamicTest.dynamicTest("Пустое имя", () -> {
-            List<Author> authors = assertDoesNotThrow(() -> authorDao.findByNameContaining(""));
+            List<Author> authors = assertDoesNotThrow(() -> authorRepository.findByNameContaining(""));
             assertEquals(authors.size(), 3);
         });
         DynamicTest part = DynamicTest.dynamicTest("Часть имени", () -> {
-            List<Author> authors = assertDoesNotThrow(() -> authorDao.findByNameContaining("uth"));
+            List<Author> authors = assertDoesNotThrow(() -> authorRepository.findByNameContaining("uth"));
             assertEquals(authors.size(), 3);
         });
         DynamicTest full = DynamicTest.dynamicTest("Полное имя", () -> {
-            List<Author> authors = assertDoesNotThrow(() -> authorDao.findByNameContaining("Author 3"));
+            List<Author> authors = assertDoesNotThrow(() -> authorRepository.findByNameContaining("Author 3"));
             assertEquals(authors.size(), 1);
             assertEquals(authors.get(0).getId(), 3);
         });
         DynamicTest noMatch = DynamicTest.dynamicTest("Не совпадающее имя", () -> {
-            List<Author> authors = assertDoesNotThrow(() -> authorDao.findByNameContaining("\"!№;%:?*:;%;№\""));
+            List<Author> authors = assertDoesNotThrow(() -> authorRepository.findByNameContaining("\"!№;%:?*:;%;№\""));
             assertEquals(authors.size(), 0);
         });
         return Arrays.asList(empty, part, full, noMatch);
@@ -115,12 +117,12 @@ class AuthorDaoTest {
     @DisplayName("Поиск по Id книги")
     List<DynamicTest> findByBookId() {
         DynamicTest auth1 = DynamicTest.dynamicTest("ID = 1", () -> {
-            List<Author> authors = assertDoesNotThrow(() -> authorDao.findByBookId(1L));
+            List<Author> authors = assertDoesNotThrow(() -> authorRepository.findByBookId(1L));
             assertEquals(1, authors.size());
             assertEquals(authors.get(0).getId(), 1);
         });
         DynamicTest auth2 = DynamicTest.dynamicTest("ID = Integer.MAX_VALUE+1", () -> {
-            List<Author> authors = assertDoesNotThrow(() -> authorDao.findByBookId(Integer.MAX_VALUE + 1L));
+            List<Author> authors = assertDoesNotThrow(() -> authorRepository.findByBookId(Integer.MAX_VALUE + 1L));
             assertTrue(authors.isEmpty());
         });
         return Arrays.asList(auth1, auth2);

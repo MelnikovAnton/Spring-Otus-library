@@ -98,7 +98,7 @@ class AuthorShellCommandsTest {
             when(authorService.findById(anyLong())).thenReturn(Optional.of(getTestAuthor()));
 
             String r = (String) shell.evaluate(() -> "dela 1");
-            assertTrue(r.contains("Author deleted rows="));
+            assertTrue(r.contains("Author deleted id="));
         });
         DynamicTest delWrongBook = DynamicTest.dynamicTest("Удаление автора с неверным ID", () -> {
             when(authorService.findById(anyLong())).thenReturn(Optional.empty());

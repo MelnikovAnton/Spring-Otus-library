@@ -11,7 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.shell.jline.InteractiveShellApplicationRunner;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.otus.library.dao.AuthorDao;
+import ru.otus.library.repository.AuthorRepository;
 import ru.otus.library.model.Author;
 
 import java.util.Arrays;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 class AuthorServiceTest {
 
     @MockBean
-    private AuthorDao authorDao;
+    private AuthorRepository authorRepository;
     @Autowired
     private AuthorService authorService;
 
@@ -39,7 +39,7 @@ class AuthorServiceTest {
             Author a = inv.getArgument(0);
             a.setId(1);
             return a;
-        }).when(authorDao).save(any(Author.class));
+        }).when(authorRepository).save(any(Author.class));
 
         Author a = assertDoesNotThrow(() -> authorService.saveAuthor(author));
         assertEquals(a, author);
@@ -48,7 +48,7 @@ class AuthorServiceTest {
 
     @Test
     void findAuthorsByName() {
-        when(authorDao.findByNameContaining(anyString())).thenReturn(getTestAuthors());
+        when(authorRepository.findByNameContaining(anyString())).thenReturn(getTestAuthors());
         List<Author> authors = authorService.findAuthorsByName("test");
         assertEquals(getTestAuthors(), authors);
     }
@@ -58,12 +58,12 @@ class AuthorServiceTest {
     @DisplayName("Поиск по ID")
     List<DynamicTest> findById() {
         DynamicTest isPresent = DynamicTest.dynamicTest("автор найден", () -> {
-            when(authorDao.findById(anyLong())).thenReturn(Optional.of(new Author("test")));
+            when(authorRepository.findById(anyLong())).thenReturn(Optional.of(new Author("test")));
             Optional<Author> author = authorService.findById(1);
             assertTrue(author.isPresent());
         });
         DynamicTest isNotPresent = DynamicTest.dynamicTest("автор не найден", () -> {
-            doThrow(new EmptyResultDataAccessException(1)).when(authorDao).findById(anyLong());
+            doThrow(new EmptyResultDataAccessException(1)).when(authorRepository).findById(anyLong());
             Optional<Author> author = assertDoesNotThrow(() -> authorService.findById(1));
             assertTrue(author.isEmpty());
         });
@@ -76,7 +76,7 @@ class AuthorServiceTest {
             Author a = invocation.getArgument(0);
             assertEquals(1, a.getId());
             return null;
-        }).when(authorDao).delete(any(Author.class));
+        }).when(authorRepository).delete(any(Author.class));
 
         Author author = new Author("Test");
         author.setId(1);
@@ -86,7 +86,7 @@ class AuthorServiceTest {
 
     @Test
     void findAll() {
-        when(authorDao.findAll()).thenReturn(getTestAuthors());
+        when(authorRepository.findAll()).thenReturn(getTestAuthors());
 
         List<Author> authors = assertDoesNotThrow(() -> authorService.findAll());
         assertEquals(getTestAuthors(), authors);
@@ -95,7 +95,7 @@ class AuthorServiceTest {
 
     @Test
     void findByBookId() {
-        when(authorDao.findByBookId(anyLong())).thenReturn(getTestAuthors());
+        when(authorRepository.findByBookId(anyLong())).thenReturn(getTestAuthors());
         assertEquals(getTestAuthors(),authorService.findByBookId(1));
     }
 

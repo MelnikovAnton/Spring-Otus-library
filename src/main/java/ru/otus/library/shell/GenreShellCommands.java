@@ -32,7 +32,7 @@ public class GenreShellCommands {
         Optional<Genre> oGenre = genreService.findById(id);
         if (oGenre.isEmpty()) return "no genre with id " + id;
         long r = genreService.delete(oGenre.get());
-        return "Genre deleted rows=" + r;
+        return "Genre deleted id=" + r;
     }
 
     @ShellMethod(value = "add Genre", key = {"addGenre", "addg"})

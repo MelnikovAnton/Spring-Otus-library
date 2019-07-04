@@ -11,7 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.shell.jline.InteractiveShellApplicationRunner;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.otus.library.dao.BookDao;
+import ru.otus.library.repository.BookRepository;
 import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Genre;
@@ -32,7 +32,7 @@ class BookServiceTest {
     private BookService bookService;
 
     @MockBean
-    private BookDao bookDao;
+    private BookRepository bookRepository;
     @MockBean
     private AuthorService authorService;
     @MockBean
@@ -47,12 +47,12 @@ class BookServiceTest {
             Book b = (Book) invocation.getArgument(0);
             b.setId(1);
             return b;
-        }).when(bookDao).save(any(Book.class));
+        }).when(bookRepository).save(any(Book.class));
 
         Book b = assertDoesNotThrow(() -> bookService.saveBook(book));
         assertEquals(book, b);
 
-        verify(bookDao, times(1)).save(any(Book.class));
+        verify(bookRepository, times(1)).save(any(Book.class));
         verify(authorService, never()).saveAuthor(any(Author.class));
         verify(genreService, never()).saveGenre(any(Genre.class));
     }
@@ -65,7 +65,7 @@ class BookServiceTest {
             Book b = (Book) invocation.getArgument(0);
             b.setId(1);
             return b;
-        }).when(bookDao).save(any(Book.class));
+        }).when(bookRepository).save(any(Book.class));
 
         Book book = new Book("test", "test");
         book.addGenre(new Genre("Test"));
@@ -74,14 +74,14 @@ class BookServiceTest {
         Book b = assertDoesNotThrow(() -> bookService.saveBook(book));
         assertEquals(book, b);
 
-        verify(bookDao, times(1)).save(any(Book.class));
+        verify(bookRepository, times(1)).save(any(Book.class));
 //        verify(authorService, times(1)).saveAuthor(any(Author.class));
 //        verify(genreService, times(1)).saveGenre(any(Genre.class));
     }
 
     @Test
     void findBooksByTitle() {
-        when(bookDao.findByTitleContaining(anyString())).thenReturn(getTestBooks());
+        when(bookRepository.findByTitleContaining(anyString())).thenReturn(getTestBooks());
         List<Book> books = bookService.findBooksByTitle("test");
         assertEquals(getTestBooks(), books);
     }
@@ -93,14 +93,14 @@ class BookServiceTest {
                         new Author(2, "Auth2"),
                         new Author(3, "Auth3")));
 
-        when(bookDao.getByAuthor(any(Author.class))).thenReturn(getTestBooks());
+        when(bookRepository.getByAuthor(any(Author.class))).thenReturn(getTestBooks());
 
         List<Book> books = assertDoesNotThrow(() -> bookService.findBooksByAuthor("test"));
 
         assertEquals(getTestBooks(), books);
 
         verify(authorService, times(1)).findAuthorsByName("test");
-        verify(bookDao, times(3)).getByAuthor(any(Author.class));
+        verify(bookRepository, times(3)).getByAuthor(any(Author.class));
     }
 
     @Test
@@ -110,28 +110,28 @@ class BookServiceTest {
                         new Genre(2, "Genre2"),
                         new Genre(3, "Genre3")));
 
-        when(bookDao.getByGenre(any(Genre.class))).thenReturn(getTestBooks());
+        when(bookRepository.getByGenre(any(Genre.class))).thenReturn(getTestBooks());
 
         List<Book> books = assertDoesNotThrow(() -> bookService.findBooksByGenre("test"));
 
         assertEquals(getTestBooks(), books);
 
         verify(genreService, times(1)).findGenresByName("test");
-        verify(bookDao, times(3)).getByGenre(any(Genre.class));
+        verify(bookRepository, times(3)).getByGenre(any(Genre.class));
     }
 
     @TestFactory
     @DisplayName("Поиск по ID")
     List<DynamicTest> findById() {
         DynamicTest isPresent = DynamicTest.dynamicTest("Книга найдена", () -> {
-            when(bookDao.findById(anyLong())).thenReturn(Optional.of(new Book("test", "test")));
+            when(bookRepository.findById(anyLong())).thenReturn(Optional.of(new Book("test", "test")));
             Optional<Book> oBook = bookService.findById(1);
-            System.out.println(bookDao.findById(1L));
+            System.out.println(bookRepository.findById(1L));
             System.out.println(oBook);
             assertTrue(oBook.isPresent());
         });
         DynamicTest isNotPresent = DynamicTest.dynamicTest("Книга не найдена", () -> {
-            doThrow(new EmptyResultDataAccessException(1)).when(bookDao).findById(anyLong());
+            doThrow(new EmptyResultDataAccessException(1)).when(bookRepository).findById(anyLong());
             Optional<Book> book = assertDoesNotThrow(() -> bookService.findById(1));
             assertTrue(book.isEmpty());
         });
@@ -144,7 +144,7 @@ class BookServiceTest {
             Book a = invocation.getArgument(0);
             assertEquals(1, a.getId());
             return null;
-        }).when(bookDao).delete(any(Book.class));
+        }).when(bookRepository).delete(any(Book.class));
 
         Book book = new Book("Test","Test");
         book.setId(1);
@@ -154,7 +154,7 @@ class BookServiceTest {
 
     @Test
     void findAll() {
-        when(bookDao.findAll()).thenReturn(getTestBooks());
+        when(bookRepository.findAll()).thenReturn(getTestBooks());
 
         List<Book> books = assertDoesNotThrow(() -> bookService.findAll());
         assertEquals(getTestBooks(), books);
@@ -165,7 +165,7 @@ class BookServiceTest {
     @Test
     void addRelations() {
         assertDoesNotThrow(() -> bookService.addRelations(new Book("Test", "test")));
-        verify(bookDao, times(1)).save(any(Book.class));
+        verify(bookRepository, times(1)).save(any(Book.class));
     }
 
     private List<Book> getTestBooks() {
