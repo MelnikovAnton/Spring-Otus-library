@@ -9,11 +9,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(properties = {
-		InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=false"})
+        InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=false"})
 public class LibraryApplicationTests {
 
-	@Test
-	public void contextLoads() {
-	}
+
+    @Test
+    public void contextLoads() {
+
+    }
 
 }
