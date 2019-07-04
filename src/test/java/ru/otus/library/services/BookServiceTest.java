@@ -47,12 +47,12 @@ class BookServiceTest {
             Book b = (Book) invocation.getArgument(0);
             b.setId(1);
             return null;
-        }).when(bookDao).insert(any(Book.class));
+        }).when(bookDao).save(any(Book.class));
 
         Book b = assertDoesNotThrow(() -> bookService.saveBook(book));
         assertEquals(book, b);
 
-        verify(bookDao, times(1)).insert(any(Book.class));
+        verify(bookDao, times(1)).save(any(Book.class));
         verify(authorService, never()).saveAuthor(any(Author.class));
         verify(genreService, never()).saveGenre(any(Genre.class));
     }
@@ -65,7 +65,7 @@ class BookServiceTest {
             Book b = (Book) invocation.getArgument(0);
             b.setId(1);
             return b;
-        }).when(bookDao).insert(any(Book.class));
+        }).when(bookDao).save(any(Book.class));
 
         Book book = new Book("test", "test");
         book.addGenre(new Genre("Test"));
@@ -74,7 +74,7 @@ class BookServiceTest {
         Book b = assertDoesNotThrow(() -> bookService.saveBook(book));
         assertEquals(book, b);
 
-        verify(bookDao, times(1)).insert(any(Book.class));
+        verify(bookDao, times(1)).save(any(Book.class));
         verify(authorService, times(1)).saveAuthor(any(Author.class));
         verify(genreService, times(1)).saveGenre(any(Genre.class));
     }
@@ -124,14 +124,14 @@ class BookServiceTest {
     @DisplayName("Поиск по ID")
     List<DynamicTest> findById() {
         DynamicTest isPresent = DynamicTest.dynamicTest("Книга найдена", () -> {
-            when(bookDao.getById(anyLong())).thenReturn(Optional.of(new Book("test", "test")));
+            when(bookDao.findById(anyLong())).thenReturn(Optional.of(new Book("test", "test")));
             Optional<Book> oBook = bookService.findById(1);
-            System.out.println(bookDao.getById(1));
+            System.out.println(bookDao.findById(1L));
             System.out.println(oBook);
             assertTrue(oBook.isPresent());
         });
         DynamicTest isNotPresent = DynamicTest.dynamicTest("Книга не найдена", () -> {
-            doThrow(new EmptyResultDataAccessException(1)).when(bookDao).getById(anyLong());
+            doThrow(new EmptyResultDataAccessException(1)).when(bookDao).findById(anyLong());
             Optional<Book> book = assertDoesNotThrow(() -> bookService.findById(1));
             assertTrue(book.isEmpty());
         });
@@ -154,18 +154,18 @@ class BookServiceTest {
 
     @Test
     void findAll() {
-        when(bookDao.getAll()).thenReturn(getTestBooks());
+        when(bookDao.findAll()).thenReturn(getTestBooks());
 
         List<Book> books = assertDoesNotThrow(() -> bookService.findAll());
         assertEquals(getTestBooks(), books);
 
-        //      verify(bookDao, times(1)).getAll();
+        //      verify(bookDao, times(1)).findAll();
     }
 
     @Test
     void addRelations() {
         assertDoesNotThrow(() -> bookService.addRelations(new Book("Test", "test")));
-        verify(bookDao, times(1)).addRelations(any(Book.class));
+        verify(bookDao, times(1)).save(any(Book.class));
     }
 
     private List<Book> getTestBooks() {

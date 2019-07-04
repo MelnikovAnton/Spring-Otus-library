@@ -20,7 +20,7 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public Genre saveGenre(Genre genre) {
-        genreDao.insert(genre);
+        genreDao.save(genre);
         return genre;
     }
 
@@ -32,7 +32,7 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public Optional<Genre> findById(long id) {
         try {
-            return genreDao.getById(id);
+            return genreDao.findById(id);
         } catch (EmptyResultDataAccessException e) {
             log.warn("Return Empty result.", e);
             return Optional.empty();
@@ -47,7 +47,7 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public List<Genre> findAll() {
-        return genreDao.getAll();
+        return genreDao.findAll();
     }
 
     @Override

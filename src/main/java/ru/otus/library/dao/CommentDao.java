@@ -1,20 +1,16 @@
 package ru.otus.library.dao;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import ru.otus.library.model.Comment;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface CommentDao {
-    long count();
+@Repository
+public interface CommentDao extends JpaRepository<Comment,Long> {
 
-    void insert(Comment comment);
-
-    List<Comment> findByBookId(long id);
-
-    List<Comment> findAll();
-
-    Optional<Comment> findById(long id);
-
-    void delete(Comment comment);
+    @Query("select c from Comment c where c.book.id = :id")
+    List<Comment> findByBookId(Long id);
 }

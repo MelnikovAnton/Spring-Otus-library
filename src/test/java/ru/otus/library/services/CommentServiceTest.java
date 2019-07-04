@@ -14,7 +14,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.library.dao.CommentDao;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Comment;
-import ru.otus.library.services.CommentService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +42,7 @@ class CommentServiceTest {
             Comment c = inv.getArgument(0);
             c.setId(1);
             return null;
-        }).when(commentDao).insert(any(Comment.class));
+        }).when(commentDao).save(any(Comment.class));
 
         Comment c  = assertDoesNotThrow(() -> commentService.saveComment(comment));
         assertEquals(c, comment);

@@ -6,9 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.dao.EmptyResultDataAccessException;
-import ru.otus.library.dao.impl.GenreDaoImpl;
 import ru.otus.library.model.Genre;
 
 import javax.persistence.EntityManager;
@@ -20,7 +17,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@Import({GenreDaoImpl.class})
 class GenreDaoTest {
 
     @Autowired
@@ -41,24 +37,24 @@ class GenreDaoTest {
     @DisplayName("Вставка с получением ID")
     void insert() {
         Genre genre = new Genre("ewq");
-        assertDoesNotThrow(() -> genreDao.insert(genre));
+        assertDoesNotThrow(() -> genreDao.save(genre));
 
         em.refresh(genre);
         em.detach(genre);
-        Optional<Genre> result = assertDoesNotThrow(() -> genreDao.getById(genre.getId()));
+        Optional<Genre> result = assertDoesNotThrow(() -> genreDao.findById(genre.getId()));
         assertTrue(result.isPresent());
-        assertEquals(genre,result.get());
+        assertEquals(genre, result.get());
     }
 
     @TestFactory
     @DisplayName("Получение жанра по ID")
     List<DynamicTest> getById() {
         DynamicTest genre1 = DynamicTest.dynamicTest("ID = 1", () -> {
-            Genre genre = assertDoesNotThrow(() -> genreDao.getById(1).orElseThrow());
+            Genre genre = assertDoesNotThrow(() -> genreDao.findById(1L).orElseThrow());
             assertEquals(genre.getId(), 1);
         });
         DynamicTest genre2 = DynamicTest.dynamicTest("ID = 10", () -> {
-            Optional<Genre> genre = assertDoesNotThrow(() -> genreDao.getById(Integer.MAX_VALUE + 1));
+            Optional<Genre> genre = assertDoesNotThrow(() -> genreDao.findById(Integer.MAX_VALUE + 1L));
             assertTrue(genre.isEmpty());
         });
         return Arrays.asList(genre1, genre2);
@@ -67,7 +63,7 @@ class GenreDaoTest {
     @Test
     @DisplayName("Получение всех жанров")
     void getAll() {
-        List<Genre> genres = assertDoesNotThrow(() -> genreDao.getAll());
+        List<Genre> genres = assertDoesNotThrow(() -> genreDao.findAll());
         assertEquals(genres.size(), 4);
     }
 
@@ -79,12 +75,12 @@ class GenreDaoTest {
         DynamicTest delExists = DynamicTest.dynamicTest("Удаление существующего жанра", () -> {
             genre.setId(1);
             assertDoesNotThrow(() -> genreDao.delete(genre));
-            Optional<Genre> result = assertDoesNotThrow(() -> genreDao.getById(1));
+            Optional<Genre> result = assertDoesNotThrow(() -> genreDao.findById(1L));
             assertTrue(result.isEmpty());
         });
 
         DynamicTest delDoseNotExists = DynamicTest.dynamicTest("Удаление не существующего жанра", () -> {
-            genre.setId(Integer.MAX_VALUE + 1);
+            genre.setId(Integer.MAX_VALUE + 1L);
             assertDoesNotThrow(() -> genreDao.delete(genre));
         });
 

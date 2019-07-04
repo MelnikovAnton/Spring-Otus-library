@@ -5,13 +5,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.dao.EmptyResultDataAccessException;
-import ru.otus.library.dao.impl.AuthorDaoImpl;
-import ru.otus.library.dao.impl.BookDaoImpl;
-import ru.otus.library.dao.impl.GenreDaoImpl;
 import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Genre;
@@ -26,8 +20,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @DataJpaTest
-@Import({BookDaoImpl.class,
-        GenreDaoImpl.class, AuthorDaoImpl.class})
 class BookDaoTest {
 
     @Autowired
@@ -47,25 +39,25 @@ class BookDaoTest {
     @DisplayName("Вставка с получением ID")
     void insert() {
         Book book = new Book("qwe", "ewq");
-        assertDoesNotThrow(() -> bookDao.insert(book));
+        assertDoesNotThrow(() -> bookDao.save(book));
 
         em.refresh(book);
         em.detach(book);
 
-        Optional<Book> result = assertDoesNotThrow(() -> bookDao.getById(book.getId()));
+        Optional<Book> result = assertDoesNotThrow(() -> bookDao.findById(book.getId()));
         assertTrue(result.isPresent());
-        assertEquals(book,result.get());
+        assertEquals(book, result.get());
     }
 
     @TestFactory
     @DisplayName("Получение книги по ID")
     List<DynamicTest> getById() {
         DynamicTest book1 = DynamicTest.dynamicTest("ID = 1", () -> {
-            Book book = assertDoesNotThrow(() -> bookDao.getById(1).orElseThrow());
+            Book book = assertDoesNotThrow(() -> bookDao.findById(1L).orElseThrow());
             assertEquals(book.getId(), 1);
         });
         DynamicTest book2 = DynamicTest.dynamicTest("ID = Integer.MAX_VALUE+1", () -> {
-            Optional<Book> book = assertDoesNotThrow(() -> bookDao.getById(Integer.MAX_VALUE+1));
+            Optional<Book> book = assertDoesNotThrow(() -> bookDao.findById(Integer.MAX_VALUE + 1L));
             assertTrue(book.isEmpty());
         });
         return Arrays.asList(book1, book2);
@@ -75,7 +67,7 @@ class BookDaoTest {
     @Test
     @DisplayName("Получение всех книг")
     void getAll() {
-        List<Book> books = assertDoesNotThrow(() -> bookDao.getAll());
+        List<Book> books = assertDoesNotThrow(() -> bookDao.findAll());
         assertEquals(books.size(), 3);
     }
 
@@ -86,13 +78,13 @@ class BookDaoTest {
 
         DynamicTest delExists = DynamicTest.dynamicTest("Удаление существующей книги", () -> {
             book.setId(1);
-           assertDoesNotThrow(() -> bookDao.delete(book));
-           assertTrue(bookDao.getById(1).isEmpty());
+            assertDoesNotThrow(() -> bookDao.delete(book));
+            assertTrue(bookDao.findById(1L).isEmpty());
 
         });
 
         DynamicTest delDoseNotExists = DynamicTest.dynamicTest("Удаление не существующей книги", () -> {
-            book.setId(Integer.MAX_VALUE+1);
+            book.setId(Integer.MAX_VALUE + 1);
             assertDoesNotThrow(() -> bookDao.delete(book));
         });
 
@@ -167,7 +159,7 @@ class BookDaoTest {
     @Test
     @DisplayName("Добавление авторов и жанров в книгу")
     void addRelations() {
-        Book book = bookDao.getById(1).orElseThrow();
+        Book book = bookDao.findById(1L).orElseThrow();
 
         Genre genre = new Genre("Genre3");
         genre.setId(3);
@@ -181,7 +173,7 @@ class BookDaoTest {
         book.addAuthor(author);
         book.addGenre(genre);
 
-        assertDoesNotThrow(() -> bookDao.addRelations(book));
+        assertDoesNotThrow(() -> bookDao.save(book));
 
         assertTrue(bookDao.getByGenre(genre).contains(book));
         assertTrue(bookDao.getByAuthor(author).contains(book));

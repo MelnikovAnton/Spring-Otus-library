@@ -40,7 +40,7 @@ class GenreServiceTest {
             Genre g = inv.getArgument(0);
             g.setId(1);
             return null;
-        }).when(genreDao).insert(any(Genre.class));
+        }).when(genreDao).save(any(Genre.class));
 
         Genre g  = assertDoesNotThrow(() -> genreService.saveGenre(genre));
         assertEquals(g, genre);
@@ -56,7 +56,7 @@ class GenreServiceTest {
 
     @Test
     void findAll() {
-        when(genreDao.getAll()).thenReturn(getTestGenres());
+        when(genreDao.findAll()).thenReturn(getTestGenres());
 
         List<Genre> genres = assertDoesNotThrow(() -> genreService.findAll());
         assertEquals(getTestGenres(), genres);
@@ -66,12 +66,12 @@ class GenreServiceTest {
     @DisplayName("Поиск по ID")
     List<DynamicTest> findById() {
         DynamicTest isPresent = DynamicTest.dynamicTest("Жанр найден", () -> {
-            when(genreDao.getById(anyLong())).thenReturn(Optional.of(new Genre("test")));
+            when(genreDao.findById(anyLong())).thenReturn(Optional.of(new Genre("test")));
             Optional<Genre> genre = genreService.findById(1);
             assertTrue(genre.isPresent());
         });
         DynamicTest isNotPresent = DynamicTest.dynamicTest("Жанр не найден", () -> {
-            doThrow(new EmptyResultDataAccessException(1)).when(genreDao).getById(anyLong());
+            doThrow(new EmptyResultDataAccessException(1)).when(genreDao).findById(anyLong());
             Optional<Genre> genre = assertDoesNotThrow(() -> genreService.findById(1));
             assertTrue(genre.isEmpty());
         });

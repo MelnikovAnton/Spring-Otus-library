@@ -38,7 +38,7 @@ public class BookServiceImpl implements BookService {
                 .filter(a -> a.getId() <= 0)
                 .map(genreService::saveGenre)
                 .collect(Collectors.toList());
-         bookDao.insert(book);
+         bookDao.save(book);
          return book;
     }
 
@@ -71,7 +71,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Optional<Book> findById(long id) {
         try {
-            return bookDao.getById(id);
+            return bookDao.findById(id);
         } catch (EmptyResultDataAccessException e) {
             log.warn("Return Empty result.", e);
             return Optional.empty();
@@ -87,11 +87,11 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> findAll() {
-        return bookDao.getAll();
+        return bookDao.findAll();
     }
 
     @Override
     public void addRelations(Book book) {
-        bookDao.addRelations(book);
+        bookDao.save(book);
     }
 }

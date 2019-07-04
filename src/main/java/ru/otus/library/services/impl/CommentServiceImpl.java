@@ -22,7 +22,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment saveComment(Comment comment) {
-        commentDao.insert(comment);
+        commentDao.save(comment);
         return comment;
     }
 

@@ -39,7 +39,7 @@ class AuthorServiceTest {
             Author a = inv.getArgument(0);
             a.setId(1);
             return null;
-        }).when(authorDao).insert(any(Author.class));
+        }).when(authorDao).save(any(Author.class));
 
         Author a = assertDoesNotThrow(() -> authorService.saveAuthor(author));
         assertEquals(a, author);
@@ -58,12 +58,12 @@ class AuthorServiceTest {
     @DisplayName("Поиск по ID")
     List<DynamicTest> findById() {
         DynamicTest isPresent = DynamicTest.dynamicTest("автор найден", () -> {
-            when(authorDao.getById(anyLong())).thenReturn(Optional.of(new Author("test")));
+            when(authorDao.findById(anyLong())).thenReturn(Optional.of(new Author("test")));
             Optional<Author> author = authorService.findById(1);
             assertTrue(author.isPresent());
         });
         DynamicTest isNotPresent = DynamicTest.dynamicTest("автор не найден", () -> {
-            doThrow(new EmptyResultDataAccessException(1)).when(authorDao).getById(anyLong());
+            doThrow(new EmptyResultDataAccessException(1)).when(authorDao).findById(anyLong());
             Optional<Author> author = assertDoesNotThrow(() -> authorService.findById(1));
             assertTrue(author.isEmpty());
         });
@@ -86,7 +86,7 @@ class AuthorServiceTest {
 
     @Test
     void findAll() {
-        when(authorDao.getAll()).thenReturn(getTestAuthors());
+        when(authorDao.findAll()).thenReturn(getTestAuthors());
 
         List<Author> authors = assertDoesNotThrow(() -> authorService.findAll());
         assertEquals(getTestAuthors(), authors);
