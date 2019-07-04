@@ -5,9 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import ru.otus.library.dao.BookDao;
-import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
-import ru.otus.library.model.Genre;
 import ru.otus.library.services.AuthorService;
 import ru.otus.library.services.BookService;
 import ru.otus.library.services.GenreService;
@@ -30,16 +28,15 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book saveBook(Book book) {
-        List<Author> addedAuthors = book.getAuthors().stream()
-                .filter(a -> a.getId() <= 0)
-                .map(authorService::saveAuthor)
-                .collect(Collectors.toList());
-        List<Genre> addedGenres = book.getGenres().stream()
-                .filter(a -> a.getId() <= 0)
-                .map(genreService::saveGenre)
-                .collect(Collectors.toList());
-         bookDao.save(book);
-         return book;
+//        List<Author> addedAuthors = book.getAuthors().stream()
+//                .filter(a -> a.getId() <= 0)
+//                .map(authorService::saveAuthor)
+//                .collect(Collectors.toList());
+//        List<Genre> addedGenres = book.getGenres().stream()
+//                .filter(a -> a.getId() <= 0)
+//                .map(genreService::saveGenre)
+//                .collect(Collectors.toList());
+        return bookDao.save(book);
     }
 
     @Override
@@ -81,8 +78,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public long delete(Book book) {
-         bookDao.delete(book);
-         return book.getId();
+        bookDao.delete(book);
+        return book.getId();
     }
 
     @Override

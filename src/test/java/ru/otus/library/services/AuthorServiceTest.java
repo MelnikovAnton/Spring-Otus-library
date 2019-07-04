@@ -38,7 +38,7 @@ class AuthorServiceTest {
         doAnswer(inv -> {
             Author a = inv.getArgument(0);
             a.setId(1);
-            return null;
+            return a;
         }).when(authorDao).save(any(Author.class));
 
         Author a = assertDoesNotThrow(() -> authorService.saveAuthor(author));

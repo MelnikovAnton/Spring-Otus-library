@@ -39,7 +39,7 @@ class GenreServiceTest {
         doAnswer(inv -> {
             Genre g = inv.getArgument(0);
             g.setId(1);
-            return null;
+            return g;
         }).when(genreDao).save(any(Genre.class));
 
         Genre g  = assertDoesNotThrow(() -> genreService.saveGenre(genre));

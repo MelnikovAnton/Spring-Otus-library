@@ -22,8 +22,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment saveComment(Comment comment) {
-        commentDao.save(comment);
-        return comment;
+        return commentDao.save(comment);
+
     }
 
     @Override

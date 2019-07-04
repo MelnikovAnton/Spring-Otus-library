@@ -20,8 +20,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Author saveAuthor(Author author) {
-        authorDao.save(author);
-        return author;
+        return authorDao.save(author);
     }
 
     @Override

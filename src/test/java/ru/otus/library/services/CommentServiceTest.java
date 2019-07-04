@@ -41,7 +41,7 @@ class CommentServiceTest {
         doAnswer(inv -> {
             Comment c = inv.getArgument(0);
             c.setId(1);
-            return null;
+            return c;
         }).when(commentDao).save(any(Comment.class));
 
         Comment c  = assertDoesNotThrow(() -> commentService.saveComment(comment));

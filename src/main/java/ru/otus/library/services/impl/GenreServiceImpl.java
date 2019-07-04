@@ -20,8 +20,7 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public Genre saveGenre(Genre genre) {
-        genreDao.save(genre);
-        return genre;
+        return genreDao.save(genre);
     }
 
     @Override
