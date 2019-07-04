@@ -20,7 +20,8 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Author saveAuthor(Author author) {
-        return authorDao.insert(author);
+        authorDao.insert(author);
+        return author;
     }
 
     @Override
@@ -29,7 +30,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Optional<Author> findById(int id) {
+    public Optional<Author> findById(long id) {
         try {
             return authorDao.getById(id);
         } catch (EmptyResultDataAccessException e) {
@@ -39,12 +40,18 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public int delete(Author author) {
-        return authorDao.delete(author);
+    public long delete(Author author) {
+        authorDao.delete(author);
+        return author.getId();
     }
 
     @Override
     public List<Author> findAll() {
         return authorDao.getAll();
+    }
+
+    @Override
+    public List<Author> findByBookId(long id) {
+        return authorDao.findByBookId(id);
     }
 }

@@ -1,180 +1,84 @@
 package ru.otus.library.dao.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsertOperations;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.library.dao.AuthorDao;
 import ru.otus.library.dao.BookDao;
-import ru.otus.library.dao.GenreDao;
-import ru.otus.library.dao.mappers.BookMapper;
 import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Genre;
 
-import javax.sql.DataSource;
-import java.util.HashMap;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 
-@SuppressWarnings("SqlResolve")
+@SuppressWarnings("ALL")
 @Repository
 @RequiredArgsConstructor
 @Transactional
 public class BookDaoImpl implements BookDao {
 
-    private final NamedParameterJdbcOperations jdbc;
-    private final BookMapper bookMapper;
-    private final GenreDao genreDao;
-    private final AuthorDao authorDao;
-    private SimpleJdbcInsertOperations simpleJdbcInsert;
+    @PersistenceContext
+    private EntityManager em;
 
-    @Autowired
-    public void setSimpleJdbcInsert(DataSource dataSource) {
-        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("book")
-                .usingGeneratedKeyColumns("id");
+    @Override
+    public long count() {
+        return (long) em.createQuery("select count(b) from Book b").getSingleResult();
     }
 
     @Override
-    public int count() {
-        return jdbc.queryForObject("select count(*) from book", new HashMap<>(), Integer.class);
+    public void insert(Book book) {
+        em.persist(book);
     }
 
     @Override
-    public Book insert(Book book) {
-        final Map<String, Object> params = new HashMap<>(2);
-        params.put("title", book.getTitle());
-        params.put("content_path", book.getContentPath());
-        int id = simpleJdbcInsert.executeAndReturnKey(params).intValue();
-        book.setId(id);
-        addRelations(book);
-        return book;
-    }
-
-    @Override
-    public Optional<Book> getById(int id) {
-        final Map<String, Object> params = new HashMap<>(1);
-        params.put("id", id);
-        Book book = jdbc.queryForObject("select * from book where id =:id;", params, bookMapper);
-        return Optional.of(addAuthorAndGenre(book));
+    public Optional<Book> getById(long id) {
+        return Optional.ofNullable(em.find(Book.class, id));
     }
 
     @Override
     public List<Book> getAll() {
-        List<Book> books = jdbc.query("select * from book", new HashMap<>(), bookMapper);
-        books.forEach(this::addAuthorAndGenre);
-        return books;
+        return em.createQuery("select b from Book b").getResultList();
     }
 
-
     @Override
-    public int delete(Book book) {
-        final Map<String, Object> params = new HashMap<>(1);
-        params.put("id", book.getId());
-        deleteGenreRelation(book);
-        deleteAuthorRelation(book);
-        return jdbc.update("delete from book where id=:id;", params);
+    public void delete(Book book) {
+        Query query = em.createQuery("delete from Comment c where c.book = :book");// Ничего лучше не придумал
+        query.setParameter("book", book);
+        query.executeUpdate();
+        em.remove(em.contains(book) ? book : em.merge(book));
     }
 
     @Override
     public List<Book> findByTitle(String title) {
-        final Map<String, Object> params = new HashMap<>(1);
-        params.put("title", "%" + title + "%");
-        List<Book> books = jdbc.query("select * from book where title like :title;", params, bookMapper);
-        books.forEach(this::addAuthorAndGenre);
-        return books;
+        Query query = em.createQuery("select b from Book b where title like :title");
+        query.setParameter("title", "%" + title + "%");
+        return query.getResultList();
     }
 
     @Override
     public List<Book> getByAuthor(Author author) {
-        final Map<String, Object> params = new HashMap<>(1);
-        params.put("id", author.getId());
-        List<Book> books = jdbc.query("select * from book where id in " +
-                "(select distinct book_id from author_book where author_id=:id);", params, bookMapper);
-        books.forEach(this::addAuthorAndGenre);
-        return books;
+        Query query = em.createQuery("select b from Book b " +
+                "join b.authors a" +
+                " where a= :author");
+        query.setParameter("author", author);
+        return query.getResultList();
     }
 
     @Override
     public List<Book> getByGenre(Genre genre) {
-        final Map<String, Object> params = new HashMap<>(1);
-        params.put("id", genre.getId());
-        List<Book> books = jdbc.query("select * from book where id in " +
-                "(select distinct book_id from genre_book where genre_id=:id);", params, bookMapper);
-        books.forEach(this::addAuthorAndGenre);
-        return books;
-    }
-
-
-    private Book addAuthorAndGenre(Book book) {
-        int id = book.getId();
-        book.setGenres(findGenre(id));
-        book.setAuthors(findAuthor(id));
-        return book;
-    }
-
-    private List<Genre> findGenre(int bookId) {
-        return genreDao.findByBookId(bookId);
-    }
-
-    private List<Author> findAuthor(int bookId) {
-        return authorDao.findByBookId(bookId);
+        Query query = em.createQuery("select b from Book b " +
+                "join b.genres g" +
+                " where g= :genre");
+        query.setParameter("genre", genre);
+        return query.getResultList();
     }
 
     @Override
     public void addRelations(Book book) {
-        addAuthorRelations(book);
-        addGenreRelations(book);
+        em.merge(book);
     }
-
-    private void addAuthorRelations(Book book) {
-        final Map<String, Object> params = new HashMap<>(2);
-        params.put("bookId", book.getId());
-        List<Author> authors = book.getAuthors();
-        deleteAuthorRelation(book);
-        if (authors == null || authors.isEmpty()) return;
-        String query = "insert into author_book (book_id, author_id)\n" +
-                "values (:bookId, :authorId);";
-        authors.forEach(a -> {
-            params.put("authorId", a.getId());
-            jdbc.update(query, params);
-        });
-    }
-
-    private void addGenreRelations(Book book) {
-        final Map<String, Object> params = new HashMap<>(2);
-        params.put("bookId", book.getId());
-        List<Genre> genres = book.getGenres();
-        deleteGenreRelation(book);
-        if (genres == null || genres.isEmpty()) return;
-        String query = "insert into genre_book (book_id, genre_id)\n" +
-                "values (:bookId, :genreId);";
-        genres.forEach(a -> {
-            params.put("genreId", a.getId());
-            jdbc.update(query, params);
-        });
-    }
-
-
-    private void deleteAuthorRelation(Book book) {
-        final Map<String, Object> params = new HashMap<>(1);
-        params.put("bookId", book.getId());
-        String query = "delete from author_book where book_id = :bookId;";
-        jdbc.update(query, params);
-    }
-
-    private void deleteGenreRelation(Book book) {
-        final Map<String, Object> params = new HashMap<>(1);
-        params.put("bookId", book.getId());
-        String query = "delete from genre_book where book_id = :bookId;";
-        jdbc.update(query, params);
-    }
-
-
 }

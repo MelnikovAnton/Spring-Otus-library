@@ -6,44 +6,55 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.EmptyResultDataAccessException;
 import ru.otus.library.dao.impl.AuthorDaoImpl;
 import ru.otus.library.dao.impl.BookDaoImpl;
 import ru.otus.library.dao.impl.GenreDaoImpl;
-import ru.otus.library.dao.mappers.AuthorMapper;
-import ru.otus.library.dao.mappers.BookMapper;
-import ru.otus.library.dao.mappers.GenreMapper;
 import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Genre;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
-@JdbcTest
-@Import({BookDaoImpl.class, BookMapper.class, GenreMapper.class, AuthorMapper.class,
+@DataJpaTest
+@Import({BookDaoImpl.class,
         GenreDaoImpl.class, AuthorDaoImpl.class})
 class BookDaoTest {
 
     @Autowired
     private BookDao bookDao;
 
+    @PersistenceContext
+    private EntityManager em;
+
     @Test
     @DisplayName("Получениене количества книг")
     void count() {
-        int count = bookDao.count();
+        long count = bookDao.count();
         assertEquals(count, 3);
     }
 
     @Test
     @DisplayName("Вставка с получением ID")
     void insert() {
-        Book book = assertDoesNotThrow(() -> bookDao.insert(new Book("qwe", "ewq")));
-        assertTrue(book.getId() > 0);
+        Book book = new Book("qwe", "ewq");
+        assertDoesNotThrow(() -> bookDao.insert(book));
+
+        em.refresh(book);
+        em.detach(book);
+
+        Optional<Book> result = assertDoesNotThrow(() -> bookDao.getById(book.getId()));
+        assertTrue(result.isPresent());
+        assertEquals(book,result.get());
     }
 
     @TestFactory
@@ -53,7 +64,10 @@ class BookDaoTest {
             Book book = assertDoesNotThrow(() -> bookDao.getById(1).orElseThrow());
             assertEquals(book.getId(), 1);
         });
-        DynamicTest book2 = DynamicTest.dynamicTest("ID = 10", () -> assertThrows(EmptyResultDataAccessException.class, () -> bookDao.getById(10)));
+        DynamicTest book2 = DynamicTest.dynamicTest("ID = Integer.MAX_VALUE+1", () -> {
+            Optional<Book> book = assertDoesNotThrow(() -> bookDao.getById(Integer.MAX_VALUE+1));
+            assertTrue(book.isEmpty());
+        });
         return Arrays.asList(book1, book2);
     }
 
@@ -72,14 +86,14 @@ class BookDaoTest {
 
         DynamicTest delExists = DynamicTest.dynamicTest("Удаление существующей книги", () -> {
             book.setId(1);
-            int c = assertDoesNotThrow(() -> bookDao.delete(book));
-            assertEquals(c, 1);
+           assertDoesNotThrow(() -> bookDao.delete(book));
+           assertTrue(bookDao.getById(1).isEmpty());
+
         });
 
         DynamicTest delDoseNotExists = DynamicTest.dynamicTest("Удаление не существующей книги", () -> {
-            book.setId(10);
-            int c1 = assertDoesNotThrow(() -> bookDao.delete(book));
-            assertEquals(c1, 0);
+            book.setId(Integer.MAX_VALUE+1);
+            assertDoesNotThrow(() -> bookDao.delete(book));
         });
 
         return Arrays.asList(delExists, delDoseNotExists);
@@ -93,11 +107,11 @@ class BookDaoTest {
             assertEquals(books.size(), 3);
         });
         DynamicTest part = DynamicTest.dynamicTest("Часть заголовока", () -> {
-            List<Book> books = assertDoesNotThrow(() -> bookDao.findByTitle("est"));
+            List<Book> books = assertDoesNotThrow(() -> bookDao.findByTitle("oo"));
             assertEquals(books.size(), 3);
         });
         DynamicTest full = DynamicTest.dynamicTest("Полный заголовок", () -> {
-            List<Book> books = assertDoesNotThrow(() -> bookDao.findByTitle("Test2"));
+            List<Book> books = assertDoesNotThrow(() -> bookDao.findByTitle("Book 2"));
             assertEquals(books.size(), 1);
             assertEquals(books.get(0).getId(), 2);
         });

@@ -9,11 +9,11 @@ import java.util.Optional;
 
 public interface BookDao {
 
-    int count();
-    Book insert(Book book);
-    Optional<Book> getById(int id);
+    long count();
+    void insert(Book book);
+    Optional<Book> getById(long id);
     List<Book> getAll();
-    int delete(Book book);
+    void delete(Book book);
     List<Book> findByTitle(String title);
     List<Book> getByAuthor(Author author);
     List<Book> getByGenre(Genre genre);

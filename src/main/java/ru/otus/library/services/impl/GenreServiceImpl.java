@@ -20,7 +20,8 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public Genre saveGenre(Genre genre) {
-        return genreDao.insert(genre);
+        genreDao.insert(genre);
+        return genre;
     }
 
     @Override
@@ -29,7 +30,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public Optional<Genre> findById(int id) {
+    public Optional<Genre> findById(long id) {
         try {
             return genreDao.getById(id);
         } catch (EmptyResultDataAccessException e) {
@@ -39,12 +40,18 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public int delete(Genre genre) {
-        return genreDao.delete(genre);
+    public long delete(Genre genre) {
+        genreDao.delete(genre);
+        return genre.getId();
     }
 
     @Override
     public List<Genre> findAll() {
         return genreDao.getAll();
+    }
+
+    @Override
+    public List<Genre> findByBookId(long id) {
+        return genreDao.findByBookId(id);
     }
 }

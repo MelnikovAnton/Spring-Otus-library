@@ -43,11 +43,11 @@ class BookServiceTest {
     void saveBook() {
         Book book = new Book("test", "test");
 
-        when(bookDao.insert(any(Book.class))).thenAnswer(invocation -> {
+        doAnswer(invocation -> {
             Book b = (Book) invocation.getArgument(0);
             b.setId(1);
-            return b;
-        });
+            return null;
+        }).when(bookDao).insert(any(Book.class));
 
         Book b = assertDoesNotThrow(() -> bookService.saveBook(book));
         assertEquals(book, b);
@@ -60,11 +60,12 @@ class BookServiceTest {
     @Test
     @DisplayName("Сохранение книги с автором и жанром")
     void saveBookWithAuthAndGenre() {
-        when(bookDao.insert(any(Book.class))).thenAnswer(invocation -> {
+
+        doAnswer(invocation -> {
             Book b = (Book) invocation.getArgument(0);
             b.setId(1);
             return b;
-        });
+        }).when(bookDao).insert(any(Book.class));
 
         Book book = new Book("test", "test");
         book.addGenre(new Genre("Test"));
@@ -123,12 +124,14 @@ class BookServiceTest {
     @DisplayName("Поиск по ID")
     List<DynamicTest> findById() {
         DynamicTest isPresent = DynamicTest.dynamicTest("Книга найдена", () -> {
-            when(bookDao.getById(anyInt())).thenReturn(Optional.of(new Book("test", "test")));
-            Optional<Book> book = bookService.findById(1);
-            assertTrue(book.isPresent());
+            when(bookDao.getById(anyLong())).thenReturn(Optional.of(new Book("test", "test")));
+            Optional<Book> oBook = bookService.findById(1);
+            System.out.println(bookDao.getById(1));
+            System.out.println(oBook);
+            assertTrue(oBook.isPresent());
         });
         DynamicTest isNotPresent = DynamicTest.dynamicTest("Книга не найдена", () -> {
-            doThrow(new EmptyResultDataAccessException(1)).when(bookDao).getById(anyInt());
+            doThrow(new EmptyResultDataAccessException(1)).when(bookDao).getById(anyLong());
             Optional<Book> book = assertDoesNotThrow(() -> bookService.findById(1));
             assertTrue(book.isEmpty());
         });
@@ -137,17 +140,16 @@ class BookServiceTest {
 
     @Test
     void delete() {
-        when(bookDao.delete(any(Book.class))).thenAnswer(invocation -> {
-            Book b = (Book) invocation.getArgument(0);
-            return b.getId();
-        });
+        doAnswer(invocation -> {
+            Book a = invocation.getArgument(0);
+            assertEquals(1, a.getId());
+            return null;
+        }).when(bookDao).delete(any(Book.class));
 
-        Book book = new Book("Test", "test");
+        Book book = new Book("Test","Test");
         book.setId(1);
 
-        int id=assertDoesNotThrow(()->bookService.delete(book));
-        assertEquals(1,id);
-//        verify(bookDao, times(1)).delete(any(Book.class));
+        assertDoesNotThrow(() -> bookService.delete(book));
     }
 
     @Test
@@ -155,14 +157,14 @@ class BookServiceTest {
         when(bookDao.getAll()).thenReturn(getTestBooks());
 
         List<Book> books = assertDoesNotThrow(() -> bookService.findAll());
-        assertEquals(getTestBooks(),books);
+        assertEquals(getTestBooks(), books);
 
-  //      verify(bookDao, times(1)).getAll();
+        //      verify(bookDao, times(1)).getAll();
     }
 
     @Test
     void addRelations() {
-        assertDoesNotThrow(()->bookService.addRelations(new Book("Test", "test")));
+        assertDoesNotThrow(() -> bookService.addRelations(new Book("Test", "test")));
         verify(bookDao, times(1)).addRelations(any(Book.class));
     }
 

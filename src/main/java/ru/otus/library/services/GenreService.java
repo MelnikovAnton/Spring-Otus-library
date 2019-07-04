@@ -10,10 +10,12 @@ public interface GenreService {
 
     List<Genre> findGenresByName(String name);
 
+    List<Genre> findByBookId(long id);
+
     List<Genre> findAll();
 
-    Optional<Genre> findById(int id);
+    Optional<Genre> findById(long id);
 
-    int delete(Genre genre);
+    long delete(Genre genre);
 
 }

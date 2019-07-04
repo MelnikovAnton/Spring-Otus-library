@@ -1,33 +1,41 @@
 package ru.otus.library.dao;
 
+import org.h2.tools.Console;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.EmptyResultDataAccessException;
 import ru.otus.library.dao.impl.AuthorDaoImpl;
-import ru.otus.library.dao.mappers.AuthorMapper;
 import ru.otus.library.model.Author;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@JdbcTest
-@Import({AuthorDaoImpl.class, AuthorMapper.class})
+@DataJpaTest
+@Import({AuthorDaoImpl.class})
 class AuthorDaoTest {
 
     @Autowired
     private AuthorDao authorDao;
 
+    @PersistenceContext
+    private EntityManager em;
+
     @Test
     @DisplayName("Получениене количества авторов")
     void count() {
-        int count = authorDao.count();
+        long count = authorDao.count();
         assertEquals(count, 3);
     }
 
@@ -35,8 +43,15 @@ class AuthorDaoTest {
     @Test
     @DisplayName("Вставка с получением ID")
     void insert() {
-        Author author = assertDoesNotThrow(() -> authorDao.insert(new Author("ewq")));
-        assertTrue(author.getId() > 0);
+        Author author = new Author("ewq");
+        assertDoesNotThrow(() -> authorDao.insert(author));
+
+        em.refresh(author);
+        em.detach(author);
+        Optional<Author> result = assertDoesNotThrow(() -> authorDao.getById(author.getId()));
+        assertTrue(result.isPresent());
+        assertEquals(author,result.get());
+
     }
 
     @TestFactory
@@ -46,7 +61,10 @@ class AuthorDaoTest {
             Author author = assertDoesNotThrow(() -> authorDao.getById(1).orElseThrow());
             assertEquals(author.getId(), 1);
         });
-        DynamicTest author2 = DynamicTest.dynamicTest("ID = 10", () -> assertThrows(EmptyResultDataAccessException.class, () -> authorDao.getById(10)));
+        DynamicTest author2 = DynamicTest.dynamicTest("ID = Integer.MAX_VALUE+1", () -> {
+           assertTrue(authorDao.getById(Integer.MAX_VALUE+1).isEmpty());
+
+        });
         return Arrays.asList(author1, author2);
     }
 
@@ -64,14 +82,14 @@ class AuthorDaoTest {
 
         DynamicTest delExists = DynamicTest.dynamicTest("Удаление существующего автора", () -> {
             author.setId(1);
-            int c = assertDoesNotThrow(() -> authorDao.delete(author));
-            assertEquals(c, 1);
+            assertDoesNotThrow(() -> authorDao.delete(author));
+            Optional<Author> result = assertDoesNotThrow(() -> authorDao.getById(1));
+            assertTrue(result.isEmpty());
         });
 
         DynamicTest delDoseNotExists = DynamicTest.dynamicTest("Удаление не существующего автора", () -> {
-            author.setId(10);
-            int c1 = assertDoesNotThrow(() -> authorDao.delete(author));
-            assertEquals(c1, 0);
+            author.setId(Integer.MAX_VALUE+1);
+            assertDoesNotThrow(() -> authorDao.delete(author));
         });
 
         return Arrays.asList(delExists, delDoseNotExists);
@@ -89,7 +107,7 @@ class AuthorDaoTest {
             assertEquals(authors.size(), 3);
         });
         DynamicTest full = DynamicTest.dynamicTest("Полное имя", () -> {
-            List<Author> authors = assertDoesNotThrow(() -> authorDao.findByName("Author3"));
+            List<Author> authors = assertDoesNotThrow(() -> authorDao.findByName("Author 3"));
             assertEquals(authors.size(), 1);
             assertEquals(authors.get(0).getId(), 3);
         });
@@ -98,5 +116,20 @@ class AuthorDaoTest {
             assertEquals(authors.size(), 0);
         });
         return Arrays.asList(empty, part, full, noMatch);
+    }
+
+    @TestFactory
+    @DisplayName("Поиск по Id книги")
+    List<DynamicTest> findByBookId() {
+        DynamicTest auth1 = DynamicTest.dynamicTest("ID = 1", () -> {
+            List<Author> authors = assertDoesNotThrow(() -> authorDao.findByBookId(1));
+            assertEquals(1, authors.size());
+            assertEquals(authors.get(0).getId(), 1);
+        });
+        DynamicTest auth2 = DynamicTest.dynamicTest("ID = Integer.MAX_VALUE+1", () -> {
+            List<Author> authors = assertDoesNotThrow(() -> authorDao.findByBookId(Integer.MAX_VALUE + 1));
+            assertTrue(authors.isEmpty());
+        });
+        return Arrays.asList(auth1, auth2);
     }
 }

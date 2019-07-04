@@ -10,8 +10,8 @@ public interface BookService {
     List<Book> findBooksByTitle(String title);
     List<Book> findBooksByAuthor(String author);
     List<Book> findBooksByGenre(String genre);
-    Optional<Book> findById(int id);
-    int delete(Book book);
+    Optional<Book> findById(long id);
+    long delete(Book book);
     List<Book> findAll();
     void addRelations(Book book);
 }
