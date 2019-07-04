@@ -81,7 +81,7 @@ class BookServiceTest {
 
     @Test
     void findBooksByTitle() {
-        when(bookDao.findByTitle(anyString())).thenReturn(getTestBooks());
+        when(bookDao.findByTitleContaining(anyString())).thenReturn(getTestBooks());
         List<Book> books = bookService.findBooksByTitle("test");
         assertEquals(getTestBooks(), books);
     }

@@ -26,7 +26,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<Author> findAuthorsByName(String name) {
-        return authorDao.findByName(name);
+        return authorDao.findByNameContaining(name);
     }
 
     @Override

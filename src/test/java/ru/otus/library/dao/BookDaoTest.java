@@ -95,20 +95,20 @@ class BookDaoTest {
     @DisplayName("Поиск по заголовку")
     List<DynamicTest> findByTitle() {
         DynamicTest empty = DynamicTest.dynamicTest("Пустой заголовок", () -> {
-            List<Book> books = assertDoesNotThrow(() -> bookDao.findByTitle(""));
+            List<Book> books = assertDoesNotThrow(() -> bookDao.findByTitleContaining(""));
             assertEquals(books.size(), 3);
         });
         DynamicTest part = DynamicTest.dynamicTest("Часть заголовока", () -> {
-            List<Book> books = assertDoesNotThrow(() -> bookDao.findByTitle("oo"));
+            List<Book> books = assertDoesNotThrow(() -> bookDao.findByTitleContaining("oo"));
             assertEquals(books.size(), 3);
         });
         DynamicTest full = DynamicTest.dynamicTest("Полный заголовок", () -> {
-            List<Book> books = assertDoesNotThrow(() -> bookDao.findByTitle("Book 2"));
+            List<Book> books = assertDoesNotThrow(() -> bookDao.findByTitleContaining("Book 2"));
             assertEquals(books.size(), 1);
             assertEquals(books.get(0).getId(), 2);
         });
         DynamicTest noMatch = DynamicTest.dynamicTest("Не совпадающий заголовок", () -> {
-            List<Book> books = assertDoesNotThrow(() -> bookDao.findByTitle("!№;%:?*:;%;№"));
+            List<Book> books = assertDoesNotThrow(() -> bookDao.findByTitleContaining("!№;%:?*:;%;№"));
             assertEquals(books.size(), 0);
         });
         return Arrays.asList(empty, part, full, noMatch);

@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface GenreDao extends JpaRepository<Genre,Long> {
 
-    List<Genre> findByName(String name);
+    List<Genre> findByNameContaining(String name);
 
     @Query("select b.genres from Book b where  b.id = :id")
     List<Genre> findByBookId(long id);

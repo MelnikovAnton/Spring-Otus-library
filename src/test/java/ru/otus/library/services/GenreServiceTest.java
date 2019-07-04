@@ -49,7 +49,7 @@ class GenreServiceTest {
 
     @Test
     void findGenresByName() {
-        when(genreDao.findByName(anyString())).thenReturn(getTestGenres());
+        when(genreDao.findByNameContaining(anyString())).thenReturn(getTestGenres());
         List<Genre> genres = genreService.findGenresByName("test");
         assertEquals(getTestGenres(), genres);
     }

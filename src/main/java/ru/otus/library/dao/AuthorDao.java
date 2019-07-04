@@ -11,8 +11,7 @@ import java.util.Optional;
 @Repository
 public interface AuthorDao extends JpaRepository<Author,Long> {
 
-    List<Author> findByName(String name);
-
+    List<Author> findByNameContaining(String name);
     @Query("select b.authors from Book b where  b.id = :id")
     List<Author> findByBookId(Long id);
 }

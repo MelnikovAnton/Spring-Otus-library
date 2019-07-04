@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface BookDao extends JpaRepository<Book,Long> {
 
-    List<Book> findByTitle(String title);
+    List<Book> findByTitleContaining(String title);
     @Query("select b from Book b " +
             "join b.authors a" +
             " where a= :author")

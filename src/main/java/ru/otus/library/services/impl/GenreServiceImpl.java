@@ -26,7 +26,7 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public List<Genre> findGenresByName(String name) {
-        return genreDao.findByName(name);
+        return genreDao.findByNameContaining(name);
     }
 
     @Override

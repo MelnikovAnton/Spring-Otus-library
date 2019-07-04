@@ -91,20 +91,20 @@ class GenreDaoTest {
     @DisplayName("Поиск по имени жанра")
     List<DynamicTest> findGenresByName() {
         DynamicTest empty = DynamicTest.dynamicTest("Пустое имя", () -> {
-            List<Genre> genres = assertDoesNotThrow(() -> genreDao.findByName(""));
+            List<Genre> genres = assertDoesNotThrow(() -> genreDao.findByNameContaining(""));
             assertEquals(genres.size(), 4);
         });
         DynamicTest part = DynamicTest.dynamicTest("Часть имени", () -> {
-            List<Genre> genres = assertDoesNotThrow(() -> genreDao.findByName("enre"));
+            List<Genre> genres = assertDoesNotThrow(() -> genreDao.findByNameContaining("enre"));
             assertEquals(genres.size(), 4);
         });
         DynamicTest full = DynamicTest.dynamicTest("Полное имя", () -> {
-            List<Genre> genres = assertDoesNotThrow(() -> genreDao.findByName("Genre 3"));
+            List<Genre> genres = assertDoesNotThrow(() -> genreDao.findByNameContaining("Genre 3"));
             assertEquals(genres.size(), 1);
             assertEquals(genres.get(0).getId(), 3);
         });
         DynamicTest noMatch = DynamicTest.dynamicTest("Не совпадающее имя", () -> {
-            List<Genre> genres = assertDoesNotThrow(() -> genreDao.findByName("\"!№;%:?*:;%;№\""));
+            List<Genre> genres = assertDoesNotThrow(() -> genreDao.findByNameContaining("\"!№;%:?*:;%;№\""));
             assertEquals(genres.size(), 0);
         });
         return Arrays.asList(empty, part, full, noMatch);

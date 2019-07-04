@@ -48,7 +48,7 @@ class AuthorServiceTest {
 
     @Test
     void findAuthorsByName() {
-        when(authorDao.findByName(anyString())).thenReturn(getTestAuthors());
+        when(authorDao.findByNameContaining(anyString())).thenReturn(getTestAuthors());
         List<Author> authors = authorService.findAuthorsByName("test");
         assertEquals(getTestAuthors(), authors);
     }
