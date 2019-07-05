@@ -40,27 +40,11 @@ class AuthorRepositoryTest {
         assertEquals(author, result.get());
     }
 
-    @TestFactory
+    @Test
     @DisplayName("Поиск по имени автора")
-    List<DynamicTest> findAuthorsByName() {
-        DynamicTest empty = DynamicTest.dynamicTest("Пустое имя", () -> {
-            List<Author> authors = assertDoesNotThrow(() -> authorRepository.findByNameContaining(""));
-            assertEquals(authors.size(), 3);
-        });
-        DynamicTest part = DynamicTest.dynamicTest("Часть имени", () -> {
-            List<Author> authors = assertDoesNotThrow(() -> authorRepository.findByNameContaining("uth"));
-            assertEquals(authors.size(), 3);
-        });
-        DynamicTest full = DynamicTest.dynamicTest("Полное имя", () -> {
-            List<Author> authors = assertDoesNotThrow(() -> authorRepository.findByNameContaining("Author 3"));
-            assertEquals(authors.size(), 1);
-            assertEquals(authors.get(0).getId(), 3);
-        });
-        DynamicTest noMatch = DynamicTest.dynamicTest("Не совпадающее имя", () -> {
-            List<Author> authors = assertDoesNotThrow(() -> authorRepository.findByNameContaining("\"!№;%:?*:;%;№\""));
-            assertEquals(authors.size(), 0);
-        });
-        return Arrays.asList(empty, part, full, noMatch);
+    void findAuthorsByName() {
+        List<Author> authors = assertDoesNotThrow(() -> authorRepository.findByNameContaining(""));
+        assertEquals(authors.size(), 3);
     }
 
     @TestFactory

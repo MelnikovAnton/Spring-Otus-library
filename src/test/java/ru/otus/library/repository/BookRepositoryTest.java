@@ -73,7 +73,7 @@ class BookRepositoryTest {
         DynamicTest auth1 = DynamicTest.dynamicTest("Автор с ID 1(есть в базе)", () -> {
             Author author = new Author("Test");
             author.setId(1);
-            List<Book> books = assertDoesNotThrow(() -> bookRepository.getByAuthor(author));
+            List<Book> books = assertDoesNotThrow(() -> bookRepository.findByAuthorsContains(author));
             // System.out.println(books);
             assertEquals(books.size(), 1);
         });
@@ -81,7 +81,7 @@ class BookRepositoryTest {
         DynamicTest auth2 = DynamicTest.dynamicTest("Автор с ID 10(нет есть в базе)", () -> {
             Author author = new Author("Test");
             author.setId(10);
-            List<Book> books = assertDoesNotThrow(() -> bookRepository.getByAuthor(author));
+            List<Book> books = assertDoesNotThrow(() -> bookRepository.findByAuthorsContains(author));
             //    System.out.println(books);
             assertEquals(books.size(), 0);
         });
@@ -94,7 +94,7 @@ class BookRepositoryTest {
         DynamicTest genre1 = DynamicTest.dynamicTest("Жанр с ID 1(есть в базе)", () -> {
             Genre genre = new Genre("Test");
             genre.setId(1);
-            List<Book> books = assertDoesNotThrow(() -> bookRepository.getByGenre(genre));
+            List<Book> books = assertDoesNotThrow(() -> bookRepository.findByGenresContains(genre));
             // System.out.println(books);
             assertEquals(books.size(), 1);
         });
@@ -102,7 +102,7 @@ class BookRepositoryTest {
         DynamicTest genre2 = DynamicTest.dynamicTest("Жанр с ID 10(нет есть в базе)", () -> {
             Genre genre = new Genre("Test");
             genre.setId(10);
-            List<Book> books = assertDoesNotThrow(() -> bookRepository.getByGenre(genre));
+            List<Book> books = assertDoesNotThrow(() -> bookRepository.findByGenresContains(genre));
             //    System.out.println(books);
             assertEquals(books.size(), 0);
         });

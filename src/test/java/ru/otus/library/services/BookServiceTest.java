@@ -91,14 +91,14 @@ class BookServiceTest {
                         new Author(2, "Auth2"),
                         new Author(3, "Auth3")));
 
-        when(bookRepository.getByAuthor(any(Author.class))).thenReturn(getTestBooks());
+        when(bookRepository.findByAuthorsContains(any(Author.class))).thenReturn(getTestBooks());
 
         List<Book> books = assertDoesNotThrow(() -> bookService.findBooksByAuthor("test"));
 
         assertEquals(getTestBooks(), books);
 
         verify(authorService, times(1)).findAuthorsByName("test");
-        verify(bookRepository, times(3)).getByAuthor(any(Author.class));
+        verify(bookRepository, times(3)).findByAuthorsContains(any(Author.class));
     }
 
     @Test
@@ -108,14 +108,14 @@ class BookServiceTest {
                         new Genre(2, "Genre2"),
                         new Genre(3, "Genre3")));
 
-        when(bookRepository.getByGenre(any(Genre.class))).thenReturn(getTestBooks());
+        when(bookRepository.findByGenresContains(any(Genre.class))).thenReturn(getTestBooks());
 
         List<Book> books = assertDoesNotThrow(() -> bookService.findBooksByGenre("test"));
 
         assertEquals(getTestBooks(), books);
 
         verify(genreService, times(1)).findGenresByName("test");
-        verify(bookRepository, times(3)).getByGenre(any(Genre.class));
+        verify(bookRepository, times(3)).findByGenresContains(any(Genre.class));
     }
 
     @TestFactory

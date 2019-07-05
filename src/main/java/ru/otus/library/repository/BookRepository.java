@@ -14,14 +14,8 @@ public interface BookRepository extends JpaRepository<Book,Long> {
 
     List<Book> findByTitleContaining(String title);
 
-    @Query("select b from Book b " +
-            "join b.authors a" +
-            " where a= :author")
-    List<Book> getByAuthor(Author author);
+    List<Book> findByAuthorsContains(Author author);
 
-    @Query("select b from Book b " +
-            "join b.genres g" +
-            " where g= :genre")
-    List<Book> getByGenre(Genre genre);
+    List<Book> findByGenresContains(Genre genre);
 
 }
