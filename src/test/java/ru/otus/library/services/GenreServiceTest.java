@@ -11,7 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.shell.jline.InteractiveShellApplicationRunner;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.otus.library.dao.GenreDao;
+import ru.otus.library.repository.GenreRepository;
 import ru.otus.library.model.Genre;
 
 import java.util.Arrays;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 class GenreServiceTest {
 
     @MockBean
-    private GenreDao genreDao;
+    private GenreRepository genreRepository;
     @Autowired
     private GenreService genreService;
 
@@ -36,11 +36,11 @@ class GenreServiceTest {
     void saveGenre() {
         Genre genre = new Genre("test");
 
-        when(genreDao.insert(any(Genre.class))).thenAnswer(invocation -> {
-            Genre g = invocation.getArgument(0);
+        doAnswer(inv -> {
+            Genre g = inv.getArgument(0);
             g.setId(1);
             return g;
-        });
+        }).when(genreRepository).save(any(Genre.class));
 
         Genre g  = assertDoesNotThrow(() -> genreService.saveGenre(genre));
         assertEquals(g, genre);
@@ -49,14 +49,14 @@ class GenreServiceTest {
 
     @Test
     void findGenresByName() {
-        when(genreDao.findByName(anyString())).thenReturn(getTestGenres());
+        when(genreRepository.findByNameContaining(anyString())).thenReturn(getTestGenres());
         List<Genre> genres = genreService.findGenresByName("test");
         assertEquals(getTestGenres(), genres);
     }
 
     @Test
     void findAll() {
-        when(genreDao.getAll()).thenReturn(getTestGenres());
+        when(genreRepository.findAll()).thenReturn(getTestGenres());
 
         List<Genre> genres = assertDoesNotThrow(() -> genreService.findAll());
         assertEquals(getTestGenres(), genres);
@@ -66,12 +66,12 @@ class GenreServiceTest {
     @DisplayName("Поиск по ID")
     List<DynamicTest> findById() {
         DynamicTest isPresent = DynamicTest.dynamicTest("Жанр найден", () -> {
-            when(genreDao.getById(anyInt())).thenReturn(Optional.of(new Genre("test")));
+            when(genreRepository.findById(anyLong())).thenReturn(Optional.of(new Genre("test")));
             Optional<Genre> genre = genreService.findById(1);
             assertTrue(genre.isPresent());
         });
         DynamicTest isNotPresent = DynamicTest.dynamicTest("Жанр не найден", () -> {
-            doThrow(new EmptyResultDataAccessException(1)).when(genreDao).getById(anyInt());
+            doThrow(new EmptyResultDataAccessException(1)).when(genreRepository).findById(anyLong());
             Optional<Genre> genre = assertDoesNotThrow(() -> genreService.findById(1));
             assertTrue(genre.isEmpty());
         });
@@ -80,16 +80,22 @@ class GenreServiceTest {
 
     @Test
     void delete() {
-        when(genreDao.delete(any(Genre.class))).thenAnswer(invocation -> {
+        doAnswer(invocation -> {
             Genre g = invocation.getArgument(0);
-            return g.getId();
-        });
+            assertEquals(1, g.getId());
+            return null;
+        }).when(genreRepository).delete(any(Genre.class));
 
         Genre genre = new Genre("Test");
         genre.setId(1);
 
-        int id = assertDoesNotThrow(() -> genreService.delete(genre));
-        assertEquals(1, id);
+        assertDoesNotThrow(() -> genreService.delete(genre));
+    }
+
+    @Test
+    void findByBookId() {
+        when(genreRepository.findByBookId(anyLong())).thenReturn(getTestGenres());
+        assertEquals(getTestGenres(),genreService.findByBookId(1));
     }
 
     private List<Genre> getTestGenres() {

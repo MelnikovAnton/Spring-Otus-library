@@ -1,7 +1,3 @@
-#logging:
-#  level:
-#    root: DEBUG
-
 logging:
   level:
     # Hides HHH000424: Disabling contextual LOB creation as createClob() method threw error
@@ -12,14 +8,7 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: validate
-    database: postgresql
-  datasource:
-    url: jdbc:postgresql://localhost:5432/library
-    username: root
-    password: root01
+    database-platform: org.hibernate.dialect.H2Dialect
   liquibase:
     enabled: true
     contexts: test
-
-
-

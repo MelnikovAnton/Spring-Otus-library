@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import ru.otus.library.dao.BookDao;
-import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
-import ru.otus.library.model.Genre;
+import ru.otus.library.model.Comment;
+import ru.otus.library.repository.BookRepository;
 import ru.otus.library.services.AuthorService;
 import ru.otus.library.services.BookService;
+import ru.otus.library.services.CommentService;
 import ru.otus.library.services.GenreService;
 
 import java.util.Collection;
@@ -22,35 +22,28 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BookServiceImpl implements BookService {
 
-    private final BookDao bookDao;
+    private final BookRepository bookRepository;
 
     private final AuthorService authorService;
     private final GenreService genreService;
+    private final CommentService commentService;
 
 
     @Override
     public Book saveBook(Book book) {
-        List<Author> addedAuthors = book.getAuthors().stream()
-                .filter(a -> a.getId() <= 0)
-                .map(authorService::saveAuthor)
-                .collect(Collectors.toList());
-        List<Genre> addedGenres = book.getGenres().stream()
-                .filter(a -> a.getId() <= 0)
-                .map(genreService::saveGenre)
-                .collect(Collectors.toList());
-        return bookDao.insert(book);
+        return bookRepository.save(book);
     }
 
     @Override
     public List<Book> findBooksByTitle(String title) {
-        return bookDao.findByTitle(title);
+        return bookRepository.findByTitleContaining(title);
     }
 
     @Override
     public List<Book> findBooksByAuthor(String author) {
         return authorService.findAuthorsByName(author)
                 .stream()
-                .map(bookDao::getByAuthor)
+                .map(bookRepository::findByAuthorsContains)
                 .flatMap(Collection::stream)
                 .distinct()
                 .collect(Collectors.toList());
@@ -61,16 +54,16 @@ public class BookServiceImpl implements BookService {
     public List<Book> findBooksByGenre(String genre) {
         return genreService.findGenresByName(genre)
                 .stream()
-                .map(bookDao::getByGenre)
+                .map(bookRepository::findByGenresContains)
                 .flatMap(Collection::stream)
                 .distinct()
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<Book> findById(int id) {
+    public Optional<Book> findById(long id) {
         try {
-            return bookDao.getById(id);
+            return bookRepository.findById(id);
         } catch (EmptyResultDataAccessException e) {
             log.warn("Return Empty result.", e);
             return Optional.empty();
@@ -79,17 +72,20 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public int delete(Book book) {
-        return bookDao.delete(book);
+    public long delete(Book book) {
+        List<Comment> comments = commentService.findCommentsByBook(book);
+        commentService.deleteAll(comments);
+        bookRepository.delete(book);
+        return book.getId();
     }
 
     @Override
     public List<Book> findAll() {
-        return bookDao.getAll();
+        return bookRepository.findAll();
     }
 
     @Override
     public void addRelations(Book book) {
-        bookDao.addRelations(book);
+        bookRepository.save(book);
     }
 }

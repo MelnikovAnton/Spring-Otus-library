@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import ru.otus.library.dao.AuthorDao;
 import ru.otus.library.model.Author;
+import ru.otus.library.repository.AuthorRepository;
 import ru.otus.library.services.AuthorService;
 
 import java.util.List;
@@ -16,22 +16,22 @@ import java.util.Optional;
 @Slf4j
 public class AuthorServiceImpl implements AuthorService {
 
-    private final AuthorDao authorDao;
+    private final AuthorRepository authorRepository;
 
     @Override
     public Author saveAuthor(Author author) {
-        return authorDao.insert(author);
+        return authorRepository.save(author);
     }
 
     @Override
     public List<Author> findAuthorsByName(String name) {
-        return authorDao.findByName(name);
+        return authorRepository.findByNameContaining(name);
     }
 
     @Override
-    public Optional<Author> findById(int id) {
+    public Optional<Author> findById(long id) {
         try {
-            return authorDao.getById(id);
+            return authorRepository.findById(id);
         } catch (EmptyResultDataAccessException e) {
             log.warn("Return Empty result.", e);
             return Optional.empty();
@@ -39,12 +39,18 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public int delete(Author author) {
-        return authorDao.delete(author);
+    public long delete(Author author) {
+        authorRepository.delete(author);
+        return author.getId();
     }
 
     @Override
     public List<Author> findAll() {
-        return authorDao.getAll();
+        return authorRepository.findAll();
+    }
+
+    @Override
+    public List<Author> findByBookId(long id) {
+        return authorRepository.findByBookId(id);
     }
 }

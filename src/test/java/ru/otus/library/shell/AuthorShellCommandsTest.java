@@ -49,16 +49,16 @@ class AuthorShellCommandsTest {
     @DisplayName("Поиск авторов")
     List<DynamicTest> findAuthors() {
         DynamicTest byIdExists = DynamicTest.dynamicTest("Поиск по ID автор есть", () -> {
-            when(authorService.findById(anyInt())).thenReturn(Optional.of(getTestAuthor()));
+            when(authorService.findById(anyLong())).thenReturn(Optional.of(getTestAuthor()));
             Table r = (Table) shell.evaluate(() -> "fa -i 1");
             int rowCount = r.getModel().getRowCount();
             assertEquals(2, rowCount);
-            int id = (int) r.getModel().getValue(1, 0);
+            long id = (long) r.getModel().getValue(1, 0);
             assertEquals(1, id);
         });
 
         DynamicTest byIdNotExists = DynamicTest.dynamicTest("Поиск по ID автора нет", () -> {
-            when(authorService.findById(anyInt())).thenReturn(Optional.empty());
+            when(authorService.findById(anyLong())).thenReturn(Optional.empty());
             Table r = (Table) shell.evaluate(() -> "fa -i 10");
             int rowCount = r.getModel().getRowCount();
             assertEquals(1, rowCount);
@@ -69,7 +69,7 @@ class AuthorShellCommandsTest {
             Table r = (Table) shell.evaluate(() -> "fa -n 1");
             int rowCount = r.getModel().getRowCount();
             assertEquals(2, rowCount);
-            int id = (int) r.getModel().getValue(1, 0);
+            long id = (long) r.getModel().getValue(1, 0);
             assertEquals(1, id);
         });
 
@@ -86,7 +86,7 @@ class AuthorShellCommandsTest {
 
         int rowCount = r.getModel().getRowCount();
         assertEquals(4, rowCount);
-        int id = (int) r.getModel().getValue(1, 0);
+        long id = (long)r.getModel().getValue(1, 0);
         assertEquals(1, id);
     }
 
@@ -95,13 +95,13 @@ class AuthorShellCommandsTest {
     @DisplayName("Удаление автора")
     List<DynamicTest> testDeleteAuthor() {
         DynamicTest delBook = DynamicTest.dynamicTest("Удаление автора", () -> {
-            when(authorService.findById(anyInt())).thenReturn(Optional.of(getTestAuthor()));
+            when(authorService.findById(anyLong())).thenReturn(Optional.of(getTestAuthor()));
 
             String r = (String) shell.evaluate(() -> "dela 1");
-            assertTrue(r.contains("Author deleted rows="));
+            assertTrue(r.contains("Author deleted id="));
         });
         DynamicTest delWrongBook = DynamicTest.dynamicTest("Удаление автора с неверным ID", () -> {
-            when(authorService.findById(anyInt())).thenReturn(Optional.empty());
+            when(authorService.findById(anyLong())).thenReturn(Optional.empty());
             String r = (String) shell.evaluate(() -> "dela -i 1");
             assertTrue(r.contains("no author with id"));
         });
