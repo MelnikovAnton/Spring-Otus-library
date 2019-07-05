@@ -13,10 +13,12 @@ import java.util.List;
 public interface BookRepository extends JpaRepository<Book,Long> {
 
     List<Book> findByTitleContaining(String title);
+
     @Query("select b from Book b " +
             "join b.authors a" +
             " where a= :author")
     List<Book> getByAuthor(Author author);
+
     @Query("select b from Book b " +
             "join b.genres g" +
             " where g= :genre")

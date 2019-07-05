@@ -27,13 +27,6 @@ class GenreRepositoryTest {
     @Autowired
     private TestEntityManager em;
 
-    @Test
-    @DisplayName("Получениене количества жанров")
-    void count() {
-        long count = genreRepository.count();
-        assertEquals(count, 4);
-    }
-
 
     @Test
     @DisplayName("Вставка с получением ID")
@@ -46,47 +39,6 @@ class GenreRepositoryTest {
         Optional<Genre> result = assertDoesNotThrow(() -> genreRepository.findById(genre.getId()));
         assertTrue(result.isPresent());
         assertEquals(genre, result.get());
-    }
-
-    @TestFactory
-    @DisplayName("Получение жанра по ID")
-    List<DynamicTest> getById() {
-        DynamicTest genre1 = DynamicTest.dynamicTest("ID = 1", () -> {
-            Genre genre = assertDoesNotThrow(() -> genreRepository.findById(1L).orElseThrow());
-            assertEquals(genre.getId(), 1);
-        });
-        DynamicTest genre2 = DynamicTest.dynamicTest("ID = 10", () -> {
-            Optional<Genre> genre = assertDoesNotThrow(() -> genreRepository.findById(Integer.MAX_VALUE + 1L));
-            assertTrue(genre.isEmpty());
-        });
-        return Arrays.asList(genre1, genre2);
-    }
-
-    @Test
-    @DisplayName("Получение всех жанров")
-    void getAll() {
-        List<Genre> genres = assertDoesNotThrow(() -> genreRepository.findAll());
-        assertEquals(genres.size(), 4);
-    }
-
-    @TestFactory
-    @DisplayName("Удаление жанров")
-    List<DynamicTest> delete() {
-        Genre genre = new Genre("Test");
-
-        DynamicTest delExists = DynamicTest.dynamicTest("Удаление существующего жанра", () -> {
-            genre.setId(1);
-            assertDoesNotThrow(() -> genreRepository.delete(genre));
-            Optional<Genre> result = assertDoesNotThrow(() -> genreRepository.findById(1L));
-            assertTrue(result.isEmpty());
-        });
-
-        DynamicTest delDoseNotExists = DynamicTest.dynamicTest("Удаление не существующего жанра", () -> {
-            genre.setId(Integer.MAX_VALUE + 1L);
-            assertDoesNotThrow(() -> genreRepository.delete(genre));
-        });
-
-        return Arrays.asList(delExists, delDoseNotExists);
     }
 
     @TestFactory

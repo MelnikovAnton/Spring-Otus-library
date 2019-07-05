@@ -28,13 +28,6 @@ class CommentRepositoryTest {
     @Autowired
     private TestEntityManager em;
 
-    @Test
-    @DisplayName("Получениене количества комментариев")
-    void count() {
-        long count = commentRepository.count();
-        assertEquals(count, 4);
-    }
-
     @TestFactory
     @DisplayName("Добавление коментария")
     List<DynamicTest> insert() {
@@ -81,48 +74,5 @@ class CommentRepositoryTest {
             assertTrue(comment.isEmpty());
         });
         return Arrays.asList(comment1, comment2);
-    }
-
-    @Test
-    void findAll() {
-        List<Comment> comments = commentRepository.findAll();
-        assertTrue(comments.size() == 4);
-    }
-
-    @TestFactory
-    @DisplayName("Получение коментария по ID")
-    List<DynamicTest> getById() {
-        DynamicTest comment1 = DynamicTest.dynamicTest("ID = 1", () -> {
-            Comment comment = assertDoesNotThrow(() -> commentRepository.findById(1L).orElseThrow());
-            assertEquals(comment.getId(), 1);
-        });
-        DynamicTest comment2 = DynamicTest.dynamicTest("ID = Integer.MAX_VALUE+1", () -> {
-            Optional<Comment> comment = assertDoesNotThrow(() -> commentRepository.findById(Integer.MAX_VALUE + 1L));
-            assertTrue(comment.isEmpty());
-        });
-        return Arrays.asList(comment1, comment2);
-    }
-
-    @TestFactory
-    @DisplayName("Удаление коментария")
-    List<DynamicTest> delete() {
-        Comment comment = new Comment();
-        Book book = new Book();
-        book.setId(1);
-        comment.setBook(book);
-        DynamicTest delExists = DynamicTest.dynamicTest("Удаление существующего коментария", () -> {
-            comment.setId(1);
-            assertDoesNotThrow(() -> commentRepository.delete(comment));
-            assertTrue(commentRepository.findByBookId(1L).isEmpty());
-
-        });
-
-        DynamicTest delDoseNotExists = DynamicTest.dynamicTest("Удаление не существующего коментария", () -> {
-            comment.setId(Integer.MAX_VALUE + 1L);
-            assertDoesNotThrow(() -> commentRepository.delete(comment));
-            assertTrue(commentRepository.findById(Integer.MAX_VALUE + 1L).isEmpty());
-        });
-
-        return Arrays.asList(delExists, delDoseNotExists);
     }
 }

@@ -30,13 +30,6 @@ class BookRepositoryTest {
     private TestEntityManager em;
 
     @Test
-    @DisplayName("Получениене количества книг")
-    void count() {
-        long count = bookRepository.count();
-        assertEquals(count, 3);
-    }
-
-    @Test
     @DisplayName("Вставка с получением ID")
     void insert() {
         Book book = new Book("qwe", "ewq");
@@ -50,47 +43,6 @@ class BookRepositoryTest {
         assertEquals(book, result.get());
     }
 
-    @TestFactory
-    @DisplayName("Получение книги по ID")
-    List<DynamicTest> getById() {
-        DynamicTest book1 = DynamicTest.dynamicTest("ID = 1", () -> {
-            Book book = assertDoesNotThrow(() -> bookRepository.findById(1L).orElseThrow());
-            assertEquals(book.getId(), 1);
-        });
-        DynamicTest book2 = DynamicTest.dynamicTest("ID = Integer.MAX_VALUE+1", () -> {
-            Optional<Book> book = assertDoesNotThrow(() -> bookRepository.findById(Integer.MAX_VALUE + 1L));
-            assertTrue(book.isEmpty());
-        });
-        return Arrays.asList(book1, book2);
-    }
-
-
-    @Test
-    @DisplayName("Получение всех книг")
-    void getAll() {
-        List<Book> books = assertDoesNotThrow(() -> bookRepository.findAll());
-        assertEquals(books.size(), 3);
-    }
-
-    @TestFactory
-    @DisplayName("Удаление книги")
-    List<DynamicTest> delete() {
-        Book book = new Book("Test", "Test");
-
-        DynamicTest delExists = DynamicTest.dynamicTest("Удаление существующей книги", () -> {
-            book.setId(1);
-            assertDoesNotThrow(() -> bookRepository.delete(book));
-            assertTrue(bookRepository.findById(1L).isEmpty());
-
-        });
-
-        DynamicTest delDoseNotExists = DynamicTest.dynamicTest("Удаление не существующей книги", () -> {
-            book.setId(Integer.MAX_VALUE + 1);
-            assertDoesNotThrow(() -> bookRepository.delete(book));
-        });
-
-        return Arrays.asList(delExists, delDoseNotExists);
-    }
 
     @TestFactory
     @DisplayName("Поиск по заголовку")
@@ -155,29 +107,5 @@ class BookRepositoryTest {
             assertEquals(books.size(), 0);
         });
         return Arrays.asList(genre1, genre2);
-    }
-
-    @Test
-    @DisplayName("Добавление авторов и жанров в книгу")
-    void addRelations() {
-        Book book = bookRepository.findById(1L).orElseThrow();
-
-        Genre genre = new Genre("Genre3");
-        genre.setId(3);
-
-        Author author = new Author("Author3");
-        author.setId(3);
-
-        assertFalse(book.getAuthors().contains(author));
-        assertFalse(book.getGenres().contains(genre));
-
-        book.addAuthor(author);
-        book.addGenre(genre);
-
-        assertDoesNotThrow(() -> bookRepository.save(book));
-
-        assertTrue(bookRepository.getByGenre(genre).contains(book));
-        assertTrue(bookRepository.getByAuthor(author).contains(book));
-
     }
 }

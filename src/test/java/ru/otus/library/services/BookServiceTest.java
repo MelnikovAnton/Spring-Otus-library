@@ -75,8 +75,6 @@ class BookServiceTest {
         assertEquals(book, b);
 
         verify(bookRepository, times(1)).save(any(Book.class));
-//        verify(authorService, times(1)).saveAuthor(any(Author.class));
-//        verify(genreService, times(1)).saveGenre(any(Genre.class));
     }
 
     @Test
@@ -158,8 +156,6 @@ class BookServiceTest {
 
         List<Book> books = assertDoesNotThrow(() -> bookService.findAll());
         assertEquals(getTestBooks(), books);
-
-        //      verify(bookDao, times(1)).findAll();
     }
 
     @Test

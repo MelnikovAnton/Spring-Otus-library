@@ -27,67 +27,17 @@ class AuthorRepositoryTest {
     @Autowired
     private TestEntityManager em;
 
-    @Test
-    @DisplayName("Получениене количества авторов")
-    void count() {
-        long count = authorRepository.count();
-        assertEquals(count, 3);
-    }
-
 
     @Test
     @DisplayName("Вставка с получением ID")
     void insert() {
         Author author = new Author("ewq");
         assertDoesNotThrow(() -> authorRepository.save(author));
-
         em.refresh(author);
         em.detach(author);
         Optional<Author> result = assertDoesNotThrow(() -> authorRepository.findById(author.getId()));
         assertTrue(result.isPresent());
         assertEquals(author, result.get());
-
-    }
-
-    @TestFactory
-    @DisplayName("Получение автора по ID")
-    List<DynamicTest> getById() {
-        DynamicTest author1 = DynamicTest.dynamicTest("ID = 1", () -> {
-            Author author = assertDoesNotThrow(() -> authorRepository.findById(1L).orElseThrow());
-            assertEquals(author.getId(), 1);
-        });
-        DynamicTest author2 = DynamicTest.dynamicTest("ID = Integer.MAX_VALUE+1", () -> {
-            assertTrue(authorRepository.findById(Integer.MAX_VALUE + 1L).isEmpty());
-
-        });
-        return Arrays.asList(author1, author2);
-    }
-
-    @Test
-    @DisplayName("Получение всех авторов")
-    void getAll() {
-        List<Author> authors = assertDoesNotThrow(() -> authorRepository.findAll());
-        assertEquals(authors.size(), 3);
-    }
-
-    @TestFactory
-    @DisplayName("Удаление авторов")
-    List<DynamicTest> delete() {
-        Author author = new Author("Test");
-
-        DynamicTest delExists = DynamicTest.dynamicTest("Удаление существующего автора", () -> {
-            author.setId(1);
-            assertDoesNotThrow(() -> authorRepository.delete(author));
-            Optional<Author> result = assertDoesNotThrow(() -> authorRepository.findById(1L));
-            assertTrue(result.isEmpty());
-        });
-
-        DynamicTest delDoseNotExists = DynamicTest.dynamicTest("Удаление не существующего автора", () -> {
-            author.setId(Integer.MAX_VALUE + 1);
-            assertDoesNotThrow(() -> authorRepository.delete(author));
-        });
-
-        return Arrays.asList(delExists, delDoseNotExists);
     }
 
     @TestFactory
