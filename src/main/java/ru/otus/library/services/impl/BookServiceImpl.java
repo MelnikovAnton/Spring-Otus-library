@@ -61,7 +61,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Optional<Book> findById(long id) {
+    public Optional<Book> findById(String id) {
         try {
             return bookRepository.findById(id);
         } catch (EmptyResultDataAccessException e) {
@@ -72,7 +72,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public long delete(Book book) {
+    public String delete(Book book) {
         List<Comment> comments = commentService.findCommentsByBook(book);
         commentService.deleteAll(comments);
         bookRepository.delete(book);

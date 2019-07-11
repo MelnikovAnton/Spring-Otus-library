@@ -55,10 +55,10 @@ class CommentShellCommandsTest {
         DynamicTest success = DynamicTest.dynamicTest("Добавление коментария в книгу", ()-> {
             when(commentService.saveComment(any(Comment.class))).thenAnswer(invocation -> {
                 Comment comment = (Comment) invocation.getArgument(0);
-                comment.setId(1);
+                comment.setId("1");
                 return comment;
             });
-            when(bookService.findById(anyLong())).thenReturn(Optional.of(new Book(1, "test", "Test")));
+            when(bookService.findById(anyString())).thenReturn(Optional.of(new Book("1", "test", "Test")));
 
             String r = (String) shell.evaluate(() -> "addc -b 1 -c test");
             assertEquals("Comment added id=1", r);
@@ -67,10 +67,10 @@ class CommentShellCommandsTest {
         DynamicTest noBook = DynamicTest.dynamicTest("Добавление коментария в книгу с неверным id", ()-> {
             when(commentService.saveComment(any(Comment.class))).thenAnswer(invocation -> {
                 Comment comment = (Comment) invocation.getArgument(0);
-                comment.setId(1);
+                comment.setId("1");
                 return comment;
             });
-            when(bookService.findById(anyLong())).thenReturn(Optional.empty());
+            when(bookService.findById(anyString())).thenReturn(Optional.empty());
 
             String r = (String) shell.evaluate(() -> "addc -b 1 -c test");
             assertEquals("No book with id 1", r);
@@ -85,7 +85,7 @@ class CommentShellCommandsTest {
     @DisplayName("Поиск коментария")
     List<DynamicTest> findCommentss() {
         DynamicTest byIdExists = DynamicTest.dynamicTest("Поиск по ID,коментарий есть", () -> {
-            when(commentService.findById(anyLong())).thenReturn(Optional.of(getTestComment()));
+            when(commentService.findById(anyString())).thenReturn(Optional.of(getTestComment()));
             Table r = (Table) shell.evaluate(() -> "fc -i 1");
             int rowCount = r.getModel().getRowCount();
             assertEquals(2, rowCount);
@@ -94,7 +94,7 @@ class CommentShellCommandsTest {
         });
 
         DynamicTest byIdNotExists = DynamicTest.dynamicTest("Поиск по ID, коментария нет", () -> {
-            when(commentService.findById(anyLong())).thenReturn(Optional.empty());
+            when(commentService.findById(anyString())).thenReturn(Optional.empty());
             Table r = (Table) shell.evaluate(() -> "fc -i 10");
             int rowCount = r.getModel().getRowCount();
             assertEquals(1, rowCount);
@@ -102,7 +102,7 @@ class CommentShellCommandsTest {
 
         DynamicTest byBook = DynamicTest.dynamicTest("Поиск по книге", () -> {
             when(commentService.findCommentsByBook(any(Book.class))).thenReturn(getTestComments());
-            when(bookService.findById(anyLong())).thenReturn(Optional.of(new Book(1, "test", "Test")));
+            when(bookService.findById(anyString())).thenReturn(Optional.of(new Book("1", "test", "Test")));
             Table r = (Table) shell.evaluate(() -> "fc -b 1");
             int rowCount = r.getModel().getRowCount();
             assertEquals(4, rowCount);
@@ -132,14 +132,14 @@ class CommentShellCommandsTest {
     @DisplayName("Удаление коментария")
     List<DynamicTest> testDeleteGenre() {
         DynamicTest delBook = DynamicTest.dynamicTest("Удаление коментария", () -> {
-            when(commentService.findById(anyLong())).thenReturn(Optional.of(getTestComment()));
+            when(commentService.findById(anyString())).thenReturn(Optional.of(getTestComment()));
 
             String r = (String) shell.evaluate(() -> "delc 1");
             assertTrue(r.contains("Comment deleted id="));
 
         });
         DynamicTest delWrongBook = DynamicTest.dynamicTest("Удаление коментария с неверным ID", () -> {
-            when(commentService.findById(anyLong())).thenReturn(Optional.empty());
+            when(commentService.findById(anyString())).thenReturn(Optional.empty());
             String r = (String) shell.evaluate(() -> "delc -i 1");
             assertTrue(r.contains("no comment with id"));
         });
@@ -149,16 +149,16 @@ class CommentShellCommandsTest {
 
 
     private Comment getTestComment() {
-        Book book = new Book(1,"Test","Test");
+        Book book = new Book("1","Test","Test");
         Comment comment=new Comment(book,"Test");
-        comment.setId(1);
+        comment.setId("1");
         return comment;
     }
 
     private List<Comment> getTestComments() {
-        Book book = new Book(1,"Test","Test");
-        Comment comment = new Comment(book, "Test");
-        comment.setId(1);
+        Book book = new Book("1","Test","Test");
+        Comment comment = new Comment( book,"Test");
+        comment.setId("1");
         return List.of(comment,
                 new Comment(book,"Test"),
                 new Comment(book,"Test"));

@@ -29,7 +29,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public Optional<Genre> findById(long id) {
+    public Optional<Genre> findById(String id) {
         try {
             return genreRepository.findById(id);
         } catch (EmptyResultDataAccessException e) {
@@ -39,7 +39,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public long delete(Genre genre) {
+    public String delete(Genre genre) {
         genreRepository.delete(genre);
         return genre.getId();
     }
@@ -50,7 +50,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public List<Genre> findByBookId(long id) {
-        return genreRepository.findByBookId(id);
+    public List<Genre> findByBookId(String id) {
+        return null;// genreRepository.findByBookId(id);
     }
 }

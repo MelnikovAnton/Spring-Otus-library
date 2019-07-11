@@ -56,7 +56,7 @@ class BookShellCommandsTest {
     @DisplayName("Поиск книг")
     List<DynamicTest> findBooks() {
         DynamicTest byIdExists = DynamicTest.dynamicTest("Поиск по ID книга есть", () -> {
-            when(bookService.findById(anyLong())).thenReturn(Optional.of(getTestBook()));
+            when(bookService.findById(anyString())).thenReturn(Optional.of(getTestBook()));
             Table r = (Table) shell.evaluate(() -> "fb -i 1");
             int rowCount = r.getModel().getRowCount();
             assertEquals(2, rowCount);
@@ -65,7 +65,7 @@ class BookShellCommandsTest {
         });
 
         DynamicTest byIdNotExists = DynamicTest.dynamicTest("Поиск по ID книги нет", () -> {
-            when(bookService.findById(anyLong())).thenReturn(Optional.empty());
+            when(bookService.findById(anyString())).thenReturn(Optional.empty());
             Table r = (Table) shell.evaluate(() -> "fb -i 1");
             int rowCount = r.getModel().getRowCount();
             assertEquals(1, rowCount);
@@ -116,14 +116,14 @@ class BookShellCommandsTest {
     @DisplayName("Удаление книги")
     List<DynamicTest> testDeleteBook() {
         DynamicTest delBook = DynamicTest.dynamicTest("Удаление книги", () -> {
-            when(bookService.findById(anyLong())).thenReturn(Optional.of(getTestBook()));
+            when(bookService.findById(anyString())).thenReturn(Optional.of(getTestBook()));
 
             String r = (String) shell.evaluate(() -> "delb 1");
             assertTrue(r.contains("Book deleted id="));
 
         });
         DynamicTest delWrongBook = DynamicTest.dynamicTest("Удаление книги с неверным ID", () -> {
-            when(bookService.findById(anyLong())).thenReturn(Optional.empty());
+            when(bookService.findById(anyString())).thenReturn(Optional.empty());
             String r = (String) shell.evaluate(() -> "delb -i 1");
             assertTrue(r.contains("no book with id"));
 
@@ -138,7 +138,7 @@ class BookShellCommandsTest {
     void testAddBook() {
         when(bookService.saveBook(any(Book.class))).thenAnswer(invocation -> {
             Book b = (Book) invocation.getArgument(0);
-            b.setId(1);
+            b.setId("1");
             return b;
         });
 
@@ -153,21 +153,21 @@ class BookShellCommandsTest {
     @DisplayName("Добавление автора в книгу")
     List<DynamicTest> setAuthor() {
         DynamicTest addAuthor = DynamicTest.dynamicTest("Добавление автора", () -> {
-            when(authorService.findById(anyLong())).thenReturn(Optional.of(getTestAuthor()));
-            when(bookService.findById(anyLong())).thenReturn(Optional.of(getTestBook()));
+            when(authorService.findById(anyString())).thenReturn(Optional.of(getTestAuthor()));
+            when(bookService.findById(anyString())).thenReturn(Optional.of(getTestBook()));
 
             String r = (String) shell.evaluate(() -> "seta -b 1 -a 1");
             assertTrue(r.contains("Author added to book"));
         });
         DynamicTest addWrongAuthor = DynamicTest.dynamicTest("Добавление автора с неверным ID", () -> {
-            when(authorService.findById(anyLong())).thenReturn(Optional.empty());
-            when(bookService.findById(anyLong())).thenReturn(Optional.of(getTestBook()));
+            when(authorService.findById(anyString())).thenReturn(Optional.empty());
+            when(bookService.findById(anyString())).thenReturn(Optional.of(getTestBook()));
             String r = (String) shell.evaluate(() -> "seta -b 1 -a 1");
             assertTrue(r.contains("no Author with id"));
         });
         DynamicTest addWrongBook = DynamicTest.dynamicTest("Добавление книги с неверным ID", () -> {
-            when(authorService.findById(anyLong())).thenReturn(Optional.of(getTestAuthor()));
-            when(bookService.findById(anyLong())).thenReturn(Optional.empty());
+            when(authorService.findById(anyString())).thenReturn(Optional.of(getTestAuthor()));
+            when(bookService.findById(anyString())).thenReturn(Optional.empty());
             String r = (String) shell.evaluate(() -> "seta -b 1 -a 1");
             assertTrue(r.contains("no book with id"));
         });
@@ -179,21 +179,21 @@ class BookShellCommandsTest {
     @DisplayName("Добавление жанра в книгу")
     List<DynamicTest> setGenre() {
         DynamicTest addGenre = DynamicTest.dynamicTest("Добавление жанра", () -> {
-            when(genreService.findById(anyLong())).thenReturn(Optional.of(getTestGenre()));
-            when(bookService.findById(anyLong())).thenReturn(Optional.of(getTestBook()));
+            when(genreService.findById(anyString())).thenReturn(Optional.of(getTestGenre()));
+            when(bookService.findById(anyString())).thenReturn(Optional.of(getTestBook()));
 
             String r = (String) shell.evaluate(() -> "setg -b 1 -g 1");
             assertTrue(r.contains("Genre added to book"));
         });
         DynamicTest addWrongGenre = DynamicTest.dynamicTest("Добавление жанра с неверным ID", () -> {
-            when(genreService.findById(anyLong())).thenReturn(Optional.empty());
-            when(bookService.findById(anyLong())).thenReturn(Optional.of(getTestBook()));
+            when(genreService.findById(anyString())).thenReturn(Optional.empty());
+            when(bookService.findById(anyString())).thenReturn(Optional.of(getTestBook()));
             String r = (String) shell.evaluate(() -> "setg -b 1 -g 1");
             assertTrue(r.contains("no Genre with id"));
         });
         DynamicTest addWrongBook = DynamicTest.dynamicTest("Добавление книги с неверным ID", () -> {
-            when(genreService.findById(anyLong())).thenReturn(Optional.of(getTestGenre()));
-            when(bookService.findById(anyLong())).thenReturn(Optional.empty());
+            when(genreService.findById(anyString())).thenReturn(Optional.of(getTestGenre()));
+            when(bookService.findById(anyString())).thenReturn(Optional.empty());
             String r = (String) shell.evaluate(() -> "setg -b 1 -g 1");
             assertTrue(r.contains("no book with id"));
         });
@@ -203,24 +203,24 @@ class BookShellCommandsTest {
 
     private Book getTestBook() {
         Book testBook = new Book("Test", "Test");
-        testBook.setId(1);
-        testBook.addAuthor(new Author(1, "Auth1"));
-        testBook.addAuthor(new Author(2, "Auth2"));
-        testBook.addAuthor(new Author(3, "Auth3"));
+        testBook.setId("1");
+        testBook.addAuthor(new Author("1", "Auth1"));
+        testBook.addAuthor(new Author("2", "Auth2"));
+        testBook.addAuthor(new Author("3", "Auth3"));
 
-        testBook.addGenre(new Genre(1, "Genre1"));
-        testBook.addGenre(new Genre(2, "Genre2"));
-        testBook.addGenre(new Genre(3, "Genre3"));
+        testBook.addGenre(new Genre("1", "Genre1"));
+        testBook.addGenre(new Genre("2", "Genre2"));
+        testBook.addGenre(new Genre("3", "Genre3"));
 
         return testBook;
     }
 
     private Author getTestAuthor() {
-        return new Author(5, "Test");
+        return new Author("5", "Test");
     }
 
     private Genre getTestGenre() {
-        return new Genre(5, "Test");
+        return new Genre("5", "Test");
     }
 
 }

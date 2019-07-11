@@ -28,10 +28,10 @@ public class GenreShellCommands {
 
 
     @ShellMethod(value = "delete Genre", key = {"deleteGenre", "delg"})
-    private String deleteGenre(@ShellOption(value = {"-i", "--id"}) long id) {
+    private String deleteGenre(@ShellOption(value = {"-i", "--id"}) String id) {
         Optional<Genre> oGenre = genreService.findById(id);
         if (oGenre.isEmpty()) return "no genre with id " + id;
-        long r = genreService.delete(oGenre.get());
+        String r = genreService.delete(oGenre.get());
         return "Genre deleted id=" + r;
     }
 
@@ -43,13 +43,13 @@ public class GenreShellCommands {
     }
 
     @ShellMethod(value = "find Genres", key = {"findGenres", "fg"})
-    private Table findGenres(@ShellOption(value = {"-i", "--id"}, defaultValue = "-1") long id,
-                             @ShellOption(value = {"-b", "--book-id"}, defaultValue = "-1") long book_id,
+    private Table findGenres(@ShellOption(value = {"-i", "--id"}, defaultValue = "-1") String id,
+                             @ShellOption(value = {"-b", "--book-id"}, defaultValue = "-1") String book_id,
                              @ShellOption(value = {"-n", "--name"}, defaultValue = "") String name) {
 
         List<Genre> genres = new ArrayList<>();
-        if (id > 0) genreService.findById(id).ifPresent(genres::add);
-        if (book_id>0) genres.addAll(genreService.findByBookId(book_id));
+        if (!id.isEmpty()) genreService.findById(id).ifPresent(genres::add);
+        if (!book_id.isEmpty()) genres.addAll(genreService.findByBookId(book_id));
         if (!name.isEmpty()) genres.addAll(genreService.findGenresByName(name));
         return getGenresTable(genres);
     }

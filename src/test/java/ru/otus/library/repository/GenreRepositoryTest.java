@@ -21,45 +21,45 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 class GenreRepositoryTest {
 
-    @Autowired
-    private GenreRepository genreRepository;
-
-    @Autowired
-    private TestEntityManager em;
-
-
-    @Test
-    @DisplayName("Вставка с получением ID")
-    void insert() {
-        Genre genre = new Genre("ewq");
-        assertDoesNotThrow(() -> genreRepository.save(genre));
-
-        em.refresh(genre);
-        em.detach(genre);
-        Optional<Genre> result = assertDoesNotThrow(() -> genreRepository.findById(genre.getId()));
-        assertTrue(result.isPresent());
-        assertEquals(genre, result.get());
-    }
-
-    @Test
-    @DisplayName("Поиск по имени жанра")
-    void findGenresByName() {
-        List<Genre> genres = assertDoesNotThrow(() -> genreRepository.findByNameContaining("enre"));
-        assertEquals(genres.size(), 4);
-    }
-
-    @TestFactory
-    @DisplayName("Поиск по Id книги")
-    List<DynamicTest> findByBookId() {
-        DynamicTest auth1 = DynamicTest.dynamicTest("ID = 1", () -> {
-            List<Genre> authors = assertDoesNotThrow(() -> genreRepository.findByBookId(1));
-            assertEquals(1, authors.size());
-            assertEquals(authors.get(0).getId(), 1);
-        });
-        DynamicTest auth2 = DynamicTest.dynamicTest("ID = Integer.MAX_VALUE+1", () -> {
-            List<Genre> authors = assertDoesNotThrow(() -> genreRepository.findByBookId(Integer.MAX_VALUE + 1));
-            assertTrue(authors.isEmpty());
-        });
-        return Arrays.asList(auth1, auth2);
-    }
+//    @Autowired
+//    private GenreRepository genreRepository;
+//
+//    @Autowired
+//    private TestEntityManager em;
+//
+//
+//    @Test
+//    @DisplayName("Вставка с получением ID")
+//    void insert() {
+//        Genre genre = new Genre("ewq");
+//        assertDoesNotThrow(() -> genreRepository.save(genre));
+//
+//        em.refresh(genre);
+//        em.detach(genre);
+//        Optional<Genre> result = assertDoesNotThrow(() -> genreRepository.findById(genre.getId()));
+//        assertTrue(result.isPresent());
+//        assertEquals(genre, result.get());
+//    }
+//
+//    @Test
+//    @DisplayName("Поиск по имени жанра")
+//    void findGenresByName() {
+//        List<Genre> genres = assertDoesNotThrow(() -> genreRepository.findByNameContaining("enre"));
+//        assertEquals(genres.size(), 4);
+//    }
+//
+//    @TestFactory
+//    @DisplayName("Поиск по Id книги")
+//    List<DynamicTest> findByBookId() {
+//        DynamicTest auth1 = DynamicTest.dynamicTest("ID = 1", () -> {
+//            List<Genre> authors = assertDoesNotThrow(() -> genreRepository.findByBookId(1));
+//            assertEquals(1, authors.size());
+//            assertEquals(authors.get(0).getId(), 1);
+//        });
+//        DynamicTest auth2 = DynamicTest.dynamicTest("ID = Integer.MAX_VALUE+1", () -> {
+//            List<Genre> authors = assertDoesNotThrow(() -> genreRepository.findByBookId(Integer.MAX_VALUE + 1));
+//            assertTrue(authors.isEmpty());
+//        });
+//        return Arrays.asList(auth1, auth2);
+//    }
 }

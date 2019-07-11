@@ -34,14 +34,14 @@ public class BookShellCommands {
     private final AuthorService authorService;
 
     @ShellMethod(value = "find Book", key = {"findBook", "fb"})
-    private Table findBooks(@ShellOption(value = {"-i", "--id"}, defaultValue = "-1") long id,
+    private Table findBooks(@ShellOption(value = {"-i", "--id"}, defaultValue = "-1") String id,
                             @ShellOption(value = {"-t", "--title"}, defaultValue = "") String title,
                             @ShellOption(value = {"-gn", "--genre-name"}, defaultValue = "") String genre,
                             @ShellOption(value = {"-an", "--author-name"}, defaultValue = "") String author) {
 
         List<Book> books = new ArrayList<>();
 
-        if (id > 0) bookService.findById(id).ifPresent(books::add);
+        if (!id.isEmpty()) bookService.findById(id).ifPresent(books::add);
         if (!title.isEmpty()) books.addAll(bookService.findBooksByTitle(title));
         if (!genre.isEmpty()) books.addAll(bookService.findBooksByGenre(genre));
         if (!author.isEmpty()) books.addAll(bookService.findBooksByAuthor(author));
@@ -56,11 +56,11 @@ public class BookShellCommands {
     }
 
     @ShellMethod(value = "delete Book", key = {"deleteBook", "delb"})
-    private String deleteBook(@ShellOption(value = {"-i", "--id"}) long id) {
+    private String deleteBook(@ShellOption(value = {"-i", "--id"}) String id) {
 
         Optional<Book> oBook = bookService.findById(id);
         if (oBook.isEmpty()) return "no book with id " + id;
-        long r = bookService.delete(oBook.get());
+        String r = bookService.delete(oBook.get());
         return "Book deleted id=" + r;
     }
 
@@ -73,8 +73,8 @@ public class BookShellCommands {
     }
 
     @ShellMethod(value = "set Genre to book", key = {"setGenre", "setg"})
-    private String setGenre(@ShellOption(value = {"-b", "--book"}) long bookId,
-                            @ShellOption(value = {"-g", "--genre"}) long genreId) {
+    private String setGenre(@ShellOption(value = {"-b", "--book"}) String bookId,
+                            @ShellOption(value = {"-g", "--genre"}) String genreId) {
 
         Optional<Book> oBook = bookService.findById(bookId);
         if (oBook.isEmpty()) return "no book with id " + bookId;
@@ -91,8 +91,8 @@ public class BookShellCommands {
 
 
     @ShellMethod(value = "set Author to book", key = {"setAuthor", "seta"})
-    private String setAuthor(@ShellOption(value = {"-b", "--book"}) long bookId,
-                             @ShellOption(value = {"-a", "--author"}) long authorId) {
+    private String setAuthor(@ShellOption(value = {"-b", "--book"}) String bookId,
+                             @ShellOption(value = {"-a", "--author"}) String authorId) {
 
         Optional<Book> oBook = bookService.findById(bookId);
         if (oBook.isEmpty()) return "no book with id " + bookId;

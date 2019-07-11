@@ -52,7 +52,7 @@ class GenreShellCommandsTest {
 
         when(genreService.saveGenre(any(Genre.class))).thenAnswer(invocation -> {
             Genre genre = (Genre) invocation.getArgument(0);
-            genre.setId(1);
+            genre.setId("1");
             return genre;
         });
         String r = (String) shell.evaluate(() -> "addg Name");
@@ -64,7 +64,7 @@ class GenreShellCommandsTest {
     @DisplayName("Поиск жанров")
     List<DynamicTest> findGenres() {
         DynamicTest byIdExists = DynamicTest.dynamicTest("Поиск по ID жанр есть", () -> {
-            when(genreService.findById(anyLong())).thenReturn(Optional.of(getTestGenre()));
+            when(genreService.findById(anyString())).thenReturn(Optional.of(getTestGenre()));
             Table r = (Table) shell.evaluate(() -> "fg -i 1");
             int rowCount = r.getModel().getRowCount();
             assertEquals(2, rowCount);
@@ -73,7 +73,7 @@ class GenreShellCommandsTest {
         });
 
         DynamicTest byIdNotExists = DynamicTest.dynamicTest("Поиск по ID жанра нет", () -> {
-            when(genreService.findById(anyLong())).thenReturn(Optional.empty());
+            when(genreService.findById(anyString())).thenReturn(Optional.empty());
             Table r = (Table) shell.evaluate(() -> "fg -i 10");
             int rowCount = r.getModel().getRowCount();
             assertEquals(1, rowCount);
@@ -110,14 +110,14 @@ class GenreShellCommandsTest {
     @DisplayName("Удаление жанра")
     List<DynamicTest> testDeleteGenre() {
         DynamicTest delBook = DynamicTest.dynamicTest("Удаление жанра", () -> {
-            when(genreService.findById(anyLong())).thenReturn(Optional.of(getTestGenre()));
+            when(genreService.findById(anyString())).thenReturn(Optional.of(getTestGenre()));
 
             String r = (String) shell.evaluate(() -> "delg 1");
             assertTrue(r.contains("Genre deleted id="));
 
         });
         DynamicTest delWrongBook = DynamicTest.dynamicTest("Удаление жанра с неверным ID", () -> {
-            when(genreService.findById(anyLong())).thenReturn(Optional.empty());
+            when(genreService.findById(anyString())).thenReturn(Optional.empty());
             String r = (String) shell.evaluate(() -> "delg -i 1");
             assertTrue(r.contains("no genre with id"));
         });
@@ -127,12 +127,12 @@ class GenreShellCommandsTest {
 
 
     private Genre getTestGenre() {
-        return new Genre(1, "Test");
+        return new Genre("1", "Test");
     }
 
     private List<Genre> getTestGenres() {
-        return List.of(new Genre(1, "Test"),
-                new Genre(2, "Test"),
-                new Genre(3, "Test"));
+        return List.of(new Genre("1", "Test"),
+                new Genre("2", "Test"),
+                new Genre("3", "Test"));
     }
 }

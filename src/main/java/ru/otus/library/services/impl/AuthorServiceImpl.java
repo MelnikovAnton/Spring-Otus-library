@@ -29,7 +29,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Optional<Author> findById(long id) {
+    public Optional<Author> findById(String id) {
         try {
             return authorRepository.findById(id);
         } catch (EmptyResultDataAccessException e) {
@@ -39,7 +39,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public long delete(Author author) {
+    public String delete(Author author) {
         authorRepository.delete(author);
         return author.getId();
     }
@@ -50,7 +50,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<Author> findByBookId(long id) {
-        return authorRepository.findByBookId(id);
+    public List<Author> findByBookId(String id) {
+        return null;//authorRepository.findByBookId(id);
     }
 }

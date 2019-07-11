@@ -49,7 +49,7 @@ class AuthorShellCommandsTest {
     @DisplayName("Поиск авторов")
     List<DynamicTest> findAuthors() {
         DynamicTest byIdExists = DynamicTest.dynamicTest("Поиск по ID автор есть", () -> {
-            when(authorService.findById(anyLong())).thenReturn(Optional.of(getTestAuthor()));
+            when(authorService.findById(anyString())).thenReturn(Optional.of(getTestAuthor()));
             Table r = (Table) shell.evaluate(() -> "fa -i 1");
             int rowCount = r.getModel().getRowCount();
             assertEquals(2, rowCount);
@@ -58,7 +58,7 @@ class AuthorShellCommandsTest {
         });
 
         DynamicTest byIdNotExists = DynamicTest.dynamicTest("Поиск по ID автора нет", () -> {
-            when(authorService.findById(anyLong())).thenReturn(Optional.empty());
+            when(authorService.findById(anyString())).thenReturn(Optional.empty());
             Table r = (Table) shell.evaluate(() -> "fa -i 10");
             int rowCount = r.getModel().getRowCount();
             assertEquals(1, rowCount);
@@ -95,13 +95,13 @@ class AuthorShellCommandsTest {
     @DisplayName("Удаление автора")
     List<DynamicTest> testDeleteAuthor() {
         DynamicTest delBook = DynamicTest.dynamicTest("Удаление автора", () -> {
-            when(authorService.findById(anyLong())).thenReturn(Optional.of(getTestAuthor()));
+            when(authorService.findById(anyString())).thenReturn(Optional.of(getTestAuthor()));
 
             String r = (String) shell.evaluate(() -> "dela 1");
             assertTrue(r.contains("Author deleted id="));
         });
         DynamicTest delWrongBook = DynamicTest.dynamicTest("Удаление автора с неверным ID", () -> {
-            when(authorService.findById(anyLong())).thenReturn(Optional.empty());
+            when(authorService.findById(anyString())).thenReturn(Optional.empty());
             String r = (String) shell.evaluate(() -> "dela -i 1");
             assertTrue(r.contains("no author with id"));
         });
@@ -115,7 +115,7 @@ class AuthorShellCommandsTest {
 
         when(authorService.saveAuthor(any(Author.class))).thenAnswer(invocation -> {
             Author genre = invocation.getArgument(0);
-            genre.setId(1);
+            genre.setId("1");
             return genre;
         });
         String r = (String) shell.evaluate(() -> "adda Name");
@@ -125,13 +125,13 @@ class AuthorShellCommandsTest {
     }
 
     private Author getTestAuthor() {
-        return new Author(1, "Test");
+        return new Author("1", "Test");
     }
 
     private List<Author> getTestAuthors() {
-        return List.of(new Author(1, "Test"),
-                new Author(2, "Test"),
-                new Author(3, "Test"));
+        return List.of(new Author("1", "Test"),
+                new Author("2", "Test"),
+                new Author("3", "Test"));
     }
 
 }
