@@ -34,7 +34,7 @@ public class BookShellCommands {
     private final AuthorService authorService;
 
     @ShellMethod(value = "find Book", key = {"findBook", "fb"})
-    private Table findBooks(@ShellOption(value = {"-i", "--id"}, defaultValue = "-1") String id,
+    private Table findBooks(@ShellOption(value = {"-i", "--id"}, defaultValue = "") String id,
                             @ShellOption(value = {"-t", "--title"}, defaultValue = "") String title,
                             @ShellOption(value = {"-gn", "--genre-name"}, defaultValue = "") String genre,
                             @ShellOption(value = {"-an", "--author-name"}, defaultValue = "") String author) {

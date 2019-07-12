@@ -56,8 +56,8 @@ public class CommentShellCommands {
     }
 
     @ShellMethod(value = "find Comments", key = {"findComments", "fc"})
-    private Table findComments(@ShellOption(value = {"-i", "--id"}, defaultValue = "-1") String id,
-                               @ShellOption(value = {"-b", "--book"}, defaultValue = "-1") String book_id) {
+    private Table findComments(@ShellOption(value = {"-i", "--id"}, defaultValue = "") String id,
+                               @ShellOption(value = {"-b", "--book"}, defaultValue = "") String book_id) {
 
         List<Comment> comments = new ArrayList<>();
         if (!id.isEmpty()) commentService.findById(id).ifPresent(comments::add);

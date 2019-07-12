@@ -41,23 +41,12 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> findBooksByAuthor(String author) {
-        return authorService.findAuthorsByName(author)
-                .stream()
-                .map(bookRepository::findByAuthorsContains)
-                .flatMap(Collection::stream)
-                .distinct()
-                .collect(Collectors.toList());
-
+        return bookRepository.findByAuthorsNameContains(author);
     }
 
     @Override
     public List<Book> findBooksByGenre(String genre) {
-        return genreService.findGenresByName(genre)
-                .stream()
-                .map(bookRepository::findByGenresContains)
-                .flatMap(Collection::stream)
-                .distinct()
-                .collect(Collectors.toList());
+       return bookRepository.findByGenresNameContains(genre);
     }
 
     @Override

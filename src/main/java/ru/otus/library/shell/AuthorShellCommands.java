@@ -42,8 +42,8 @@ public class AuthorShellCommands {
     }
 
     @ShellMethod(value = "find Authors", key = {"findAuthors", "fa"})
-    private Table findAuthors(@ShellOption(value = {"-i", "--id"}, defaultValue = "-1") String id,
-                              @ShellOption(value = {"-b", "--book-id"}, defaultValue = "-1") String book_id,
+    private Table findAuthors(@ShellOption(value = {"-i", "--id"}, defaultValue = "") String id,
+                              @ShellOption(value = {"-b", "--book-id"}, defaultValue = "") String book_id,
                               @ShellOption(value = {"-n", "--name"}, defaultValue = "") String name) {
 
         List<Author> authors = new ArrayList<>();

@@ -43,8 +43,8 @@ public class GenreShellCommands {
     }
 
     @ShellMethod(value = "find Genres", key = {"findGenres", "fg"})
-    private Table findGenres(@ShellOption(value = {"-i", "--id"}, defaultValue = "-1") String id,
-                             @ShellOption(value = {"-b", "--book-id"}, defaultValue = "-1") String book_id,
+    private Table findGenres(@ShellOption(value = {"-i", "--id"}, defaultValue = "") String id,
+                             @ShellOption(value = {"-b", "--book-id"}, defaultValue = "") String book_id,
                              @ShellOption(value = {"-n", "--name"}, defaultValue = "") String name) {
 
         List<Genre> genres = new ArrayList<>();

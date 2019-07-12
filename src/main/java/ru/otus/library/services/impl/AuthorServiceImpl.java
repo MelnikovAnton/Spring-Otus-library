@@ -25,7 +25,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<Author> findAuthorsByName(String name) {
-        return authorRepository.findByNameContaining(name);
+        return authorRepository.findByNameContainingIgnoreCase(name);
     }
 
     @Override
@@ -51,6 +51,6 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<Author> findByBookId(String id) {
-        return null;//authorRepository.findByBookId(id);
+        return authorRepository.findByBookId(id);
     }
 }
