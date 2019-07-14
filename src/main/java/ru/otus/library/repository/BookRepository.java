@@ -7,11 +7,12 @@ import org.springframework.stereotype.Repository;
 import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Genre;
+import ru.otus.library.repository.custom.BookCustomRepository;
 
 import java.util.List;
 
 @Repository
-public interface BookRepository extends MongoRepository<Book, String> {
+public interface BookRepository extends MongoRepository<Book, String>, BookCustomRepository {
 
     List<Book> findByTitleContaining(String title);
 
