@@ -20,10 +20,6 @@ public interface BookRepository extends MongoRepository<Book, String>, BookCusto
 
     List<Book> findByGenresContains(Genre genre);
 
-    List<Book> findByGenresContains(List<Genre> genre);
-
-    List<Book> findByAuthorsContains(List<Author> author);
-
     @Query("{'authors.name':{ '$regex' : :#{#name}, '$options' : 'i' }}")
     List<Book> findByAuthorsNameContains(@Param("name") String authorName);
 
