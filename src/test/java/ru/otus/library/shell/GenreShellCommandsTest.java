@@ -68,8 +68,8 @@ class GenreShellCommandsTest {
             Table r = (Table) shell.evaluate(() -> "fg -i 1");
             int rowCount = r.getModel().getRowCount();
             assertEquals(2, rowCount);
-            long id = (long) r.getModel().getValue(1, 0);
-            assertEquals(1, id);
+            String id = (String) r.getModel().getValue(1, 0);
+            assertEquals("1", id);
         });
 
         DynamicTest byIdNotExists = DynamicTest.dynamicTest("Поиск по ID жанра нет", () -> {
@@ -84,8 +84,8 @@ class GenreShellCommandsTest {
             Table r = (Table) shell.evaluate(() -> "fg -n Test");
             int rowCount = r.getModel().getRowCount();
             assertEquals(2, rowCount);
-            long id = (long) r.getModel().getValue(1, 0);
-            assertEquals(1, id);
+            String id = (String) r.getModel().getValue(1, 0);
+            assertEquals("1", id);
         });
 
         return Arrays.asList(byIdExists, byIdNotExists, byName);
@@ -100,8 +100,8 @@ class GenreShellCommandsTest {
 
         int rowCount = r.getModel().getRowCount();
         assertEquals(4, rowCount);
-        long id = (long) r.getModel().getValue(1, 0);
-        assertEquals(1, id);
+        String id = (String) r.getModel().getValue(1, 0);
+        assertEquals("1", id);
 
     }
 

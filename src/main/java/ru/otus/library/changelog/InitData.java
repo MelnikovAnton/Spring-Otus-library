@@ -6,6 +6,7 @@ import com.mongodb.client.MongoDatabase;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
+import ru.otus.library.model.Comment;
 import ru.otus.library.model.Genre;
 
 import java.util.ArrayList;
@@ -36,6 +37,12 @@ public class InitData {
     @ChangeSet(order = "003", id = "initBooks", author = "MelnikovAnton", runAlways = true)
     public void initBooks(MongoTemplate template) {
         getBooks().forEach(template::save);
+    }
+
+    @ChangeSet(order = "004", id = "initComments", author = "MelnikovAnton", runAlways = true)
+    public void initComments(MongoTemplate template) {
+        List<Book> books = template.findAll(Book.class);
+        books.forEach(b->template.save(new Comment(b,"comment")));
     }
 
 

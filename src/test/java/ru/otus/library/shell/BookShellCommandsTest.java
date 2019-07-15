@@ -60,8 +60,8 @@ class BookShellCommandsTest {
             Table r = (Table) shell.evaluate(() -> "fb -i 1");
             int rowCount = r.getModel().getRowCount();
             assertEquals(2, rowCount);
-            long id = (long) r.getModel().getValue(1, 0);
-            assertEquals(1, id);
+            String id = (String) r.getModel().getValue(1, 0);
+            assertEquals("1", id);
         });
 
         DynamicTest byIdNotExists = DynamicTest.dynamicTest("Поиск по ID книги нет", () -> {
@@ -75,16 +75,16 @@ class BookShellCommandsTest {
             Table r = (Table) shell.evaluate(() -> "fb -t test");
             int rowCount = r.getModel().getRowCount();
             assertEquals(2, rowCount);
-            long id = (long) r.getModel().getValue(1, 0);
-            assertEquals(1, id);
+            String id = (String) r.getModel().getValue(1, 0);
+            assertEquals("1", id);
         });
         DynamicTest byAuthor = DynamicTest.dynamicTest("Поиск по автору", () -> {
             when(bookService.findBooksByAuthor(anyString())).thenReturn(List.of(getTestBook()));
             Table r = (Table) shell.evaluate(() -> "fb -an test");
             int rowCount = r.getModel().getRowCount();
             assertEquals(2, rowCount);
-            long id = (long) r.getModel().getValue(1, 0);
-            assertEquals(1, id);
+            String id = (String) r.getModel().getValue(1, 0);
+            assertEquals("1", id);
         });
 
         DynamicTest byGenre = DynamicTest.dynamicTest("Поиск по жанру", () -> {
@@ -92,8 +92,8 @@ class BookShellCommandsTest {
             Table r = (Table) shell.evaluate(() -> "fb -an test");
             int rowCount = r.getModel().getRowCount();
             assertEquals(2, rowCount);
-            long id = (long) r.getModel().getValue(1, 0);
-            assertEquals(1, id);
+            String id = (String) r.getModel().getValue(1, 0);
+            assertEquals("1", id);
         });
 
         return Arrays.asList(byIdExists, byIdNotExists, byTitle, byAuthor, byGenre);
@@ -107,8 +107,8 @@ class BookShellCommandsTest {
         Table r = (Table) shell.evaluate(() -> "fba");
         int rowCount = r.getModel().getRowCount();
         assertEquals(2, rowCount);
-        long id = (long) r.getModel().getValue(1, 0);
-        assertEquals(1, id);
+        String id = (String) r.getModel().getValue(1, 0);
+        assertEquals("1", id);
 
     }
 

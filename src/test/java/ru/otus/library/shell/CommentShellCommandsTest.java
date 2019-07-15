@@ -89,8 +89,8 @@ class CommentShellCommandsTest {
             Table r = (Table) shell.evaluate(() -> "fc -i 1");
             int rowCount = r.getModel().getRowCount();
             assertEquals(2, rowCount);
-            long id = (long) r.getModel().getValue(1, 0);
-            assertEquals(1, id);
+            String id = (String) r.getModel().getValue(1, 0);
+            assertEquals("1", id);
         });
 
         DynamicTest byIdNotExists = DynamicTest.dynamicTest("Поиск по ID, коментария нет", () -> {
@@ -106,8 +106,8 @@ class CommentShellCommandsTest {
             Table r = (Table) shell.evaluate(() -> "fc -b 1");
             int rowCount = r.getModel().getRowCount();
             assertEquals(4, rowCount);
-            long id = (long) r.getModel().getValue(1, 0);
-            assertEquals(1, id);
+            String id = (String) r.getModel().getValue(1, 0);
+            assertEquals("1", id);
         });
 
         return Arrays.asList(byIdExists, byIdNotExists, byBook);
@@ -122,8 +122,8 @@ class CommentShellCommandsTest {
 
         int rowCount = r.getModel().getRowCount();
         assertEquals(4, rowCount);
-        long id = (long) r.getModel().getValue(1, 0);
-        assertEquals(1, id);
+        String id = (String) r.getModel().getValue(1, 0);
+        assertEquals("1", id);
 
     }
 

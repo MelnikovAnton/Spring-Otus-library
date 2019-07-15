@@ -53,8 +53,8 @@ class AuthorShellCommandsTest {
             Table r = (Table) shell.evaluate(() -> "fa -i 1");
             int rowCount = r.getModel().getRowCount();
             assertEquals(2, rowCount);
-            long id = (long) r.getModel().getValue(1, 0);
-            assertEquals(1, id);
+            String id = (String) r.getModel().getValue(1, 0);
+            assertEquals("1", id);
         });
 
         DynamicTest byIdNotExists = DynamicTest.dynamicTest("Поиск по ID автора нет", () -> {
@@ -69,8 +69,8 @@ class AuthorShellCommandsTest {
             Table r = (Table) shell.evaluate(() -> "fa -n 1");
             int rowCount = r.getModel().getRowCount();
             assertEquals(2, rowCount);
-            long id = (long) r.getModel().getValue(1, 0);
-            assertEquals(1, id);
+            String id = (String) r.getModel().getValue(1, 0);
+            assertEquals("1", id);
         });
 
         return Arrays.asList(byIdExists, byIdNotExists, byName);
@@ -86,8 +86,8 @@ class AuthorShellCommandsTest {
 
         int rowCount = r.getModel().getRowCount();
         assertEquals(4, rowCount);
-        long id = (long)r.getModel().getValue(1, 0);
-        assertEquals(1, id);
+        String id = (String)r.getModel().getValue(1, 0);
+        assertEquals("1", id);
     }
 
 

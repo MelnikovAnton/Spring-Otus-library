@@ -4,11 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Genre;
@@ -63,17 +59,20 @@ class BookRepositoryTest extends AbstractRepositoryTest {
     @TestFactory
     @DisplayName("Поиск по автору")
     List<DynamicTest> getByAuthor() {
-        DynamicTest auth1 = DynamicTest.dynamicTest("Автор с ID 1(есть в базе)", () -> {
-            Author author = new Author("Test");
-            author.setId("1");
-            List<Book> books = assertDoesNotThrow(() -> bookRepository.findByAuthorsContains(author));
-            // System.out.println(books);
-            assertEquals(books.size(), 1);
-        });
+        DynamicTest auth1 = DynamicTest
+                .dynamicTest("Поиск всех книг получение автора и поиско по этому автору", () -> {
+                    Author author = assertDoesNotThrow(() ->
+                            bookRepository.findAll()
+                                    .get(0)
+                                    .getAuthors()
+                                    .iterator().next());
+                    List<Book> books = assertDoesNotThrow(() -> bookRepository.findByAuthorsContains(author));
+                    assertEquals(3, books.size());
+                });
 
         DynamicTest auth2 = DynamicTest.dynamicTest("Автор с ID 10(нет есть в базе)", () -> {
             Author author = new Author("Test");
-            author.setId("10");
+            author.setId("WrongId");
             List<Book> books = assertDoesNotThrow(() -> bookRepository.findByAuthorsContains(author));
             //    System.out.println(books);
             assertEquals(books.size(), 0);
@@ -85,11 +84,14 @@ class BookRepositoryTest extends AbstractRepositoryTest {
     @DisplayName("Поиск по жанру")
     List<DynamicTest> getByGenre() {
         DynamicTest genre1 = DynamicTest.dynamicTest("Жанр с ID 1(есть в базе)", () -> {
-            Genre genre = new Genre("Test");
-            genre.setId("1");
+            Genre genre = assertDoesNotThrow(() ->
+                    bookRepository.findAll()
+                            .get(0)
+                            .getGenres()
+                            .iterator().next());
             List<Book> books = assertDoesNotThrow(() -> bookRepository.findByGenresContains(genre));
             // System.out.println(books);
-            assertEquals(books.size(), 1);
+            assertEquals(3, books.size());
         });
 
         DynamicTest genre2 = DynamicTest.dynamicTest("Жанр с ID 10(нет есть в базе)", () -> {
