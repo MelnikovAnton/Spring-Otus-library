@@ -42,7 +42,7 @@ public class InitData {
     @ChangeSet(order = "004", id = "initComments", author = "MelnikovAnton", runAlways = true)
     public void initComments(MongoTemplate template) {
         List<Book> books = template.findAll(Book.class);
-        books.forEach(b->template.save(new Comment(b,"comment")));
+        books.forEach(b -> template.save(new Comment(b, "comment")));
     }
 
 

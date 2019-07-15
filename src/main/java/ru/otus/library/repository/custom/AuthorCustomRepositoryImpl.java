@@ -10,7 +10,6 @@ import ru.otus.library.model.Book;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
 
 @RequiredArgsConstructor
 public class AuthorCustomRepositoryImpl implements AuthorCustomRepository {

@@ -4,14 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
-import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Genre;
 
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
 
 @RequiredArgsConstructor
 public class GenreCustomRepositoryImpl implements GenreCustomRepository {

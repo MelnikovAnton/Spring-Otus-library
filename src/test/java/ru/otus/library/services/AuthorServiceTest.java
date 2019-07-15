@@ -7,14 +7,12 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.shell.jline.InteractiveShellApplicationRunner;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.otus.library.repository.AuthorRepository;
 import ru.otus.library.model.Author;
+import ru.otus.library.repository.AuthorRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -99,7 +97,7 @@ class AuthorServiceTest {
     @Test
     void findByBookId() {
         when(authorRepository.findByBookId(anyString())).thenReturn(getTestAuthors());
-        assertEquals(getTestAuthors(),authorService.findByBookId("1"));
+        assertEquals(getTestAuthors(), authorService.findByBookId("1"));
     }
 
     private List<Author> getTestAuthors() {

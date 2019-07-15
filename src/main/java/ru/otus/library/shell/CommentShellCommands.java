@@ -49,7 +49,7 @@ public class CommentShellCommands {
         }
         if (comment.isEmpty()) return "Pleas Enter Comment";
 
-        Comment comm = new Comment(book.get(),comment);
+        Comment comm = new Comment(book.get(), comment);
         commentService.saveComment(comm);
 
         return "Comment added id=" + comm.getId();

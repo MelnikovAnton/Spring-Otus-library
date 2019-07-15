@@ -7,15 +7,13 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.shell.jline.InteractiveShellApplicationRunner;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.otus.library.repository.CommentRepository;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Comment;
+import ru.otus.library.repository.CommentRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +21,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -47,17 +44,17 @@ class CommentServiceTest {
             return c;
         }).when(commentRepository).save(any(Comment.class));
 
-        Comment c  = assertDoesNotThrow(() -> commentService.saveComment(comment));
+        Comment c = assertDoesNotThrow(() -> commentService.saveComment(comment));
         assertEquals(c, comment);
         assertEquals("1", c.getId());
     }
 
     @Test
     void findCommentsByBook() {
-        Book book = new Book("Test","Test");
+        Book book = new Book("Test", "Test");
         book.setId("1");
         when(commentRepository.findByBookId(anyString())).thenReturn(getTestComments());
-        assertEquals(getTestComments(),commentService.findCommentsByBook(book));
+        assertEquals(getTestComments(), commentService.findCommentsByBook(book));
     }
 
 
@@ -100,7 +97,7 @@ class CommentServiceTest {
     }
 
     private List<Comment> getTestComments() {
-        return List.of(new Comment(),new Comment(),new Comment());
+        return List.of(new Comment(), new Comment(), new Comment());
     }
 
 }

@@ -21,7 +21,7 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
         val query = Query.query(Criteria.where("_id").is(id));
         val update = new Update().pull("authors", query);
         UpdateResult result = mongoTemplate.updateMulti(new Query(), update, Book.class);
-        log.info("removed {} authors from books {}.",result.getModifiedCount(),result.getMatchedCount());
+        log.info("removed {} authors from books {}.", result.getModifiedCount(), result.getMatchedCount());
 
     }
 
@@ -30,6 +30,6 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
         val query = Query.query(Criteria.where("_id").is(id));
         val update = new Update().pull("genres", query);
         UpdateResult result = mongoTemplate.updateMulti(new Query(), update, Book.class);
-        log.info("removed {} genres from books {}.",result.getModifiedCount(),result.getMatchedCount());
+        log.info("removed {} genres from books {}.", result.getModifiedCount(), result.getMatchedCount());
     }
 }

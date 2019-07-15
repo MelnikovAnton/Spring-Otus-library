@@ -8,12 +8,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.shell.Shell;
 import org.springframework.shell.jline.InteractiveShellApplicationRunner;
 import org.springframework.shell.table.Table;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.library.model.Author;
 import ru.otus.library.services.AuthorService;
@@ -23,8 +21,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -90,7 +88,7 @@ class AuthorShellCommandsTest {
 
         int rowCount = r.getModel().getRowCount();
         assertEquals(4, rowCount);
-        String id = (String)r.getModel().getValue(1, 0);
+        String id = (String) r.getModel().getValue(1, 0);
         assertEquals("1", id);
     }
 

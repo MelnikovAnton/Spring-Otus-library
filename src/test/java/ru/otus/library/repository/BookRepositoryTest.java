@@ -90,7 +90,6 @@ class BookRepositoryTest extends AbstractRepositoryTest {
                             .getGenres()
                             .iterator().next());
             List<Book> books = assertDoesNotThrow(() -> bookRepository.findByGenresContains(genre));
-            // System.out.println(books);
             assertEquals(3, books.size());
         });
 
@@ -98,7 +97,6 @@ class BookRepositoryTest extends AbstractRepositoryTest {
             Genre genre = new Genre("Test");
             genre.setId("WrongId");
             List<Book> books = assertDoesNotThrow(() -> bookRepository.findByGenresContains(genre));
-            //    System.out.println(books);
             assertEquals(books.size(), 0);
         });
         return Arrays.asList(genre1, genre2);

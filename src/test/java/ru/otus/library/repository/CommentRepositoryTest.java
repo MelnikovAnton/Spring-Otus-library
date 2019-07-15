@@ -2,6 +2,7 @@ package ru.otus.library.repository;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.otus.library.model.Book;
@@ -64,4 +65,17 @@ class CommentRepositoryTest extends AbstractRepositoryTest {
         });
         return Arrays.asList(comment1, comment2);
     }
+
+    @Test
+    @DisplayName("Комментарий удаляется при удалении книги")
+    void deleteBookAndComment(){
+        Book book = bookRepository.findAll().get(0);
+        List<Comment> comments = commentRepository.findByBookId(book.getId());
+        bookRepository.delete(book);
+        System.out.println(comments);
+        comments.forEach(c->
+                assertTrue(commentRepository
+                        .findById(c.getId()).isEmpty()));
+    }
+
 }

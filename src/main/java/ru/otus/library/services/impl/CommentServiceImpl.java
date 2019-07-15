@@ -51,10 +51,4 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.delete(comment);
         return comment.getId();
     }
-
-
-    @Override
-    public void deleteAll(List<Comment> comments) {
-        commentRepository.deleteAll(comments);
-    }
 }

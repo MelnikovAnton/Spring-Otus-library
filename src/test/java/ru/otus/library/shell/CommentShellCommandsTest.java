@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.shell.Shell;
 import org.springframework.shell.jline.InteractiveShellApplicationRunner;
 import org.springframework.shell.table.Table;
@@ -26,7 +25,8 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 
@@ -55,7 +55,7 @@ class CommentShellCommandsTest {
     @TestFactory
     @DisplayName("Добавление коментария.")
     List<DynamicTest> testAddComment() {
-        DynamicTest success = DynamicTest.dynamicTest("Добавление коментария в книгу", ()-> {
+        DynamicTest success = DynamicTest.dynamicTest("Добавление коментария в книгу", () -> {
             when(commentService.saveComment(any(Comment.class))).thenAnswer(invocation -> {
                 Comment comment = (Comment) invocation.getArgument(0);
                 comment.setId("1");
@@ -67,7 +67,7 @@ class CommentShellCommandsTest {
             assertEquals("Comment added id=1", r);
         });
 
-        DynamicTest noBook = DynamicTest.dynamicTest("Добавление коментария в книгу с неверным id", ()-> {
+        DynamicTest noBook = DynamicTest.dynamicTest("Добавление коментария в книгу с неверным id", () -> {
             when(commentService.saveComment(any(Comment.class))).thenAnswer(invocation -> {
                 Comment comment = (Comment) invocation.getArgument(0);
                 comment.setId("1");
@@ -79,7 +79,7 @@ class CommentShellCommandsTest {
             assertEquals("No book with id 1", r);
         });
 
-        return List.of(success,noBook);
+        return List.of(success, noBook);
 
     }
 
@@ -121,7 +121,7 @@ class CommentShellCommandsTest {
             assertEquals(1, rowCount);
         });
 
-        return Arrays.asList(byIdExists, byIdNotExists, byBook,byNotExistsBook);
+        return Arrays.asList(byIdExists, byIdNotExists, byBook, byNotExistsBook);
     }
 
     @Test
@@ -160,19 +160,19 @@ class CommentShellCommandsTest {
 
 
     private Comment getTestComment() {
-        Book book = new Book("1","Test","Test");
-        Comment comment=new Comment(book,"Test");
+        Book book = new Book("1", "Test", "Test");
+        Comment comment = new Comment(book, "Test");
         comment.setId("1");
         return comment;
     }
 
     private List<Comment> getTestComments() {
-        Book book = new Book("1","Test","Test");
-        Comment comment = new Comment( book,"Test");
+        Book book = new Book("1", "Test", "Test");
+        Comment comment = new Comment(book, "Test");
         comment.setId("1");
         return List.of(comment,
-                new Comment(book,"Test"),
-                new Comment(book,"Test"));
+                new Comment(book, "Test"),
+                new Comment(book, "Test"));
     }
 
 }

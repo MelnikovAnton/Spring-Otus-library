@@ -5,17 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import ru.otus.library.model.Book;
-import ru.otus.library.model.Comment;
 import ru.otus.library.repository.BookRepository;
-import ru.otus.library.services.AuthorService;
 import ru.otus.library.services.BookService;
-import ru.otus.library.services.CommentService;
-import ru.otus.library.services.GenreService;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,11 +17,6 @@ import java.util.stream.Collectors;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
-
-    private final AuthorService authorService;
-    private final GenreService genreService;
-    private final CommentService commentService;
-
 
     @Override
     public Book saveBook(Book book) {
@@ -46,7 +35,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> findBooksByGenre(String genre) {
-       return bookRepository.findByGenresNameContains(genre);
+        return bookRepository.findByGenresNameContains(genre);
     }
 
     @Override
@@ -62,8 +51,6 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public String delete(Book book) {
-        List<Comment> comments = commentService.findCommentsByBook(book);
-        commentService.deleteAll(comments);
         bookRepository.delete(book);
         return book.getId();
     }
