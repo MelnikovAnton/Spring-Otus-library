@@ -8,9 +8,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.shell.Shell;
 import org.springframework.shell.jline.InteractiveShellApplicationRunner;
 import org.springframework.shell.table.Table;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Comment;
@@ -31,6 +33,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(properties = {
         InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=false"})
+@ActiveProfiles("ShellTest")
 class CommentShellCommandsTest {
 
     private final List<String> COMMANDS = Arrays.asList("delc", "fca", "fc", "addc");
@@ -110,7 +113,15 @@ class CommentShellCommandsTest {
             assertEquals("1", id);
         });
 
-        return Arrays.asList(byIdExists, byIdNotExists, byBook);
+        DynamicTest byNotExistsBook = DynamicTest.dynamicTest("Поиск по несуществующей книге", () -> {
+            when(commentService.findCommentsByBook(any(Book.class))).thenReturn(getTestComments());
+            when(bookService.findById(anyString())).thenReturn(Optional.empty());
+            Table r = (Table) shell.evaluate(() -> "fc -b 1");
+            int rowCount = r.getModel().getRowCount();
+            assertEquals(1, rowCount);
+        });
+
+        return Arrays.asList(byIdExists, byIdNotExists, byBook,byNotExistsBook);
     }
 
     @Test

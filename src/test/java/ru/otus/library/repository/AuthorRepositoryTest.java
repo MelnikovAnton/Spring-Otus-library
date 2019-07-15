@@ -4,11 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
 
@@ -47,16 +43,25 @@ class AuthorRepositoryTest extends AbstractRepositoryTest {
     @TestFactory
     @DisplayName("Поиск по Id книги")
     List<DynamicTest> findByBookId() {
-        DynamicTest auth1 = DynamicTest.dynamicTest("поиск по ID", () -> {
+        DynamicTest auth1 = DynamicTest.dynamicTest("получение ID из БД и поиск по нему", () -> {
             Book book = bookRepository.findAll().get(0);
             List<Author> authors = assertDoesNotThrow(() -> authorRepository.findByBookId(book.getId()));
             assertEquals(1, authors.size());
             assertEquals(authors.get(0).getId(), book.getAuthors().iterator().next().getId());
         });
-        DynamicTest auth2 = DynamicTest.dynamicTest("ID = Integer.MAX_VALUE+1", () -> {
-            List<Author> authors = assertDoesNotThrow(() -> authorRepository.findByBookId("123"));
+        DynamicTest auth2 = DynamicTest.dynamicTest("поиск по неправельному ID", () -> {
+            List<Author> authors = assertDoesNotThrow(() -> authorRepository.findByBookId("WrongId"));
             assertTrue(authors.isEmpty());
         });
         return Arrays.asList(auth1, auth2);
+    }
+
+    @Test
+    @DisplayName("Удаление автора из книг")
+    void deleteAuthorFromBook() {
+        Author author = assertDoesNotThrow(() -> authorRepository.findAll().get(0));
+        assertDoesNotThrow(() -> authorRepository.delete(author));
+        List<Book> books = bookRepository.findByAuthorsContains(author);
+        assertTrue(books.isEmpty());
     }
 }

@@ -10,11 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.shell.jline.InteractiveShellApplicationRunner;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.otus.library.repository.BookRepository;
 import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Genre;
+import ru.otus.library.repository.BookRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,12 +27,13 @@ import static org.mockito.Mockito.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(properties = {
         InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=false"})
+@ActiveProfiles("ServiceTest")
 class BookServiceTest {
 
     @Autowired
     private BookService bookService;
 
-    @MockBean
+    @Autowired
     private BookRepository bookRepository;
     @MockBean
     private AuthorService authorService;
@@ -140,7 +142,7 @@ class BookServiceTest {
             return null;
         }).when(bookRepository).delete(any(Book.class));
 
-        Book book = new Book("Test","Test");
+        Book book = new Book("Test", "Test");
         book.setId("1");
 
         assertDoesNotThrow(() -> bookService.delete(book));

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.otus.library.model.Book;
 import ru.otus.library.model.Genre;
 
 import java.util.Arrays;
@@ -52,5 +53,14 @@ class GenreRepositoryTest extends AbstractRepositoryTest {
             assertTrue(authors.isEmpty());
         });
         return Arrays.asList(auth1, auth2);
+    }
+
+    @Test
+    @DisplayName("Удаление жанра из книг")
+    void deleteAuthorFromBook() {
+        Genre genre = assertDoesNotThrow(() -> genreRepository.findAll().get(0));
+        assertDoesNotThrow(() -> genreRepository.delete(genre));
+        List<Book> books = bookRepository.findByGenresContains(genre);
+        assertTrue(books.isEmpty());
     }
 }

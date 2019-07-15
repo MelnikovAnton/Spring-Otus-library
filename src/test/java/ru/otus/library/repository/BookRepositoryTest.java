@@ -70,7 +70,7 @@ class BookRepositoryTest extends AbstractRepositoryTest {
                     assertEquals(3, books.size());
                 });
 
-        DynamicTest auth2 = DynamicTest.dynamicTest("Автор с ID 10(нет есть в базе)", () -> {
+        DynamicTest auth2 = DynamicTest.dynamicTest("Автор с неправельным ID", () -> {
             Author author = new Author("Test");
             author.setId("WrongId");
             List<Book> books = assertDoesNotThrow(() -> bookRepository.findByAuthorsContains(author));
@@ -83,7 +83,7 @@ class BookRepositoryTest extends AbstractRepositoryTest {
     @TestFactory
     @DisplayName("Поиск по жанру")
     List<DynamicTest> getByGenre() {
-        DynamicTest genre1 = DynamicTest.dynamicTest("Жанр с ID 1(есть в базе)", () -> {
+        DynamicTest genre1 = DynamicTest.dynamicTest("Поиск всех книг получение жанров и поиско по этому жанру", () -> {
             Genre genre = assertDoesNotThrow(() ->
                     bookRepository.findAll()
                             .get(0)
@@ -94,9 +94,9 @@ class BookRepositoryTest extends AbstractRepositoryTest {
             assertEquals(3, books.size());
         });
 
-        DynamicTest genre2 = DynamicTest.dynamicTest("Жанр с ID 10(нет есть в базе)", () -> {
+        DynamicTest genre2 = DynamicTest.dynamicTest("Жанр с несуществующим ID", () -> {
             Genre genre = new Genre("Test");
-            genre.setId("10");
+            genre.setId("WrongId");
             List<Book> books = assertDoesNotThrow(() -> bookRepository.findByGenresContains(genre));
             //    System.out.println(books);
             assertEquals(books.size(), 0);
