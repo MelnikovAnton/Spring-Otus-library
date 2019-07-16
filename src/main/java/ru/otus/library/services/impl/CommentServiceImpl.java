@@ -37,7 +37,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Optional<Comment> findById(long id) {
+    public Optional<Comment> findById(String id) {
         try {
             return commentRepository.findById(id);
         } catch (EmptyResultDataAccessException e) {
@@ -47,14 +47,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public long delete(Comment comment) {
+    public String delete(Comment comment) {
         commentRepository.delete(comment);
         return comment.getId();
-    }
-
-
-    @Override
-    public void deleteAll(List<Comment> comments) {
-        commentRepository.deleteInBatch(comments);
     }
 }

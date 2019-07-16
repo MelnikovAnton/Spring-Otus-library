@@ -13,9 +13,7 @@ public interface CommentService {
 
     List<Comment> findAll();
 
-    Optional<Comment> findById(long id);
+    Optional<Comment> findById(String id);
 
-    long delete(Comment comment);
-
-    void deleteAll(List<Comment> comments);
+    String delete(Comment comment);
 }

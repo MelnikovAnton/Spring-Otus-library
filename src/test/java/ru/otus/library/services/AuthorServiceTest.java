@@ -7,12 +7,12 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.shell.jline.InteractiveShellApplicationRunner;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.otus.library.repository.AuthorRepository;
 import ru.otus.library.model.Author;
+import ru.otus.library.repository.AuthorRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,9 +24,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(properties = {
         InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=false"})
+@ActiveProfiles("ServiceTest")
 class AuthorServiceTest {
 
-    @MockBean
+    @Autowired
     private AuthorRepository authorRepository;
     @Autowired
     private AuthorService authorService;
@@ -37,18 +38,18 @@ class AuthorServiceTest {
 
         doAnswer(inv -> {
             Author a = inv.getArgument(0);
-            a.setId(1);
+            a.setId("1");
             return a;
         }).when(authorRepository).save(any(Author.class));
 
         Author a = assertDoesNotThrow(() -> authorService.saveAuthor(author));
         assertEquals(a, author);
-        assertEquals(1, a.getId());
+        assertEquals("1", a.getId());
     }
 
     @Test
     void findAuthorsByName() {
-        when(authorRepository.findByNameContaining(anyString())).thenReturn(getTestAuthors());
+        when(authorRepository.findByNameContainingIgnoreCase(anyString())).thenReturn(getTestAuthors());
         List<Author> authors = authorService.findAuthorsByName("test");
         assertEquals(getTestAuthors(), authors);
     }
@@ -58,13 +59,13 @@ class AuthorServiceTest {
     @DisplayName("Поиск по ID")
     List<DynamicTest> findById() {
         DynamicTest isPresent = DynamicTest.dynamicTest("автор найден", () -> {
-            when(authorRepository.findById(anyLong())).thenReturn(Optional.of(new Author("test")));
-            Optional<Author> author = authorService.findById(1);
+            when(authorRepository.findById(anyString())).thenReturn(Optional.of(new Author("test")));
+            Optional<Author> author = authorService.findById("1");
             assertTrue(author.isPresent());
         });
         DynamicTest isNotPresent = DynamicTest.dynamicTest("автор не найден", () -> {
-            doThrow(new EmptyResultDataAccessException(1)).when(authorRepository).findById(anyLong());
-            Optional<Author> author = assertDoesNotThrow(() -> authorService.findById(1));
+            doThrow(new EmptyResultDataAccessException(1)).when(authorRepository).findById(anyString());
+            Optional<Author> author = assertDoesNotThrow(() -> authorService.findById("1"));
             assertTrue(author.isEmpty());
         });
         return Arrays.asList(isPresent, isNotPresent);
@@ -74,12 +75,12 @@ class AuthorServiceTest {
     void delete() {
         doAnswer(invocation -> {
             Author a = invocation.getArgument(0);
-            assertEquals(1, a.getId());
+            assertEquals("1", a.getId());
             return null;
         }).when(authorRepository).delete(any(Author.class));
 
         Author author = new Author("Test");
-        author.setId(1);
+        author.setId("1");
 
         assertDoesNotThrow(() -> authorService.delete(author));
     }
@@ -95,8 +96,8 @@ class AuthorServiceTest {
 
     @Test
     void findByBookId() {
-        when(authorRepository.findByBookId(anyLong())).thenReturn(getTestAuthors());
-        assertEquals(getTestAuthors(),authorService.findByBookId(1));
+        when(authorRepository.findByBookId(anyString())).thenReturn(getTestAuthors());
+        assertEquals(getTestAuthors(), authorService.findByBookId("1"));
     }
 
     private List<Author> getTestAuthors() {

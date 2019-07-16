@@ -1,25 +1,12 @@
-#logging:
-#  level:
-#    root: DEBUG
-
 logging:
   level:
-    # Hides HHH000424: Disabling contextual LOB creation as createClob() method threw error
-    org.hibernate.engine.jdbc.env.internal.LobCreatorBuilderImpl: WARN
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+
 
 spring:
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: validate
-    database: postgresql
-  datasource:
-    url: jdbc:postgresql://localhost:5432/library
-    username: root
-    password: root01
-  liquibase:
-    enabled: true
-    contexts: test
-
-
+  data:
+    mongodb:
+      uri: mongodb://localhost
+      port: 27017
+      database: library
 

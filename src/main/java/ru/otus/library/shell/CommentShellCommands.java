@@ -31,15 +31,15 @@ public class CommentShellCommands {
 
 
     @ShellMethod(value = "delete Comment", key = {"deleteComment", "delc"})
-    private String deleteComment(@ShellOption(value = {"-i", "--id"}) long id) {
+    private String deleteComment(@ShellOption(value = {"-i", "--id"}) String id) {
         Optional<Comment> oComment = commentService.findById(id);
         if (oComment.isEmpty()) return "no comment with id " + id;
-        long r = commentService.delete(oComment.get());
+        String r = commentService.delete(oComment.get());
         return "Comment deleted id=" + r;
     }
 
     @ShellMethod(value = "add Comment", key = {"addComment", "addc"})
-    private String addComment(@ShellOption(value = {"-b", "--book"}) long book_id,
+    private String addComment(@ShellOption(value = {"-b", "--book"}) String book_id,
                               @ShellOption(value = {"-c", "--comment"}) String comment) {
 
         Optional<Book> book = bookService.findById(book_id);
@@ -56,12 +56,12 @@ public class CommentShellCommands {
     }
 
     @ShellMethod(value = "find Comments", key = {"findComments", "fc"})
-    private Table findComments(@ShellOption(value = {"-i", "--id"}, defaultValue = "-1") long id,
-                               @ShellOption(value = {"-b", "--book"}, defaultValue = "-1") long book_id) {
+    private Table findComments(@ShellOption(value = {"-i", "--id"}, defaultValue = "") String id,
+                               @ShellOption(value = {"-b", "--book"}, defaultValue = "") String book_id) {
 
         List<Comment> comments = new ArrayList<>();
-        if (id > 0) commentService.findById(id).ifPresent(comments::add);
-        if (book_id > 0) {
+        if (!id.isEmpty()) commentService.findById(id).ifPresent(comments::add);
+        if (!book_id.isEmpty()) {
             Optional<Book> book = bookService.findById(book_id);
             if (book.isEmpty()) {
                 log.warn("No book with id {}", book_id);

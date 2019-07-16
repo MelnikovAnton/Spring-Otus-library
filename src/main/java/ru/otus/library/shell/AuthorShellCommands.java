@@ -27,10 +27,10 @@ public class AuthorShellCommands {
     private final AuthorService authorService;
 
     @ShellMethod(value = "delete Author", key = {"deleteAuthor", "dela"})
-    private String deleteAuthor(@ShellOption(value = {"-i", "--id"}) long id) {
+    private String deleteAuthor(@ShellOption(value = {"-i", "--id"}) String id) {
         Optional<Author> oAuthor = authorService.findById(id);
         if (oAuthor.isEmpty()) return "no author with id " + id;
-        long r = authorService.delete(oAuthor.get());
+        String r = authorService.delete(oAuthor.get());
         return "Author deleted id=" + r;
     }
 
@@ -42,13 +42,13 @@ public class AuthorShellCommands {
     }
 
     @ShellMethod(value = "find Authors", key = {"findAuthors", "fa"})
-    private Table findAuthors(@ShellOption(value = {"-i", "--id"}, defaultValue = "-1") long id,
-                              @ShellOption(value = {"-b", "--book-id"}, defaultValue = "-1") long book_id,
+    private Table findAuthors(@ShellOption(value = {"-i", "--id"}, defaultValue = "") String id,
+                              @ShellOption(value = {"-b", "--book-id"}, defaultValue = "") String book_id,
                               @ShellOption(value = {"-n", "--name"}, defaultValue = "") String name) {
 
         List<Author> authors = new ArrayList<>();
-        if (id > 0) authorService.findById(id).ifPresent(authors::add);
-        if (book_id > 0) authors.addAll(authorService.findByBookId(book_id));
+        if (!id.isEmpty()) authorService.findById(id).ifPresent(authors::add);
+        if (!book_id.isEmpty()) authors.addAll(authorService.findByBookId(book_id));
         if (!name.isEmpty()) authors.addAll(authorService.findAuthorsByName(name));
         return getAuthorsTable(authors);
     }

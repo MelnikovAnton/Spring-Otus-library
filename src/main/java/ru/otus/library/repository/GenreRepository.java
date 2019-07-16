@@ -1,17 +1,13 @@
 package ru.otus.library.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import ru.otus.library.model.Genre;
+import ru.otus.library.repository.custom.GenreCustomRepository;
 
 import java.util.List;
 
-@Repository
-public interface GenreRepository extends JpaRepository<Genre,Long> {
+public interface GenreRepository extends MongoRepository<Genre, String>, GenreCustomRepository {
 
-    List<Genre> findByNameContaining(String name);
+    List<Genre> findByNameContainingIgnoreCase(String name);
 
-    @Query("select b.genres from Book b where  b.id = :id")
-    List<Genre> findByBookId(long id);
 }

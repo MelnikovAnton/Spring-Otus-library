@@ -4,11 +4,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import ru.otus.library.model.Book;
 import ru.otus.library.model.Genre;
 
 import java.util.Arrays;
@@ -17,16 +14,12 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(SpringExtension.class)
-@DataJpaTest
-class GenreRepositoryTest {
+class GenreRepositoryTest extends AbstractRepositoryTest {
 
     @Autowired
     private GenreRepository genreRepository;
-
     @Autowired
-    private TestEntityManager em;
-
+    private BookRepository bookRepository;
 
     @Test
     @DisplayName("Вставка с получением ID")
@@ -34,8 +27,6 @@ class GenreRepositoryTest {
         Genre genre = new Genre("ewq");
         assertDoesNotThrow(() -> genreRepository.save(genre));
 
-        em.refresh(genre);
-        em.detach(genre);
         Optional<Genre> result = assertDoesNotThrow(() -> genreRepository.findById(genre.getId()));
         assertTrue(result.isPresent());
         assertEquals(genre, result.get());
@@ -44,22 +35,32 @@ class GenreRepositoryTest {
     @Test
     @DisplayName("Поиск по имени жанра")
     void findGenresByName() {
-        List<Genre> genres = assertDoesNotThrow(() -> genreRepository.findByNameContaining("enre"));
-        assertEquals(genres.size(), 4);
+        List<Genre> genres = assertDoesNotThrow(() -> genreRepository.findByNameContainingIgnoreCase("enre"));
+        assertEquals(genres.size(), 3);
     }
 
     @TestFactory
     @DisplayName("Поиск по Id книги")
     List<DynamicTest> findByBookId() {
-        DynamicTest auth1 = DynamicTest.dynamicTest("ID = 1", () -> {
-            List<Genre> authors = assertDoesNotThrow(() -> genreRepository.findByBookId(1));
+        DynamicTest auth1 = DynamicTest.dynamicTest("ID получен из БД", () -> {
+            String bookId = bookRepository.findAll().get(0).getId();
+            List<Genre> authors = assertDoesNotThrow(() -> genreRepository.findByBookId(bookId));
             assertEquals(1, authors.size());
-            assertEquals(authors.get(0).getId(), 1);
+            assertTrue(authors.get(0).getId().matches("[a-f\\d]{24}"));
         });
-        DynamicTest auth2 = DynamicTest.dynamicTest("ID = Integer.MAX_VALUE+1", () -> {
-            List<Genre> authors = assertDoesNotThrow(() -> genreRepository.findByBookId(Integer.MAX_VALUE + 1));
+        DynamicTest auth2 = DynamicTest.dynamicTest("ID нет в БД", () -> {
+            List<Genre> authors = assertDoesNotThrow(() -> genreRepository.findByBookId("WrongId"));
             assertTrue(authors.isEmpty());
         });
         return Arrays.asList(auth1, auth2);
+    }
+
+    @Test
+    @DisplayName("Удаление жанра из книг")
+    void deleteAuthorFromBook() {
+        Genre genre = assertDoesNotThrow(() -> genreRepository.findAll().get(0));
+        assertDoesNotThrow(() -> genreRepository.delete(genre));
+        List<Book> books = bookRepository.findByGenresContains(genre);
+        assertTrue(books.isEmpty());
     }
 }

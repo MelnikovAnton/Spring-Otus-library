@@ -5,17 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import ru.otus.library.model.Book;
-import ru.otus.library.model.Comment;
 import ru.otus.library.repository.BookRepository;
-import ru.otus.library.services.AuthorService;
 import ru.otus.library.services.BookService;
-import ru.otus.library.services.CommentService;
-import ru.otus.library.services.GenreService;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,11 +17,6 @@ import java.util.stream.Collectors;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
-
-    private final AuthorService authorService;
-    private final GenreService genreService;
-    private final CommentService commentService;
-
 
     @Override
     public Book saveBook(Book book) {
@@ -41,27 +30,16 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> findBooksByAuthor(String author) {
-        return authorService.findAuthorsByName(author)
-                .stream()
-                .map(bookRepository::findByAuthorsContains)
-                .flatMap(Collection::stream)
-                .distinct()
-                .collect(Collectors.toList());
-
+        return bookRepository.findByAuthorsNameContains(author);
     }
 
     @Override
     public List<Book> findBooksByGenre(String genre) {
-        return genreService.findGenresByName(genre)
-                .stream()
-                .map(bookRepository::findByGenresContains)
-                .flatMap(Collection::stream)
-                .distinct()
-                .collect(Collectors.toList());
+        return bookRepository.findByGenresNameContains(genre);
     }
 
     @Override
-    public Optional<Book> findById(long id) {
+    public Optional<Book> findById(String id) {
         try {
             return bookRepository.findById(id);
         } catch (EmptyResultDataAccessException e) {
@@ -72,9 +50,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public long delete(Book book) {
-        List<Comment> comments = commentService.findCommentsByBook(book);
-        commentService.deleteAll(comments);
+    public String delete(Book book) {
         bookRepository.delete(book);
         return book.getId();
     }
