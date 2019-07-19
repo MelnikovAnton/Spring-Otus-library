@@ -10,3 +10,5 @@ spring:
       port: 27017
       database: library
 
+  messages:
+    basename: messages/messages
