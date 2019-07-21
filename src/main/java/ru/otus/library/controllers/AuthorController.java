@@ -22,15 +22,15 @@ public class AuthorController {
         return "authorList";
     }
 
-    @GetMapping("editAuthor/{id}")
+    @GetMapping("/editAuthor/{id}")
     public String editAuthor(@PathVariable("id") String id, Model model) {
         Author author = authorService.findById(id).orElseThrow(() -> new RuntimeException("no author with id " + id));
         model.addAttribute("author", author);
         return "editAuthor";
     }
 
-    @PostMapping(value = "editAuthor/{id}")
-    public String postBook(@ModelAttribute Author author) {
+    @PostMapping(value = "/editAuthor/{id}")
+    public String postAuthor(@ModelAttribute Author author) {
         authorService.saveAuthor(author);
         return "redirect:/editAuthor/" + author.getId();
     }

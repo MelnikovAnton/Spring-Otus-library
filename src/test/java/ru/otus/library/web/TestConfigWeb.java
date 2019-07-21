@@ -1,4 +1,4 @@
-package ru.otus.library.services;
+package ru.otus.library.web;
 
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -10,11 +10,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import ru.otus.library.repository.AuthorRepository;
-import ru.otus.library.repository.BookRepository;
-import ru.otus.library.repository.CommentRepository;
-import ru.otus.library.repository.GenreRepository;
+import ru.otus.library.services.AuthorService;
+import ru.otus.library.services.BookService;
+import ru.otus.library.services.CommentService;
+import ru.otus.library.services.GenreService;
 
 
 /*
@@ -24,21 +23,23 @@ import ru.otus.library.repository.GenreRepository;
 
 @SpringBootConfiguration
 @EnableConfigurationProperties
-@ComponentScan(basePackages = {"ru.otus.library.services", "ru.otus.library.repository"})
+@ComponentScan(basePackages = {"ru.otus.library.services"
+        , "ru.otus.library.repository"
+        , "ru.otus.library.controllers"})
 @EnableAutoConfiguration(exclude = {EmbeddedMongoAutoConfiguration.class,
         MongoAutoConfiguration.class,
         MongoDataAutoConfiguration.class})
-@ActiveProfiles("ServiceTest")
+@ActiveProfiles("WebTest")
 @Profile("!Test")
-public class TestConfigServices {
+public class TestConfigWeb {
 
     @MockBean
-    public BookRepository bookRepository;
+    public BookService bookService;
     @MockBean
-    public GenreRepository genreRepository;
+    public GenreService genreService;
     @MockBean
-    public AuthorRepository authorRepository;
+    public AuthorService authorService;
     @MockBean
-    public CommentRepository commentRepository;
+    public CommentService commentService;
 
 }
