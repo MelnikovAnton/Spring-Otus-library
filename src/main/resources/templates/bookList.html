@@ -61,8 +61,7 @@
                 <a class="d-inline btn btn-primary" th:href="@{'/edit/'+ ${book.id}}" th:text="#{action.edit}">Edit</a>
             </td>
             <td>
-                <a class="d-inline btn btn-primary"
-                   style="background-color:red"
+                <a class="d-inline btn btn-danger"
                    th:href="@{/deleteBook(id=${book.id})}"
                    th:text="#{action.delete}"
                    role="button">delete</a>

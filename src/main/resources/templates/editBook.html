@@ -123,7 +123,9 @@
         <li class="list-group-item d-flex justify-content-between">
             <span th:text="${comment.comment}">Comment</span>
             <span class="badge">
-                    <a th:href="@{/deleteComment(id=${comment.id})}" th:text="#{action.delete}">Delete</a>
+                    <a class="btn btn-danger"
+                       th:href="@{/deleteComment(id=${comment.id})}"
+                       th:text="#{action.delete}">Delete</a>
                 </span>
         </li>
     </ul>
