@@ -9,25 +9,23 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <title>Book List!</title>
+    <title>Author List!</title>
 </head>
 <body>
 <div class="container-fluid">
     <div class="row">
-        <h2 class="col" th:text="#{book.list}">Book List</h2>
+        <h2 class="col" th:text="#{author.list}">Author list</h2>
         <div class="col_2">
             <div class="container text-center center-block">
-                <a th:href="@{/(lang=ru_RU)}">RU</a>
-                <a th:href="@{/(lang=en_US)}">EN</a>
+                <a th:href="@{__${#httpServletRequest.requestURI}__(lang=ru_RU)}">RU</a>
+                <a th:href="@{__${#httpServletRequest.requestURI}__(lang=en_US)}">EN</a>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col">
-            <a href="/addBook" th:text="#{action.addBook}">add book</a>
-        </div>
-        <div class="col">
-            <a href="/authorList" th:text="#{author.list}">Author List</a>
+            <a href="/" th:text="#{action.toBookList}">to book list</a>
+            <a href="/addAuthor" th:text="#{action.addAuthor}">add author</a>
         </div>
     </div>
 
@@ -36,31 +34,21 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th scope="col" th:text="#{book.title}">Title</th>
-            <th scope="col" th:text="#{book.author}">Authors</th>
-            <th scope="col" th:text="#{book.genre}">Genres</th>
+            <th scope="col">ID</th>
+            <th scope="col" th:text="#{name}">Name</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="book : ${books}" th:object="${book}">
-            <td th:text="*{title}">Title</td>
+        <tr th:each="author : ${authors}" th:object="${author}">
+            <td th:text="*{id}">Id</td>
+            <td th:text="*{name}">Name</td>
             <td>
-                <ul class="list-group" th:each="author : *{authors}">
-                    <li class="list-group-item" th:text="${author.name}">Author1</li>
-                </ul>
-            </td>
-            <td>
-                <ul class="list-group" th:each="genre : *{genres}">
-                    <li class="list-group-item" th:text="${genre.name}">Genre1</li>
-                </ul>
-            </td>
-            <td>
-                <a class="d-inline btn btn-primary" th:href="@{'/edit/'+ ${book.id}}" th:text="#{action.edit}">Edit</a>
+                <a class="d-inline btn btn-primary" th:href="@{'/editAuthor/'+ ${author.id}}" th:text="#{action.edit}">Edit</a>
             </td>
             <td>
                 <a class="d-inline btn btn-primary"
                    style="background-color:red"
-                   th:href="@{/deleteBook(id=${book.id})}"
+                   th:href="@{/deleteAuthor(id=${author.id})}"
                    th:text="#{action.delete}"
                    role="button">delete</a>
             </td>

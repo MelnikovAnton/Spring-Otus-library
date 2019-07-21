@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Edit Author!</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <h2 class="col" th:text="#{author.edit}">Author edit</h2>
+        <div class="col_2">
+            <div class="container text-center center-block">
+                <a th:href="@{__${#httpServletRequest.requestURI}__(lang=ru_RU)}">RU</a>
+                <a th:href="@{__${#httpServletRequest.requestURI}__(lang=en_US)}">EN</a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <a href="/" th:text="#{action.toBookList}">to book list</a>
+            <a href="/authorList" th:text="#{author.list}">Author List</a>
+        </div>
+    </div>
+
+</div>
+<div class="container-fluid">
+    <form id="edit-form" th:action="@{'/editAuthor/'+ ${author.id}}" th:method="post">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col" th:text="#{name}">Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:object="${author}">
+                <th scope="row" th:text="*{id}">ID</th>
+                <td>
+                    <input class="form-control" name="name" type="text" th:value="*{name}" value="Author1"/>
+                </td>
+                <td>
+                    <a th:href="@{'/editAuthor/'+ ${author.id}}" th:text="#{action.cancel}">cancel</a>
+                    <button class="btn btn-primary" type="submit" th:text="#{action.save}">Save</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+
+</div>
+
+
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>

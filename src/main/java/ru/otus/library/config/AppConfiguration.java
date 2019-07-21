@@ -34,7 +34,7 @@ public class AppConfiguration {
 
     @Bean
     public LocaleResolver localeResolver() {
-        final SessionLocaleResolver localeResolver = new SessionLocaleResolver();
+        final CookieLocaleResolver localeResolver = new CookieLocaleResolver();
         localeResolver.setDefaultLocale(new Locale("en", "US"));
         return localeResolver;
     }
