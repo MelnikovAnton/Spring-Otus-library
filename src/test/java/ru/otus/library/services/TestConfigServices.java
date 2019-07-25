@@ -10,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ru.otus.library.repository.AuthorRepository;
 import ru.otus.library.repository.BookRepository;
 import ru.otus.library.repository.CommentRepository;
@@ -39,4 +40,5 @@ public class TestConfigServices {
     public AuthorRepository authorRepository;
     @MockBean
     public CommentRepository commentRepository;
+
 }

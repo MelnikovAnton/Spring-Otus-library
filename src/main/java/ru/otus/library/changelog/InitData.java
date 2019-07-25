@@ -43,6 +43,8 @@ public class InitData {
     public void initComments(MongoTemplate template) {
         List<Book> books = template.findAll(Book.class);
         books.forEach(b -> template.save(new Comment(b, "comment")));
+        books.forEach(b -> template.save(new Comment(b, "comment2")));
+        books.forEach(b -> template.save(new Comment(b, "comment3")));
     }
 
 

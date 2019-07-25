@@ -1,4 +1,4 @@
-package ru.otus.library.shell;
+package ru.otus.library.web;
 
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -8,14 +8,13 @@ import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoCo
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
-import ru.otus.library.repository.AuthorRepository;
-import ru.otus.library.repository.BookRepository;
-import ru.otus.library.repository.CommentRepository;
-import ru.otus.library.repository.GenreRepository;
-import ru.otus.library.services.TestConfigServices;
+import ru.otus.library.services.AuthorService;
+import ru.otus.library.services.BookService;
+import ru.otus.library.services.CommentService;
+import ru.otus.library.services.GenreService;
+
 
 /*
  *Сделал чтобы в тестах каждый раз не поднималась embeddedMongo
@@ -24,22 +23,23 @@ import ru.otus.library.services.TestConfigServices;
 
 @SpringBootConfiguration
 @EnableConfigurationProperties
-@ComponentScan(basePackages = {"ru.otus.library.shell", "ru.otus.library.services", "ru.otus.library.repository"},
-        excludeFilters = {
-                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = TestConfigServices.class)})
+@ComponentScan(basePackages = {"ru.otus.library.services"
+        , "ru.otus.library.repository"
+        , "ru.otus.library.controllers"})
 @EnableAutoConfiguration(exclude = {EmbeddedMongoAutoConfiguration.class,
         MongoAutoConfiguration.class,
         MongoDataAutoConfiguration.class})
-@ActiveProfiles("ShellTest")
+@ActiveProfiles("WebTest")
 @Profile("!Test")
-public class TestConfigShell {
+public class TestConfigWeb {
 
     @MockBean
-    public BookRepository bookRepository;
+    public BookService bookService;
     @MockBean
-    public GenreRepository genreRepository;
+    public GenreService genreService;
     @MockBean
-    public AuthorRepository authorRepository;
+    public AuthorService authorService;
     @MockBean
-    public CommentRepository commentRepository;
+    public CommentService commentService;
+
 }

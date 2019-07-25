@@ -10,13 +10,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document
+//@Document
 public class Comment {
 
-    @Id
+//    @Id
     private String id;
 
-    @DBRef
+//    @DBRef
     private Book book;
 
     private String comment;

@@ -1,5 +1,6 @@
 logging:
   level:
+    #    root: TRACE
     org.springframework.data.mongodb.core.MongoTemplate: DEBUG
 
 
@@ -10,3 +11,5 @@ spring:
       port: 27017
       database: library
 
+  messages:
+    basename: messages/messages

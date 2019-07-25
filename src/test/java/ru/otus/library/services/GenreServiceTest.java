@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.shell.jline.InteractiveShellApplicationRunner;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.library.model.Genre;
@@ -24,8 +23,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(properties = {
-        InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=false"})
+@SpringBootTest
 @ActiveProfiles("ServiceTest")
 class GenreServiceTest {
 
@@ -44,7 +42,7 @@ class GenreServiceTest {
             return g;
         }).when(genreRepository).save(any(Genre.class));
 
-        Genre g  = assertDoesNotThrow(() -> genreService.saveGenre(genre));
+        Genre g = assertDoesNotThrow(() -> genreService.saveGenre(genre));
         assertEquals(g, genre);
         assertEquals("1", g.getId());
     }
@@ -97,7 +95,7 @@ class GenreServiceTest {
     @Test
     void findByBookId() {
         when(genreRepository.findByBookId(anyString())).thenReturn(getTestGenres());
-        assertEquals(getTestGenres(),genreService.findByBookId("1"));
+        assertEquals(getTestGenres(), genreService.findByBookId("1"));
     }
 
     private List<Genre> getTestGenres() {
