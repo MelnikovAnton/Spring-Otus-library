@@ -27,7 +27,8 @@ public class BookController {
     private final GenreService genreService;
 
     @GetMapping("/")
-    public String getBookList() {
+    public String getBookList(Model model) {
+        model.addAttribute("isDevMode",true);
         return "bookList";
     }
 

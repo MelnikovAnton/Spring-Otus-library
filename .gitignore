@@ -32,3 +32,6 @@ build/
 
 
 *.log
+
+
+/node_modules
