@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="webjars/vue/2.6.10/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
     <title>Book List!</title>
 </head>
 <body>
@@ -36,53 +37,13 @@
 
 </div>
 <div class="container-fluid">
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th scope="col" th:text="#{book.title}">Title</th>
-            <th scope="col" th:text="#{book.author}">Authors</th>
-            <th scope="col" th:text="#{book.genre}">Genres</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="book : ${books}" th:object="${book}">
-            <td th:text="*{title}">Title</td>
-            <td>
-                <ul class="list-group" th:each="author : *{authors}">
-                    <li class="list-group-item" th:text="${author.name}">Author1</li>
-                </ul>
-            </td>
-            <td>
-                <ul class="list-group" th:each="genre : *{genres}">
-                    <li class="list-group-item" th:text="${genre.name}">Genre1</li>
-                </ul>
-            </td>
-            <td>
-                <a class="d-inline btn btn-primary" th:href="@{'/edit/'+ ${book.id}}" th:text="#{action.edit}">Edit</a>
-            </td>
-            <td>
-                <a class="d-inline btn btn-danger"
-                   th:href="@{/deleteBook(id=${book.id})}"
-                   th:text="#{action.delete}"
-                   role="button">delete</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div id="app">
 
-    <div id="vue-lable">
-        {{text}}
     </div>
+
 </div>
 
-<script>
-   var app= new Vue({
-        el: '#vue-lable',
-        data: {
-            text: 'TEX123123T'
-        }
-    })
-</script>
+<script src="js/main.js"></script>
 
 </body>
 </html>

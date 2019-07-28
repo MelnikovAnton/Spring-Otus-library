@@ -69,6 +69,12 @@
             <version>2.6.10</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>vue-router</artifactId>
+            <version>3.0.7</version>
+        </dependency>
+
         <!--        TESTS-->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
