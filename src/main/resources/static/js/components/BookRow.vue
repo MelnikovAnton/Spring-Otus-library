@@ -15,6 +15,12 @@
             <input type="button" class="d-inline btn btn-danger"
                    role="button" @click="deleteBook" value="delete"/>
         </td>
+        <td>
+            <router-link :to="{name: 'edit', params: {id: book.id}}">Edit Book</router-link>
+        </td>
+        <td>
+            <router-view></router-view>
+        </td>
     </tr>
 
 </template>
@@ -38,7 +44,6 @@
                 })
             },
             editBook: function (id) {
-                console.log(id);
                 document.location.href = '/edit/' + id
             }
         }
