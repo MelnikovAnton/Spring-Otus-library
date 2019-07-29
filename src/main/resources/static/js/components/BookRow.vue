@@ -8,18 +8,13 @@
             <genre-list :genres="book.genres"/>
         </td>
         <td>
-            <input type="button" class="d-inline btn btn-primary" role="button" @click="editBook(book.id)"
-                   value="Edit"/>
+            <router-link :to="{name: 'edit', params: {id: book.id}, props: true}" v-bind:book="book" class="d-inline btn btn-primary" role="button">
+                Edit
+            </router-link>
         </td>
         <td>
             <input type="button" class="d-inline btn btn-danger"
                    role="button" @click="deleteBook" value="delete"/>
-        </td>
-        <td>
-            <router-link :to="{name: 'edit', params: {id: book.id}}">Edit Book</router-link>
-        </td>
-        <td>
-            <router-view></router-view>
         </td>
     </tr>
 
@@ -42,9 +37,6 @@
                         this.books.splice(this.books.indexOf(this.book), 1)
                     }
                 })
-            },
-            editBook: function (id) {
-                document.location.href = '/edit/' + id
             }
         }
     }

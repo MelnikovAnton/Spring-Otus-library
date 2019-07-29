@@ -32,30 +32,30 @@ public class BookController {
         return "bookList";
     }
 
-    @GetMapping("edit/{id}")
-    public String editBook(@PathVariable("id") String id, Model model) {
-        Book book = bookService.findById(id).orElseThrow(() -> new RuntimeException("no book with id " + id));
-        List<Comment> comments = commentService.findCommentsByBook(book);
-        List<Author> authors = authorService.findAll();
-        List<Genre> genres = genreService.findAll();
-        model.addAttribute("book", book);
-        model.addAttribute("comments", comments);
-        model.addAttribute("authors", authors);
-        model.addAttribute("genres", genres);
-        return "editBook";
-    }
-
-
-    @GetMapping("/addBook")
-    public String addBook(Model model) {
-        Book book = bookService.saveBook(new Book());
-        List<Author> authors = authorService.findAll();
-        List<Genre> genres = genreService.findAll();
-        model.addAttribute("book", book);
-        model.addAttribute("comments", new ArrayList<Comment>());
-        model.addAttribute("authors", authors);
-        model.addAttribute("genres", genres);
-        return "editBook";
-    }
+//    @GetMapping("edit/{id}")
+//    public String editBook(@PathVariable("id") String id, Model model) {
+//        Book book = bookService.findById(id).orElseThrow(() -> new RuntimeException("no book with id " + id));
+//        List<Comment> comments = commentService.findCommentsByBook(book);
+//        List<Author> authors = authorService.findAll();
+//        List<Genre> genres = genreService.findAll();
+//        model.addAttribute("book", book);
+//        model.addAttribute("comments", comments);
+//        model.addAttribute("authors", authors);
+//        model.addAttribute("genres", genres);
+//        return "editBook";
+//    }
+//
+//
+//    @GetMapping("/addBook")
+//    public String addBook(Model model) {
+//        Book book = bookService.saveBook(new Book());
+//        List<Author> authors = authorService.findAll();
+//        List<Genre> genres = genreService.findAll();
+//        model.addAttribute("book", book);
+//        model.addAttribute("comments", new ArrayList<Comment>());
+//        model.addAttribute("authors", authors);
+//        model.addAttribute("genres", genres);
+//        return "editBook";
+//    }
 
 }

@@ -18,11 +18,13 @@ const router = new Router({
             path: '/',
             name:'home',
             component: App,
+            props: true
         },
         {
             path: '/edit/:id',
             name:'edit',
             component: EditBook,
+            props: true
         }
     ]
 });
