@@ -6,7 +6,7 @@
 
 <script>
 
-    import BooksList from 'modules/BookList.vue'
+    import BooksList from 'components/BookList.vue'
 
     export default {
         components: {
