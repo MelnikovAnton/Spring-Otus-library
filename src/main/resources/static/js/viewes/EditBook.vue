@@ -21,29 +21,11 @@
                         <td>
                             <div class="form-group">
                                 <author-list :authors="book.authors"/>
-                                <div class="row" style="margin-left: 0px">
-
-                                    <select class="d-inline" id="addAuthorSelect">
-                                        <option>Author1</option>
-                                    </select>
-                                    <!--                                    <a class="d-inline btn btn-primary" onclick="addAuthor()" role="button">Add</a>-->
-                                </div>
                             </div>
                         </td>
                         <td>
                             <div class="form-group">
-                                <div class="row" style="margin-left: 0px">
-                                    <genre-list :genres="book.genres"/>
-                                </div>
-                                <div class="row" style="margin-left: 0px">
-
-                                    <select class="d-inline" id="addGenreSelect">
-                                        <option>Genre</option>
-                                    </select>
-                                    <!--                                    <a class="d-inline btn btn-primary" onclick="addGenre()" role="button">Add</a>-->
-
-
-                                </div>
+                                <genre-list :genres="book.genres"/>
                             </div>
                         </td>
                         <td>
@@ -51,8 +33,9 @@
                         </td>
                         <td>
                             <router-link :to="{name: 'home', props: {}}" replace
-                                         class="d-inline btn btn-primary" role="button">cancel</router-link>
-                                <button class="btn btn-primary" @click="save">Save</button>
+                                         class="d-inline btn btn-primary" role="button">cancel
+                            </router-link>
+                            <button class="btn btn-primary" @click="save">Save</button>
                         </td>
                     </tr>
                     </tbody>
@@ -60,7 +43,7 @@
             </form>
 
         </div>
-        <comment-list :comments="comments" ></comment-list>
+        <comment-list :comments="comments"></comment-list>
 
     </div>
 
@@ -75,7 +58,7 @@
 
 
     export default {
-        components: {AuthorList, CommentList,GenreList},
+        components: {AuthorList, CommentList, GenreList},
         // props: ['book','books'],
         methods: {
             deleteBook: function () {
@@ -86,10 +69,13 @@
                 })
             },
             save() {
-                this.$resource('/bookApi{/id}').update({id: this.book.id ,method:'put'},this.book).then(result => {
+                this.$resource('/bookApi{/id}').update({id: this.book.id, method: 'put'}, this.book).then(result => {
                     result.ok
                     console.log(result.ok)
                 })
+            },
+            addGenre() {
+                console.log(genre)
             }
         },
         data() {

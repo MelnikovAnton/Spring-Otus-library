@@ -1,16 +1,20 @@
 <template>
     <div>
         <ul class="list-group" v-for="genre in genres" :genre="genre" v-bind:key="genre.id">
-            <li class="list-group-item">
-                <span>{{ genre.name }}</span>
-                <input type="button" class="d-inline btn btn-danger" v-if="isEdit"
-                       role="button" @click="deleteGenreFromBook" value="X"/>
+            <li class="list-group-item d-flex">
+                <span class="mr-auto">{{ genre.name }}</span>
+                <div class=" btn-sm btn-danger ml-auto" v-if="isEdit"
+                     @click="deleteGenreFromBook">delete
+                </div>
             </li>
         </ul>
+        <add-genre v-if="isEdit" :genres="genres"></add-genre>
     </div>
 </template>
 
 <script>
+
+    import AddGenre from 'components/genres/AddGenre.vue'
 
     export default {
         props: ['genres'],
@@ -18,6 +22,9 @@
             return {
                 isEdit: false
             }
+        },
+        components: {
+            AddGenre
         },
         methods: {
             deleteGenreFromBook: function () {
