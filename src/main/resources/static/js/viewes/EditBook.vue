@@ -56,7 +56,7 @@
                             <input name="contentPath" type="text" v-model="book.contentPath"/>
                         </td>
                         <td>
-                            <router-link :to="{name: 'home'}"
+                            <router-link :to="{name: 'home', props: {}}" replace
                                          class="d-inline btn btn-primary" role="button">cancel</router-link>
                                 <button class="btn btn-primary" @click="save">Save</button>
                         </td>
@@ -66,15 +66,20 @@
             </form>
 
         </div>
+        <comment-list :comments="comments" ></comment-list>
 
     </div>
+
+
 </template>
 
 <script>
 
+    import CommentList from "components/comments/CommentList.vue";
+
 
     export default {
-        components: {},
+        components: {CommentList},
         // props: ['book','books'],
         methods: {
             deleteBook: function () {
@@ -85,21 +90,34 @@
                 })
             },
             save() {
-                this.$resource('/bookApi{/id}').update({id: this.book.id},this.book).then(result => {
-                    console.log(result.json())
+                this.$resource('/bookApi{/id}').update({id: this.book.id ,method:'put'},this.book).then(result => {
+                    result.ok
+                    console.log(result.ok)
                 })
             }
         },
         data() {
             return {
-                book: {}
+                book: {},
+                comments: []
             }
         },
         created() {
-            var book1 = {};
-            this.$resource('/bookApi/' + this.$attrs.id).get()
+            var bookId = this.$attrs.id;
+            this.$resource('/bookApi/' + bookId).get()
                 .then(result => result.json())
-                .then(b => this.book = b)
+                .then(b => {
+                    console.log(b)
+                    this.book = b
+                })
+
+            this.$resource('/commentApi/' + bookId).get()
+                .then(result =>
+                    result.json().then(data =>
+                        data.forEach(comment => this.comments.push(comment)
+                        )
+                    )
+                )
         }
     }
 

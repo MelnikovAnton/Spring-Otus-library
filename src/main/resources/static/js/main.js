@@ -3,9 +3,9 @@ import VueResource from 'vue-resource'
 import BootstrapVue from 'bootstrap-vue'
 import Router from 'vue-router'
 
-import Wrapper from 'components/Wrapper.vue'
-import App from 'components/App.vue'
-import EditBook from 'components/EditBook.vue'
+import Wrapper from 'viewes/Wrapper.vue'
+import App from 'viewes/App.vue'
+import EditBook from 'viewes/EditBook.vue'
 
 Vue.use(VueResource);
 Vue.use(BootstrapVue);
@@ -18,7 +18,7 @@ const router = new Router({
             path: '/',
             name:'home',
             component: App,
-            props: true
+            props: false
         },
         {
             path: '/edit/:id',

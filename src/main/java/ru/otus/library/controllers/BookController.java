@@ -28,7 +28,7 @@ public class BookController {
 
     @GetMapping("/")
     public String getBookList(Model model) {
-        model.addAttribute("isDevMode",false);
+        model.addAttribute("isDevMode",true);
         return "bookList";
     }
 

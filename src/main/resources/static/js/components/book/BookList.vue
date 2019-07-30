@@ -15,7 +15,7 @@
 
 <script>
 
-    import BookRow from 'components/BookRow.vue'
+    import BookRow from 'components/book/BookRow.vue'
 
     export default {
         components: {
