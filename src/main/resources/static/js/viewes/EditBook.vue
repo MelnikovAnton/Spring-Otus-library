@@ -20,11 +20,7 @@
                         </td>
                         <td>
                             <div class="form-group">
-                                <div class="row" style="margin-left: 0px">
-                                    <select class="col form-control" multiple id="authorSelect">
-                                        <option> Author1</option>
-                                    </select>
-                                </div>
+                                <author-list :authors="book.authors"/>
                                 <div class="row" style="margin-left: 0px">
 
                                     <select class="d-inline" id="addAuthorSelect">
@@ -37,9 +33,7 @@
                         <td>
                             <div class="form-group">
                                 <div class="row" style="margin-left: 0px">
-                                    <select class="col form-control" multiple id="genreSelect">
-                                        <option>Genre1</option>
-                                    </select>
+                                    <genre-list :genres="book.genres"/>
                                 </div>
                                 <div class="row" style="margin-left: 0px">
 
@@ -76,10 +70,12 @@
 <script>
 
     import CommentList from "components/comments/CommentList.vue";
+    import AuthorList from "components/authors/AuthorList.vue";
+    import GenreList from "components/genres/GenreList.vue";
 
 
     export default {
-        components: {CommentList},
+        components: {AuthorList, CommentList,GenreList},
         // props: ['book','books'],
         methods: {
             deleteBook: function () {

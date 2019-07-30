@@ -21,8 +21,8 @@
 </template>
 
 <script>
-    import AuthorList from 'components/AuthorList.vue'
-    import GenreList from 'components/GenreList.vue'
+    import AuthorList from 'components/authors/AuthorList.vue'
+    import GenreList from 'components/genres/GenreList.vue'
 
     export default {
         components: {
