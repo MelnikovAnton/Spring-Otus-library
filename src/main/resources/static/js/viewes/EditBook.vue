@@ -71,7 +71,6 @@
             save() {
                 this.$resource('/bookApi{/id}').update({id: this.book.id, method: 'put'}, this.book).then(result => {
                     result.ok
-                    console.log(result.ok)
                 })
             },
             addGenre() {

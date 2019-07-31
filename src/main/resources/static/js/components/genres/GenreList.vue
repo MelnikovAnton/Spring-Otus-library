@@ -3,9 +3,9 @@
         <ul class="list-group" v-for="genre in genres" :genre="genre" v-bind:key="genre.id">
             <li class="list-group-item d-flex">
                 <span class="mr-auto">{{ genre.name }}</span>
-                <div class=" btn-sm btn-danger ml-auto" v-if="isEdit"
+                <button class=" btn-sm btn-danger ml-auto" v-if="isEdit"
                      @click="deleteGenreFromBook">delete
-                </div>
+                </button>
             </li>
         </ul>
         <add-genre v-if="isEdit" :genres="genres"></add-genre>

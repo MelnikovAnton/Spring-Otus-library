@@ -1,9 +1,9 @@
 <template>
     <div class="row" style="margin-left: 0px">
         <select class="d-inline" v-model="auth">
-            <option v-for="aauthor in aauthors" :value="aauthor">{{ aauthor.name }}</option>
+            <option v-for="aauthor in aauthors" :value="aauthor" v-if="isContains(aauthor)">{{ aauthor.name }}</option>
         </select>
-        <a class="d-inline btn btn-primary" @click="addAuthor" role="button">Add</a>
+        <button class="d-inline btn btn-primary" @click="addAuthor" role="button">Add</button>
     </div>
 </template>
 
@@ -21,6 +21,16 @@
         methods: {
             addAuthor() {
                 this.authors.push(this.auth)
+            },
+            isContains(author) {
+                var aauth = JSON.parse(JSON.stringify(author))
+                var flag = true
+
+                this.authors.forEach(v => {
+                    var auth = JSON.parse(JSON.stringify(v))
+                    if (auth.id === aauth.id) flag = false
+                })
+                return flag
             }
         },
         created() {

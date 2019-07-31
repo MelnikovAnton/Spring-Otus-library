@@ -3,9 +3,9 @@
         <ul class="list-group" v-for="author in authors" :author="author" v-bind:key="author.id">
             <li class="list-group-item d-flex">
                 <span class="mr-auto">{{ author.name }}</span>
-                <div class=" btn-sm btn-danger ml-auto" v-if="isEdit"
+                <button  role="button" class=" btn-sm btn-danger ml-auto" v-if="isEdit"
                      @click="deleteAuthorFromBook">delete
-                </div>
+                </button>
             </li>
         </ul>
         <add-author v-if="isEdit" :authors="authors"></add-author>
