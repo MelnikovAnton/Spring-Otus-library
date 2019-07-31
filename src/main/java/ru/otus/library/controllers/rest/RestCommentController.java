@@ -30,6 +30,7 @@ public class RestCommentController {
 
     @PostMapping
     public Comment create(@RequestBody Comment comment) {
+        System.out.println(comment);
         return commentService.saveComment(comment);
     }
 

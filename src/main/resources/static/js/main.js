@@ -25,6 +25,12 @@ const router = new Router({
             name:'edit',
             component: EditBook,
             props: true
+        },
+        {
+            path: '/addBook/',
+            name:'addBook',
+            component: EditBook,
+            props: true
         }
     ]
 });

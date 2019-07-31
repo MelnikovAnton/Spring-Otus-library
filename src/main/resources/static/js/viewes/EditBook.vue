@@ -43,7 +43,7 @@
             </form>
 
         </div>
-        <comment-list :comments="comments"></comment-list>
+        <comment-list :comments="comments" :book="book" v-if="isEdit"></comment-list>
 
     </div>
 
@@ -80,25 +80,29 @@
         data() {
             return {
                 book: {},
-                comments: []
+                comments: [],
+                isEdit: false
             }
         },
         created() {
-            var bookId = this.$attrs.id;
-            this.$resource('/bookApi/' + bookId).get()
-                .then(result => result.json())
-                .then(b => {
-                    console.log(b)
-                    this.book = b
-                })
+            this.isEdit = this.$route.name === 'edit'
+            if (this.isEdit) {
+                var bookId = this.$attrs.id;
+                this.$resource('/bookApi/' + bookId).get()
+                    .then(result => result.json())
+                    .then(b => {
+                        console.log(b)
+                        this.book = b
+                    })
 
-            this.$resource('/commentApi/' + bookId).get()
-                .then(result =>
-                    result.json().then(data =>
-                        data.forEach(comment => this.comments.push(comment)
+                this.$resource('/commentApi/' + bookId).get()
+                    .then(result =>
+                        result.json().then(data =>
+                            data.forEach(comment => this.comments.push(comment)
+                            )
                         )
                     )
-                )
+            }
         }
     }
 

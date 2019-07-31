@@ -11,29 +11,7 @@
     <title>Book List!</title>
 </head>
 <body>
-<div class="container-fluid">
-    <div class="row">
-        <h2 class="col" th:text="#{book.list}">Book List</h2>
-        <div class="col_2">
-            <div class="container text-center center-block">
-                <a th:href="@{/(lang=ru_RU)}">RU</a>
-                <a th:href="@{/(lang=en_US)}">EN</a>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <a href="/addBook" th:text="#{action.addBook}">add book</a>
-        </div>
-        <div class="col">
-            <a href="/authorList" th:text="#{author.list}">Author List</a>
-        </div>
-        <div class="col">
-            <a href="/genreList" th:text="#{genre.list}">Genre List</a>
-        </div>
-    </div>
 
-</div>
 <div class="container-fluid">
     <div id="app">
 
