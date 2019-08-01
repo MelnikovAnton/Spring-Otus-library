@@ -23,20 +23,18 @@
 <script>
     import AuthorList from 'components/authors/AuthorList.vue'
     import GenreList from 'components/genres/GenreList.vue'
+    import { mapActions } from 'vuex'
 
     export default {
         components: {
             AuthorList,
             GenreList
         },
-        props: ['book', 'books'],
+        props: ['book'],
         methods: {
+            ...mapActions(['removeBookAction']),
             deleteBook: function () {
-                this.$resource('/bookApi{/id}').remove({id: this.book.id}).then(result => {
-                    if (result.ok) {
-                        this.books.splice(this.books.indexOf(this.book), 1)
-                    }
-                })
+                this.removeBookAction(this.book)
             }
         }
     }

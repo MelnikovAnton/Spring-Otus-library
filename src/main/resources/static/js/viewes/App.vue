@@ -1,6 +1,6 @@
 <template>
     <div>
-        <books-list :books="books"/>
+        <books-list/>
     </div>
 </template>
 
@@ -11,11 +11,6 @@
     export default {
         components: {
             BooksList
-        },
-        data() {
-            return {
-                books: []
-            }
         }
     }
 </script>

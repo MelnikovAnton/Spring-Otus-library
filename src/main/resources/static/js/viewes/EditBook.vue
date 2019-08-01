@@ -14,22 +14,22 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <th scope="row">{{ book.id }}</th>
+                        <th scope="row">{{ bookItem.id }}</th>
                         <td>
-                            <input class="form-control" name="title" type="text" v-model="book.title"/>
+                            <input class="form-control" name="title" type="text" v-model="bookItem.title"/>
                         </td>
                         <td>
                             <div class="form-group">
-                                <author-list :authors="book.authors"/>
+                                <author-list :authors="bookItem.authors"/>
                             </div>
                         </td>
                         <td>
                             <div class="form-group">
-                                <genre-list :genres="book.genres"/>
+                                <genre-list :genres="bookItem.genres"/>
                             </div>
                         </td>
                         <td>
-                            <input name="contentPath" type="text" v-model="book.contentPath"/>
+                            <input name="contentPath" type="text" v-model="bookItem.contentPath"/>
                         </td>
                         <td>
                             <router-link :to="{name: 'home', props: {}}" replace
@@ -43,7 +43,7 @@
             </form>
 
         </div>
-        <comment-list :comments="comments" :book="book" v-if="isEdit"></comment-list>
+        <comment-list :comments="comments" :book="bookItem" v-if="isEdit"></comment-list>
 
     </div>
 
@@ -52,6 +52,7 @@
 
 <script>
 
+    import {mapActions, mapState} from 'vuex'
     import CommentList from "components/comments/CommentList.vue";
     import AuthorList from "components/authors/AuthorList.vue";
     import GenreList from "components/genres/GenreList.vue";
@@ -61,17 +62,12 @@
         components: {AuthorList, CommentList, GenreList},
         // props: ['book','books'],
         methods: {
-            deleteBook: function () {
-                this.$resource('/bookApi{/id}').remove({id: this.book.id}).then(result => {
-                    if (result.ok) {
-                        this.books.splice(this.books.indexOf(this.book), 1)
-                    }
-                })
+            ...mapActions(['removeBookAction', 'updateBookAction', 'getBookItem']),
+            deleteBook() {
+                this.removeBookAction(this.book)
             },
             save() {
-                this.$resource('/bookApi{/id}').update({id: this.book.id, method: 'put'}, this.book).then(result => {
-                    result.ok
-                })
+                this.updateBookAction(this.book)
             },
             addGenre() {
                 console.log(genre)
@@ -79,31 +75,28 @@
         },
         data() {
             return {
-                book: {},
                 comments: [],
-                isEdit: false
+                isEdit: false,
+                isAdd: false
             }
         },
+        computed: mapState(['bookItem']),
         created() {
             this.isEdit = this.$route.name === 'edit'
-            if (this.isEdit) {
-                var bookId = this.$attrs.id;
-                this.$resource('/bookApi/' + bookId).get()
-                    .then(result => result.json())
-                    .then(b => {
-                        console.log(b)
-                        this.book = b
-                    })
+            this.isAdd = this.$route.name === 'addBook'
 
-                this.$resource('/commentApi/' + bookId).get()
-                    .then(result =>
-                        result.json().then(data =>
-                            data.forEach(comment => this.comments.push(comment)
-                            )
+            var bookId = this.$attrs.id;
+            this.getBookItem(bookId)
+
+            this.$resource('/commentApi/' + bookId).get()
+                .then(result =>
+                    result.json().then(data =>
+                        data.forEach(comment => this.comments.push(comment)
                         )
                     )
-            }
+                )
         }
+
     }
 
 </script>

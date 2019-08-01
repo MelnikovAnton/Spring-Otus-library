@@ -8,33 +8,29 @@
         </tr>
         </thead>
         <tbody>
-        <book-row v-for="book in books" :book="book" :books="books" v-bind:key="book.id"></book-row>
+        <book-row v-for="book in books" :book="book"  v-bind:key="book.id"></book-row>
         </tbody>
     </table>
 </template>
 
 <script>
-
+    import { mapState } from 'vuex'
     import BookRow from 'components/book/BookRow.vue'
 
     export default {
         components: {
             BookRow
         },
-        props: ['books'],
         data() {
             return {
                 book: null
             }
         },
+        computed: mapState(['books']),
         created() {
-            this.$resource('/bookApi{/id}').get().then(result =>
-                result.json().then(data =>
-                    data.forEach(book => this.books.push(book)
-                    )
-                )
-            )
+           this.$store.dispatch('getAllBookAction')
         }
+
     }
 </script>
 
