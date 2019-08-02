@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import booksApi from 'api/books'
+import authorsApi from 'api/authorsApi'
 
 Vue.use(Vuex);
 
@@ -8,7 +9,9 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         books: [],
-        bookItem: {}
+        bookItem: {},
+        authors: [],
+        authorsItem: []
     },
     getters: {
         books: state => state.books
@@ -17,8 +20,8 @@ export default new Vuex.Store({
         getBookItemMutation(state, book) {
             state.bookItem = book;
         },
-        addBooksMutation(state, books) {
-            books.forEach(b => state.books.push(b))
+        setBooks(state, books) {
+            state.books=books
         },
         addBookMutation(state, book) {
             state.messages = [
@@ -28,10 +31,9 @@ export default new Vuex.Store({
         },
         updateBookMutation(state, book) {
             const updateIndex = state.books.findIndex(item => item.id === book.id)
-
             state.books = [
                 ...state.books.slice(0, updateIndex),
-                message,
+                book,
                 ...state.books.slice(updateIndex + 1)
             ]
         },
@@ -50,8 +52,7 @@ export default new Vuex.Store({
         async getAllBookAction({commit}) {
             const result = await booksApi.get()
             const data = await result.json()
-            commit('addBooksMutation', data)
-            return data
+            commit('setBooks', data)
         },
         async addBookAction({commit, state}, book) {
             const result = await booksApi.add(book)

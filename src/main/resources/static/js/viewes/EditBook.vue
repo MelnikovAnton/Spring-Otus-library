@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <div class="container-fluid">
-            <form id="edit-form">
+            <div id="edit-form">
                 <table class="table table-striped">
                     <thead>
                     <tr>
@@ -40,7 +40,7 @@
                     </tr>
                     </tbody>
                 </table>
-            </form>
+            </div>
 
         </div>
         <comment-list :comments="comments" :book="bookItem" v-if="isEdit"></comment-list>
@@ -67,7 +67,7 @@
                 this.removeBookAction(this.book)
             },
             save() {
-                this.updateBookAction(this.book)
+                this.updateBookAction(this.bookItem)
             },
             addGenre() {
                 console.log(genre)
