@@ -8,16 +8,17 @@
 </template>
 
 <script>
+    import {mapState} from 'vuex'
 
     export default {
         props: ['authors'],
         data() {
             return {
                 isEdit: false,
-                aauthors: [],
                 auth: {}
             }
         },
+        computed: mapState(['aauthors']),
         methods: {
             addAuthor() {
                 this.authors.push(this.auth)
@@ -34,12 +35,7 @@
             }
         },
         created() {
-            this.$resource('/authorApi/').get().then(result =>
-                result.json().then(data =>
-                    data.forEach(auth => this.aauthors.push(auth)
-                    )
-                )
-            )
+            this.$store.dispatch('getAllAuthorsAction')
 
         }
     }

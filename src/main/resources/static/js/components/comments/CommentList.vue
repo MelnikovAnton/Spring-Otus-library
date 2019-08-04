@@ -2,7 +2,7 @@
 
     <div class="container-fluid">
         <h4>Comments</h4>
-        <add-comment :comments="comments" :book="book"></add-comment>
+        <add-comment :comments="comments"></add-comment>
         <ul class="list-group">
             <comment-row v-for="comment in comments" :comment="comment" :comments="comments"
                          v-bind:key="comment.id"></comment-row>
@@ -12,6 +12,7 @@
 </template>
 
 <script>
+    import {mapActions, mapState} from 'vuex'
     import CommentRow from 'components/comments/CommentRow.vue'
     import AddComment from 'components/comments/AddComment.vue'
 
@@ -21,11 +22,11 @@
             AddComment,
             CommentRow
         },
-        props: ['comments','book'],
-        data() {
-            return {
-                comment: null
-            }
+        methods: {
+            ...mapActions(['getItemCommentsAction']),
+        },
+        computed: {
+            ...mapState(['comments']),
         }
     }
 </script>

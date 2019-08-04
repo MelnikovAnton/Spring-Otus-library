@@ -9,18 +9,16 @@
 </template>
 
 <script>
+    import {mapActions} from 'vuex'
 
     export default {
         components: {
         },
-        props: ['comment', 'comments'],
+        props: ['comment'],
         methods: {
+            ...mapActions(['removeCommentAction']),
             deleteComment: function () {
-                this.$resource('/commentApi{/id}').remove({id: this.comment.id}).then(result => {
-                    if (result.ok) {
-                        this.comments.splice(this.comments.indexOf(this.comment), 1)
-                    }
-                })
+                this.removeCommentAction(this.comment)
             }
         }
     }

@@ -8,16 +8,17 @@
 </template>
 
 <script>
+    import {mapState} from 'vuex'
 
     export default {
         props: ['genres'],
         data() {
             return {
                 isEdit: false,
-                agenres: [],
                 genre: {}
             }
         },
+        computed: mapState(['agenres']),
         methods: {
             addGenre() {
                 this.genres.push(this.genre)
@@ -34,13 +35,7 @@
             }
         },
         created() {
-            this.$resource('/genreApi/').get().then(result =>
-                result.json().then(data =>
-                    data.forEach(gen =>
-                        this.agenres.push(gen)
-                    )
-                )
-            )
+            this.$store.dispatch('getAllGenresAction')
         }
     }
 </script>

@@ -11,23 +11,22 @@
 </template>
 
 <script>
+    import {mapActions,mapState} from 'vuex'
+
     export default {
-        props: ['comments','book'],
         data() {
             return {
                 isEdit: false,
                 comment: {}
             }
         },
+        computed: mapState(['bookItem']),
         methods: {
+            ...mapActions(['addCommentAction']),
             addComment() {
-                this.comment.book=this.book
-                this.$resource('/commentApi/').save(this.comment).then(result => {
-                    if (result.ok) {
-                        this.comments.push(result.data)
-                        this.comment = {}
-                    }
-                })
+                var book = JSON.parse(JSON.stringify(this.bookItem))
+                this.comment.book = book
+                this.addCommentAction(this.comment)
             }
         }
     }

@@ -43,7 +43,7 @@
             </div>
 
         </div>
-        <comment-list :comments="comments" :book="bookItem" v-if="isEdit"></comment-list>
+        <comment-list :book="bookItem"  v-if="isEdit"></comment-list>
 
     </div>
 
@@ -62,7 +62,7 @@
         components: {AuthorList, CommentList, GenreList},
         // props: ['book','books'],
         methods: {
-            ...mapActions(['removeBookAction', 'updateBookAction', 'getBookItem']),
+            ...mapActions(['removeBookAction', 'updateBookAction', 'getBookItem', 'getItemCommentsAction']),
             deleteBook() {
                 this.removeBookAction(this.book)
             },
@@ -75,7 +75,6 @@
         },
         data() {
             return {
-                comments: [],
                 isEdit: false,
                 isAdd: false
             }
@@ -86,15 +85,10 @@
             this.isAdd = this.$route.name === 'addBook'
 
             var bookId = this.$attrs.id;
+            this.bookId=bookId
             this.getBookItem(bookId)
 
-            this.$resource('/commentApi/' + bookId).get()
-                .then(result =>
-                    result.json().then(data =>
-                        data.forEach(comment => this.comments.push(comment)
-                        )
-                    )
-                )
+            this.getItemCommentsAction(bookId)
         }
 
     }
