@@ -32,8 +32,7 @@
                             <input name="contentPath" type="text" v-model="bookItem.contentPath"/>
                         </td>
                         <td>
-                            <router-link :to="{name: 'home', props: {}}" replace
-                                         class="d-inline btn btn-primary" role="button">cancel
+                            <router-link :to="{name: 'home', props: {}}">cancel
                             </router-link>
                             <button class="btn btn-primary" @click="save">Save</button>
                         </td>
@@ -63,12 +62,15 @@
         // props: ['book','books'],
         methods: {
             ...mapActions(['removeBookAction', 'updateBookAction', 'getBookItem', 'getItemCommentsAction', 'addBookAction']),
-            ...mapMutations(['getBookItemMutation']),
+            ...mapMutations(['setBookItemMutation']),
             deleteBook() {
                 this.removeBookAction(this.book)
             },
             save() {
-                if (this.isEdit) this.updateBookAction(this.bookItem)
+                if (this.isEdit) {
+                    this.updateBookAction(this.bookItem)
+                    this.$router.push({name: 'home'})
+                }
                 if (this.isAdd) {
                     this.addBookAction(this.bookItem)
                 }
@@ -105,7 +107,7 @@
             console.log(this.isEdit)
             if (this.isAdd) {
                 var bookItem = {title: '', authors: [], genres: [], content: ''}
-                this.getBookItemMutation(bookItem)
+                this.setBookItemMutation(bookItem)
             }
             if (this.isEdit) {
                 this.doEdit()

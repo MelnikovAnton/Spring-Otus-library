@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 import booksApi from 'api/books'
 import authorsApi from "api/authorsApi"
 import genresApi from "api/genresApi"
-import commentApi from "../api/commentApi";
+import commentApi from ":api/commentApi";
 
 Vue.use(Vuex);
 
@@ -18,11 +18,9 @@ export default new Vuex.Store({
     },
     getters: {
         books: state => state.books,
-        // bookItem: state => state.bookItem,
-        // bookId: (state,getters) => getters.bookItem
     },
     mutations: {
-        getBookItemMutation(state, book) {
+        setBookItemMutation(state, book) {
             state.bookItem = book;
         },
         setBooks(state, books) {
@@ -102,9 +100,6 @@ export default new Vuex.Store({
                 author
             ]
         },
-
-
-
         deleteGenreMutation(state, genre) {
             const deletionIndex = state.agenres.findIndex(item => item.id === genre.id)
 
@@ -149,7 +144,7 @@ export default new Vuex.Store({
                 commit('updateBookMutation', data)
             } else {
                 commit('addBookMutation', data)
-                commit('getBookItemMutation', data)
+                commit('setBookItemMutation', data)
                 console.log("books!!!!!")
             }
         },
@@ -167,7 +162,7 @@ export default new Vuex.Store({
         async getBookItem({commit}, bookId) {
             const result = await booksApi.get(bookId)
             const data = await result.json()
-            commit('getBookItemMutation', data)
+            commit('setBookItemMutation', data)
         },
         async getAllAuthorsAction({commit}) {
             const result = await authorsApi.get()

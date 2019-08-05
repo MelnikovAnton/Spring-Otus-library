@@ -27,6 +27,7 @@
                 var book = JSON.parse(JSON.stringify(this.bookItem))
                 this.comment.book = book
                 this.addCommentAction(this.comment)
+                this.comment = {}
             }
         }
     }
