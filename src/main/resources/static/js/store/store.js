@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 import booksApi from 'api/books'
 import authorsApi from "api/authorsApi"
 import genresApi from "api/genresApi"
-import commentApi from ":api/commentApi";
+import commentApi from "api/commentApi"
 
 Vue.use(Vuex);
 
