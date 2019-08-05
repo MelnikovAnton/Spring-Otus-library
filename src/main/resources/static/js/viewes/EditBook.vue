@@ -43,7 +43,7 @@
             </div>
 
         </div>
-        <comment-list :book="bookItem"  v-if="isEdit"></comment-list>
+        <comment-list :book="bookItem" v-if="isEdit"></comment-list>
 
     </div>
 
@@ -52,7 +52,7 @@
 
 <script>
 
-    import {mapActions, mapState} from 'vuex'
+    import {mapActions, mapMutations, mapState} from 'vuex'
     import CommentList from "components/comments/CommentList.vue";
     import AuthorList from "components/authors/AuthorList.vue";
     import GenreList from "components/genres/GenreList.vue";
@@ -62,15 +62,23 @@
         components: {AuthorList, CommentList, GenreList},
         // props: ['book','books'],
         methods: {
-            ...mapActions(['removeBookAction', 'updateBookAction', 'getBookItem', 'getItemCommentsAction']),
+            ...mapActions(['removeBookAction', 'updateBookAction', 'getBookItem', 'getItemCommentsAction', 'addBookAction']),
+            ...mapMutations(['getBookItemMutation']),
             deleteBook() {
                 this.removeBookAction(this.book)
             },
             save() {
-                this.updateBookAction(this.bookItem)
+                if (this.isEdit) this.updateBookAction(this.bookItem)
+                if (this.isAdd) {
+                    this.addBookAction(this.bookItem)
+                    console.log(this.bookItem.id)
+                }
             },
-            addGenre() {
-                console.log(genre)
+            doEdit() {
+                var bookId = this.$attrs.id;
+                this.bookId = bookId
+                this.getBookItem(bookId)
+                this.getItemCommentsAction(bookId)
             }
         },
         data() {
@@ -79,16 +87,35 @@
                 isAdd: false
             }
         },
+        watch: {
+            bookItem() {
+                if (this.bookItem.id) this.$router.push({name: 'edit', params: {id: this.bookItem.id}})
+            },
+            '$route'(to, from) {
+                this.isEdit = this.$route.name === 'edit'
+                this.isAdd = this.$route.name === 'addBook'
+                if (to.name === 'edit') this.doEdit()
+            }
+        },
         computed: mapState(['bookItem']),
         created() {
             this.isEdit = this.$route.name === 'edit'
             this.isAdd = this.$route.name === 'addBook'
 
-            var bookId = this.$attrs.id;
-            this.bookId=bookId
-            this.getBookItem(bookId)
-
-            this.getItemCommentsAction(bookId)
+            console.log(this.isAdd)
+            console.log(this.isEdit)
+            if (this.isAdd) {
+                var bookItem = {title: '', authors: [], genres: [], content: ''}
+                this.getBookItemMutation(bookItem)
+            }
+            if (this.isEdit) {
+                this.doEdit()
+            }
+        },
+        beforeRouteUpdate(to, from, next) {
+            console.log(to)
+            console.log(from)
+            next()
         }
 
     }

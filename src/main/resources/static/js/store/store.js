@@ -29,8 +29,8 @@ export default new Vuex.Store({
             state.books = books
         },
         addBookMutation(state, book) {
-            state.messages = [
-                ...state.messages,
+            state.books = [
+                ...state.books,
                 book
             ]
         },
@@ -88,12 +88,17 @@ export default new Vuex.Store({
         async addBookAction({commit, state}, book) {
             const result = await booksApi.add(book)
             const data = await result.json()
+            console.log(data)
+
             const index = state.books.findIndex(item => item.id === data.id)
 
+            console.log(index)
             if (index > -1) {
                 commit('updateBookMutation', data)
             } else {
                 commit('addBookMutation', data)
+                commit('getBookItemMutation',data)
+                console.log("books!!!!!")
             }
         },
         async updateBookAction({commit}, book) {
