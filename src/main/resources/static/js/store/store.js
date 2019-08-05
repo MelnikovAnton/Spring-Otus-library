@@ -102,6 +102,34 @@ export default new Vuex.Store({
                 author
             ]
         },
+
+
+
+        deleteGenreMutation(state, genre) {
+            const deletionIndex = state.agenres.findIndex(item => item.id === genre.id)
+
+            if (deletionIndex > -1) {
+                state.agenres = [
+                    ...state.agenres.slice(0, deletionIndex),
+                    ...state.agenres.slice(deletionIndex + 1)
+                ]
+            }
+        },
+        updateGenresMutation(state, genre) {
+            const updateIndex = state.agenres.findIndex(item => item.id === genre.id)
+            state.agenres = [
+                ...state.agenres.slice(0, updateIndex),
+                genre,
+                ...state.agenres.slice(updateIndex + 1)
+            ]
+        },
+        addGenreMutation(state, genre) {
+            state.agenres = [
+                ...state.agenres,
+                genre
+            ]
+        },
+
     },
     actions: {
         async getAllBookAction({commit}) {
@@ -167,7 +195,8 @@ export default new Vuex.Store({
         async addCommentAction({commit}, comment) {
             const result = await commentApi.add(comment)
             if (result.ok) {
-                commit('addCommentMutation', comment)
+                const data = await result.json()
+                commit('addCommentMutation', data)
             }
         },
         async removeAuthorAction({commit}, author) {
@@ -187,6 +216,26 @@ export default new Vuex.Store({
                 const data = await result.json()
                 console.log(data)
                 commit('addAuthorMutation', data)
+            }
+        },
+
+        async removeGenreAction({commit}, genre) {
+            const result = await genresApi.remove(genre.id)
+            if (result.ok) {
+                commit('deleteGenreMutation', genre)
+            }
+        },
+        async updateGenreAction({commit}, genre) {
+            const result = await genresApi.update(genre)
+            const data = await result.json()
+            commit('updateGenresMutation', data)
+        },
+        async addGenreAction({commit}, genre) {
+            const result = await genresApi.add(genre)
+            if (result.ok) {
+                const data = await result.json()
+                console.log(data)
+                commit('addGenreMutation', data)
             }
         },
     }

@@ -71,7 +71,6 @@
                 if (this.isEdit) this.updateBookAction(this.bookItem)
                 if (this.isAdd) {
                     this.addBookAction(this.bookItem)
-                    console.log(this.bookItem.id)
                 }
             },
             doEdit() {

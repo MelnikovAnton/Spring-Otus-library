@@ -2,7 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from 'viewes/App.vue'
 import EditBook from 'viewes/EditBook.vue'
-import AuthorList from 'viewes/AuthorList.vue'
+import AuthorList from 'viewes/AuthorViewe.vue'
+import GenreList from "viewes/GenreViewe.vue";
 
 Vue.use(VueRouter)
 
@@ -29,6 +30,12 @@ const routes = [
         path: '/authorList/',
         name: 'authorList',
         component: AuthorList,
+        props: true
+    },
+    {
+        path: '/genreList/',
+        name: 'genreList',
+        component: GenreList,
         props: true
     }
 ]
