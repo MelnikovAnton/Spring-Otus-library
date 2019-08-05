@@ -11,10 +11,13 @@
         </div>
         <div class="row">
             <div class="col">
+                <router-link :to="{name: 'home'}">To Home</router-link>
+            </div>
+            <div class="col">
                 <router-link :to="{name: 'addBook'}">Add book</router-link>
             </div>
             <div class="col">
-                <a href="/authorList" >Author List</a>
+                <router-link :to="{name: 'authorList'}">Author List</router-link>
             </div>
             <div class="col">
                 <a href="/genreList">Genre List</a>

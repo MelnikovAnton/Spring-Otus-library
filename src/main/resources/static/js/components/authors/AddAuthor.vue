@@ -26,7 +26,7 @@
             isContains(author) {
                 var aauth = JSON.parse(JSON.stringify(author))
                 var flag = true
-
+                if (this.authors === undefined) this.authors = []
                 this.authors.forEach(v => {
                     var auth = JSON.parse(JSON.stringify(v))
                     if (auth.id === aauth.id) flag = false

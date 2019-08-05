@@ -78,6 +78,30 @@ export default new Vuex.Store({
                 comment
             ]
         },
+        deleteAuthorMutation(state, author) {
+            const deletionIndex = state.aauthors.findIndex(item => item.id === author.id)
+
+            if (deletionIndex > -1) {
+                state.aauthors = [
+                    ...state.aauthors.slice(0, deletionIndex),
+                    ...state.aauthors.slice(deletionIndex + 1)
+                ]
+            }
+        },
+        updateAuthorsMutation(state, author) {
+            const updateIndex = state.aauthors.findIndex(item => item.id === author.id)
+            state.aauthors = [
+                ...state.aauthors.slice(0, updateIndex),
+                author,
+                ...state.aauthors.slice(updateIndex + 1)
+            ]
+        },
+        addAuthorMutation(state, author) {
+            state.aauthors = [
+                ...state.aauthors,
+                author
+            ]
+        },
     },
     actions: {
         async getAllBookAction({commit}) {
@@ -97,7 +121,7 @@ export default new Vuex.Store({
                 commit('updateBookMutation', data)
             } else {
                 commit('addBookMutation', data)
-                commit('getBookItemMutation',data)
+                commit('getBookItemMutation', data)
                 console.log("books!!!!!")
             }
         },
@@ -127,7 +151,7 @@ export default new Vuex.Store({
             const data = await result.json()
             commit('addAllGenresMutation', data)
         },
-        async getItemCommentsAction({commit},bookid) {
+        async getItemCommentsAction({commit}, bookid) {
 
             console.log(bookid)
             const result = await commentApi.get(bookid)
@@ -145,6 +169,25 @@ export default new Vuex.Store({
             if (result.ok) {
                 commit('addCommentMutation', comment)
             }
-        }
+        },
+        async removeAuthorAction({commit}, author) {
+            const result = await authorsApi.remove(author.id)
+            if (result.ok) {
+                commit('deleteAuthorMutation', author)
+            }
+        },
+        async updateAuthorAction({commit}, author) {
+            const result = await authorsApi.update(author)
+            const data = await result.json()
+            commit('updateAuthorsMutation', data)
+        },
+        async addAuthorAction({commit}, author) {
+            const result = await authorsApi.add(author)
+            if (result.ok) {
+                const data = await result.json()
+                console.log(data)
+                commit('addAuthorMutation', data)
+            }
+        },
     }
 })
