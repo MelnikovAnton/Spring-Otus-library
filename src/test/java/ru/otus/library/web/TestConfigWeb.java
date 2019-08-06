@@ -25,7 +25,7 @@ import ru.otus.library.services.GenreService;
 @EnableConfigurationProperties
 @ComponentScan(basePackages = {"ru.otus.library.services"
         , "ru.otus.library.repository"
-        , "ru.otus.library.controllers"})
+        , "ru.otus.library.controllers","ru.otus.library.controllers"})
 @EnableAutoConfiguration(exclude = {EmbeddedMongoAutoConfiguration.class,
         MongoAutoConfiguration.class,
         MongoDataAutoConfiguration.class})

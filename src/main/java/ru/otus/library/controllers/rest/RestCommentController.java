@@ -24,7 +24,7 @@ public class RestCommentController {
 
     @GetMapping("{bookId}")
     public List<Comment> getByBookId(@PathVariable("bookId") String id) {
-        Book book = bookService.findById(id).orElseThrow(() -> new RuntimeException("no comment with id " + id));
+        Book book = bookService.findById(id).orElseThrow(() -> new RuntimeException("no book with id " + id));
         return commentService.findCommentsByBook(book);
     }
 

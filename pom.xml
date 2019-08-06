@@ -15,7 +15,7 @@
     <description>Demo project for Spring Boot</description>
 
     <properties>
-        <java.version>12</java.version>
+        <java.version>11</java.version>
         <junit.version>5.3.2</junit.version>
     </properties>
 
@@ -205,12 +205,14 @@
             <properties>
                 <spring.profiles.active>dev</spring.profiles.active>
                 <maven.test.skip>true</maven.test.skip>
+                <profile>dev</profile>
             </properties>
         </profile>
         <profile>
             <id>jar</id>
             <properties>
                 <spring.profiles.active>jar</spring.profiles.active>
+                <profile>jar</profile>
             </properties>
         </profile>
     </profiles>

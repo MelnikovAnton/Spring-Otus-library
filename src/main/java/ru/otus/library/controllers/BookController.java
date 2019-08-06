@@ -13,7 +13,7 @@ public class BookController {
     @Value("${spring.profiles.active}")
     private String isDev;
 
-    @GetMapping("/**")
+    @GetMapping("/*")
     public String getBookList(Model model) {
         model.addAttribute("isDevMode", "dev".equals(isDev));
         return "bookList";
