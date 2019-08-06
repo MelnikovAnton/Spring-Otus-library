@@ -60,8 +60,6 @@
     export default {
         components: {AuthorList, CommentList, GenreList},
         beforeRouteLeave(to, from, next) {
-            console.log(from)
-            console.log(to)
             if (from.name === 'edit' && to.name === 'addBook') this.clearBookItem().then(() => next())
             else next()
         },

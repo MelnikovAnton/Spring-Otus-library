@@ -1,16 +1,16 @@
 <template>
     <div>
-        <top></top>
-        <router-view></router-view>
+        <books-list/>
     </div>
 </template>
 
 <script>
-    import Top from 'components/top.vue'
+
+    import BooksList from 'components/book/BookList.vue'
 
     export default {
         components: {
-            Top
+            BooksList
         }
     }
 </script>

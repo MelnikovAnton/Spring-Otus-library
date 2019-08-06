@@ -22,8 +22,6 @@
     <dependencies>
 
 
-
-
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
@@ -36,7 +34,7 @@
         </dependency>
 
 
-<!--        db-->
+        <!--        db-->
 
 
         <dependency>
@@ -50,7 +48,7 @@
             <version>2.0.2</version>
         </dependency>
 
-<!--        web-->
+        <!--        web-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -198,5 +196,23 @@
 
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <spring.profiles.active>dev</spring.profiles.active>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+        </profile>
+        <profile>
+            <id>jar</id>
+            <properties>
+                <spring.profiles.active>jar</spring.profiles.active>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

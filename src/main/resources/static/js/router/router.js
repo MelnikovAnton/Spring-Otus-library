@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import App from 'viewes/App.vue'
+import App from 'viewes/BookList.vue'
 import EditBook from 'viewes/EditBook.vue'
 import AuthorList from 'viewes/AuthorViewe.vue'
 import GenreList from "viewes/GenreViewe.vue"

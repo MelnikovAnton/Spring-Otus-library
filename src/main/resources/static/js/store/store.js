@@ -134,17 +134,13 @@ const store = new Vuex.Store({
         async addBookAction({commit, state}, book) {
             const result = await booksApi.add(book)
             const data = await result.json()
-            console.log(data)
-
             const index = state.books.findIndex(item => item.id === data.id)
 
-            console.log(index)
             if (index > -1) {
                 commit('updateBookMutation', data)
             } else {
                 commit('addBookMutation', data)
                 commit('setBookItemMutation', data)
-                console.log("books!!!!!")
             }
         },
         async updateBookAction({commit}, book) {
@@ -206,7 +202,6 @@ const store = new Vuex.Store({
             const result = await authorsApi.add(author)
             if (result.ok) {
                 const data = await result.json()
-                console.log(data)
                 commit('addAuthorMutation', data)
             }
         },

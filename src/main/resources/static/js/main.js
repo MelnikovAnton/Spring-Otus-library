@@ -5,10 +5,10 @@ import '@babel/polyfill'
 import store from 'store/store'
 import i18n from "i18n/i18n";
 
-import Wrapper from 'viewes/Wrapper.vue'
+import App from 'viewes/App.vue'
 
 new Vue({
-    render: a => a(Wrapper),
+    render: a => a(App),
     store,
     router,
     i18n
