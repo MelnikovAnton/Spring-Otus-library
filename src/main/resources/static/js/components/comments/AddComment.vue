@@ -1,10 +1,10 @@
 <template>
     <div class="container">
-        <h4>Add comment</h4>
+        <h4>{{ $t('action.addComment')}}</h4>
         <div class="row justify-content-center">
             <div class="col">
                 <textarea class="form-control" v-bind:key="comment.id" v-model="comment.comment" name="comment" rows="3"></textarea>
-                <button class="form-control btn btn-primary" @click="addComment">Save</button>
+                <button class="form-control btn btn-primary" @click="addComment">{{ $t('action.save')}}</button>
             </div>
         </div>
     </div>

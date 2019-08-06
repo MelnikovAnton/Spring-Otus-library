@@ -2,9 +2,9 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th scope="col">Title</th>
-            <th scope="col">Authors</th>
-            <th scope="col">Genres</th>
+            <th scope="col">{{ $t('book.title') }}</th>
+            <th scope="col">{{ $t('book.author') }}</th>
+            <th scope="col">{{ $t('book.genre') }}</th>
         </tr>
         </thead>
         <tbody>

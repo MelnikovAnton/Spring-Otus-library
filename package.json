@@ -11,19 +11,19 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
-    "bootstrap": "^4.3.1",
-    "bootstrap-vue": "^2.0.0-rc.27",
+    "css-loader": "^3.1.0",
     "vue": "^2.6.10",
     "vue-i18n": "^8.12.0",
+    "vue-loader": "^15.7.1",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.0.7",
+    "vue-style-loader": "^4.1.2",
     "vuex": "^3.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "babel-loader": "^8.0.2",
-    "vue-loader": "^15.7.1",
     "vue-template-compiler": "^2.6.10",
     "webpack": "^4.17.2",
     "webpack-cli": "^3.1.0",

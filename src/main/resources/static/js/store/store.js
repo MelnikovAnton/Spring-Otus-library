@@ -8,7 +8,7 @@ import commentApi from "api/commentApi"
 Vue.use(Vuex);
 
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
     state: {
         books: [],
         bookItem: {},
@@ -17,7 +17,7 @@ export default new Vuex.Store({
         agenres: []
     },
     getters: {
-        books: state => state.books,
+        books: state => state.books
     },
     mutations: {
         setBookItemMutation(state, book) {
@@ -123,8 +123,7 @@ export default new Vuex.Store({
                 ...state.agenres,
                 genre
             ]
-        },
-
+        }
     },
     actions: {
         async getAllBookAction({commit}) {
@@ -175,8 +174,6 @@ export default new Vuex.Store({
             commit('addAllGenresMutation', data)
         },
         async getItemCommentsAction({commit}, bookid) {
-
-            console.log(bookid)
             const result = await commentApi.get(bookid)
             const data = await result.json()
             commit('addCommentsMutation', data)
@@ -229,9 +226,13 @@ export default new Vuex.Store({
             const result = await genresApi.add(genre)
             if (result.ok) {
                 const data = await result.json()
-                console.log(data)
                 commit('addGenreMutation', data)
             }
         },
+        async clearBookItem({commit}) {
+            commit('setBookItemMutation', {authors: [], genres: []})
+        }
     }
 })
+
+export default store

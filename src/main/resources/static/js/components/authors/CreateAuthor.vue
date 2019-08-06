@@ -5,7 +5,7 @@
             <input class="form-control" name="name" type="text" v-model="author.name"/>
         </td>
         <td>
-            <a class="d-inline btn btn-primary" @click="saveAuthor">New</a>
+            <a class="d-inline btn btn-primary" @click="saveAuthor">{{ $t('action.add')}}</a>
         </td>
     </tr>
 </template>

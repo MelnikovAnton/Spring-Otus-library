@@ -59,17 +59,21 @@
 
     export default {
         components: {AuthorList, CommentList, GenreList},
-        // props: ['book','books'],
+        beforeRouteLeave(to, from, next) {
+            console.log(from)
+            console.log(to)
+            if (from.name === 'edit' && to.name === 'addBook') this.clearBookItem().then(() => next())
+            else next()
+        },
         methods: {
-            ...mapActions(['removeBookAction', 'updateBookAction', 'getBookItem', 'getItemCommentsAction', 'addBookAction']),
+            ...mapActions(['removeBookAction', 'updateBookAction', 'getBookItem', 'getItemCommentsAction', 'addBookAction','clearBookItem']),
             ...mapMutations(['setBookItemMutation']),
             deleteBook() {
                 this.removeBookAction(this.book)
             },
             save() {
                 if (this.isEdit) {
-                    this.updateBookAction(this.bookItem)
-                    this.$router.push({name: 'home'})
+                    this.updateBookAction(this.bookItem).then(() => this.$router.push({name: 'home'}))
                 }
                 if (this.isAdd) {
                     this.addBookAction(this.bookItem)
@@ -103,8 +107,6 @@
             this.isEdit = this.$route.name === 'edit'
             this.isAdd = this.$route.name === 'addBook'
 
-            console.log(this.isAdd)
-            console.log(this.isEdit)
             if (this.isAdd) {
                 var bookItem = {title: '', authors: [], genres: [], content: ''}
                 this.setBookItemMutation(bookItem)

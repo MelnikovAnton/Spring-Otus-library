@@ -3,7 +3,7 @@
         <select class="d-inline" v-model="genre">
             <option v-for="agenre in agenres" :value="agenre" v-if="isContains(agenre)">{{ agenre.name }}</option>
         </select>
-        <button class="d-inline btn btn-primary" @click="addGenre" role="button">Add</button>
+        <button class="d-inline btn btn-primary" @click="addGenre" role="button">{{ $t('action.add')}}</button>
     </div>
 </template>
 

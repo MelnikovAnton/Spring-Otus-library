@@ -1,7 +1,7 @@
 <template>
 
     <div class="container-fluid">
-        <h4>Comments</h4>
+        <h4>{{ $t('comments')}}</h4>
         <add-comment :comments="comments"></add-comment>
         <ul class="list-group">
             <comment-row v-for="comment in comments" :comment="comment" :comments="comments"
@@ -30,3 +30,7 @@
         }
     }
 </script>
+
+<style>
+
+</style>

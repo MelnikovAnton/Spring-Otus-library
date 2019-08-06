@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import App from 'viewes/App.vue'
 import EditBook from 'viewes/EditBook.vue'
 import AuthorList from 'viewes/AuthorViewe.vue'
-import GenreList from "viewes/GenreViewe.vue";
+import GenreList from "viewes/GenreViewe.vue"
 
 Vue.use(VueRouter)
 

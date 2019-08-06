@@ -10,6 +10,22 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <title>Book List!</title>
 </head>
+<style>
+    .list-item {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .list-enter-active, .list-leave-active {
+        transition: all 1s;
+    }
+
+    .list-enter, .list-leave-to /* .list-leave-active до версии 2.1.8 */
+    {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+</style>
 <body>
 
 <div class="container-fluid">

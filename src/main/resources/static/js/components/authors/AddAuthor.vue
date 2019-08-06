@@ -3,7 +3,7 @@
         <select class="d-inline" v-model="auth">
             <option v-for="aauthor in aauthors" :value="aauthor" v-if="isContains(aauthor)">{{ aauthor.name }}</option>
         </select>
-        <button class="d-inline btn btn-primary" @click="addAuthor" role="button">Add</button>
+        <button class="d-inline btn btn-primary" @click="addAuthor" role="button">{{ $t('action.add')}}</button>
     </div>
 </template>
 

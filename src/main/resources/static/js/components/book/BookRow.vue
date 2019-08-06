@@ -9,12 +9,12 @@
         </td>
         <td>
             <router-link :to="{name: 'edit', params: {id: book.id}, props: true}" v-bind:book="book" class="d-inline btn btn-primary" role="button">
-                Edit
+                {{ $t('action.edit')}}
             </router-link>
         </td>
         <td>
-            <input type="button" class="d-inline btn btn-danger"
-                   role="button" @click="deleteBook" value="delete"/>
+            <div  class="d-inline btn btn-danger"
+                 role="button" @click="deleteBook">{{ $t('action.delete')}}</div>
         </td>
     </tr>
 

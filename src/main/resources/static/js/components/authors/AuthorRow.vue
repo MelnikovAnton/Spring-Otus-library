@@ -5,11 +5,11 @@
             <input class="form-control" name="name" type="text" v-model="author.name"/>
         </td>
         <td>
-            <a class="d-inline btn btn-primary" @click="saveAuthor">Save</a>
+            <a class="d-inline btn btn-primary" @click="saveAuthor">{{ $t('action.save')}}</a>
         </td>
         <td>
             <a class="d-inline btn btn-danger"
-               role="button" @click="deleteAuthor">delete</a>
+               role="button" @click="deleteAuthor">{{ $t('action.delete')}}</a>
         </td>
     </tr>
 </template>

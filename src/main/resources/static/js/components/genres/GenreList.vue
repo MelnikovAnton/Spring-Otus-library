@@ -4,7 +4,7 @@
             <li class="list-group-item d-flex">
                 <span class="mr-auto">{{ genre.name }}</span>
                 <button class=" btn-sm btn-danger ml-auto" v-if="isEdit || isAdd"
-                     @click="deleteGenreFromBook">delete
+                     @click="deleteGenreFromBook">{{ $t('action.delete')}}
                 </button>
             </li>
         </ul>
