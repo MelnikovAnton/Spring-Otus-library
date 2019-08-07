@@ -1,16 +1,16 @@
 <template>
     <div>
 
-            <ul class="list-group" v-for="author in authors" :author="author" v-bind:key="author.id">
-                <li class="list-group-item d-flex">
+        <ul class="list-group" v-for="author in authors" :author="author" v-bind:key="author.id">
+            <li class="list-group-item d-flex">
 
-                    <span class="mr-auto">{{ author.name }}</span>
-                    <button role="button" class=" btn-sm btn-danger ml-auto" v-if="isEdit || isAdd"
-                            @click="deleteAuthorFromBook">{{ $t('action.delete')}}
-                    </button>
+                <span class="mr-auto">{{ author.name }}</span>
+                <button role="button" class=" btn-sm btn-danger ml-auto" v-if="isEdit || isAdd"
+                        @click="deleteAuthorFromBook(author)">{{ $t('action.delete')}}
+                </button>
 
-                </li>
-            </ul>
+            </li>
+        </ul>
 
         <add-author v-if="isEdit || isAdd" :authors="authors"></add-author>
     </div>
@@ -31,8 +31,9 @@
             }
         },
         methods: {
-            deleteAuthorFromBook: function () {
-                this.authors.splice(this.authors.indexOf(this.author), 1)
+            deleteAuthorFromBook: function (author) {
+                const deletionIndex = this.authors.findIndex(item => item.id === author.id)
+                this.authors.splice(deletionIndex, 1)
             }
         },
         created() {

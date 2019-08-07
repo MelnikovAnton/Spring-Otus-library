@@ -4,7 +4,7 @@
             <li class="list-group-item d-flex">
                 <span class="mr-auto">{{ genre.name }}</span>
                 <button class=" btn-sm btn-danger ml-auto" v-if="isEdit || isAdd"
-                     @click="deleteGenreFromBook">{{ $t('action.delete')}}
+                     @click="deleteGenreFromBook(genre)">{{ $t('action.delete')}}
                 </button>
             </li>
         </ul>
@@ -28,8 +28,9 @@
             AddGenre
         },
         methods: {
-            deleteGenreFromBook: function () {
-                this.genres.splice(this.genres.indexOf(this.genre), 1)
+            deleteGenreFromBook: function (genre) {
+                const deletionIndex = this.genres.findIndex(item => item.id === genre.id)
+                this.genres.splice(deletionIndex, 1)
             }
         },
         created() {

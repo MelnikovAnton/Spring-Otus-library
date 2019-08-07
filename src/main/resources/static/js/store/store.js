@@ -17,7 +17,8 @@ const store = new Vuex.Store({
         agenres: []
     },
     getters: {
-        books: state => state.books
+        books: state => state.books,
+        authors: state => state.bookItem.author
     },
     mutations: {
         setBookItemMutation(state, book) {
@@ -78,7 +79,6 @@ const store = new Vuex.Store({
         },
         deleteAuthorMutation(state, author) {
             const deletionIndex = state.aauthors.findIndex(item => item.id === author.id)
-
             if (deletionIndex > -1) {
                 state.aauthors = [
                     ...state.aauthors.slice(0, deletionIndex),
