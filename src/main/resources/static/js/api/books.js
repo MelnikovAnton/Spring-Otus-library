@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-const books = Vue.resource('/bookApi{/id}')
+const books = Vue.resource('/books{/id}')
 
 export default {
     add: book => books.save({}, book),

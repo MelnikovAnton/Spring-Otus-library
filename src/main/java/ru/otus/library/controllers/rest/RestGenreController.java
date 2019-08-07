@@ -9,27 +9,26 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("genreApi")
 public class RestGenreController {
 
     private final GenreService genreService;
 
-    @GetMapping
-    public List<Genre> getBookList() {
+    @GetMapping("genres")
+    public List<Genre> getAllGenres() {
         return genreService.findAll();
     }
 
-    @GetMapping("{id}")
-    public Genre getBook(@PathVariable("id") String id) {
+    @GetMapping("genres/{id}")
+    public Genre getGenreById(@PathVariable("id") String id) {
         return genreService.findById(id).orElseThrow(() -> new RuntimeException("no Genre with id " + id));
     }
 
-    @PostMapping
+    @PostMapping("genres")
     public Genre create(@RequestBody Genre genre) {
         return genreService.saveGenre(genre);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("genres/{id}")
     public Genre update(@RequestBody Genre genre,
                          @PathVariable String id) {
         genreService.findById(id).orElseThrow(() -> new RuntimeException("no Genre with id " + id));
@@ -37,7 +36,7 @@ public class RestGenreController {
         return genreService.saveGenre(genre);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("genres/{id}")
     public void delete(@PathVariable String id) {
         Genre genre = genreService.findById(id).orElseThrow(() -> new RuntimeException("no Genre with id " + id));
         genreService.delete(genre);

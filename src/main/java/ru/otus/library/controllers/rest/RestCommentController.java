@@ -11,30 +11,29 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("commentApi")
 public class RestCommentController {
 
     private final CommentService commentService;
     private final BookService bookService;
 
-    @GetMapping
+    @GetMapping("comments")
     public List<Comment> getAllList() {
         return commentService.findAll();
     }
 
-    @GetMapping("{bookId}")
+    @GetMapping("comments/{bookId}")
     public List<Comment> getByBookId(@PathVariable("bookId") String id) {
         Book book = bookService.findById(id).orElseThrow(() -> new RuntimeException("no book with id " + id));
         return commentService.findCommentsByBook(book);
     }
 
-    @PostMapping
+    @PostMapping("comments")
     public Comment create(@RequestBody Comment comment) {
         System.out.println(comment);
         return commentService.saveComment(comment);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("comments/{id}")
     public Comment update(@RequestBody Comment comment,
                        @PathVariable String id) {
         commentService.findById(id).orElseThrow(() -> new RuntimeException("no comment with id " + id));
@@ -42,7 +41,7 @@ public class RestCommentController {
         return commentService.saveComment(comment);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("comments/{id}")
     public void delete(@PathVariable String id) {
         Comment comment = commentService.findById(id).orElseThrow(() -> new RuntimeException("no comment with id " + id));
         commentService.delete(comment);

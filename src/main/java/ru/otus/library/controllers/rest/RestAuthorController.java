@@ -9,27 +9,26 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("authorApi")
 public class RestAuthorController {
 
     private final AuthorService authorService;
 
-    @GetMapping
-    public List<Author> getBookList() {
+    @GetMapping("/authors")
+    public List<Author> getAuthors() {
         return authorService.findAll();
     }
 
-    @GetMapping("{id}")
-    public Author getBook(@PathVariable("id") String id) {
+    @GetMapping("/authors/{id}")
+    public Author getAuthor(@PathVariable("id") String id) {
         return authorService.findById(id).orElseThrow(() -> new RuntimeException("no Author with id " + id));
     }
 
-    @PostMapping
+    @PostMapping("/authors")
     public Author create(@RequestBody Author author) {
         return authorService.saveAuthor(author);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/authors/{id}")
     public Author update(@RequestBody Author author,
                        @PathVariable String id) {
         authorService.findById(id).orElseThrow(() -> new RuntimeException("no author with id " + id));
@@ -37,7 +36,7 @@ public class RestAuthorController {
         return authorService.saveAuthor(author);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/authors/{id}")
     public void delete(@PathVariable String id) {
         Author author = authorService.findById(id).orElseThrow(() -> new RuntimeException("no Author with id " + id));
         authorService.delete(author);

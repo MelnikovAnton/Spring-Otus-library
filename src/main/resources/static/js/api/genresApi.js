@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-const genres = Vue.resource('/genreApi{/id}')
+const genres = Vue.resource('/genres{/id}')
 
 export default {
     add: genre => genres.save({}, genre),
