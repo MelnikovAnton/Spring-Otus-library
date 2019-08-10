@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,8 +19,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
@@ -35,31 +36,12 @@ public class AuthorControllerTest {
 
 
     @Test
-    @DisplayName("View authorList есть и содержит список авторов")
-    void authorList() throws Exception {
+    @DisplayName("Тест получение списка авторов")
+    void getBookList() throws Exception {
+
         when(authorService.findAll()).thenReturn(getTestAuthors());
-
-        assertTrue(this.mvc.perform(get("/authorList"))
+        assertTrue(this.mvc.perform(get("/authorApi/"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("authorList"))
-                .andExpect(model().attributeExists("authors"))
-                .andReturn()
-                .getResponse()
-                .getContentAsString()
-                .contains("Auth1"));
-    }
-
-
-    @Test
-    @DisplayName("Тест editAuthor view")
-    void editAuthorTest() throws Exception {
-        when(authorService.findById(anyString()))
-                .thenReturn(Optional.of(new Author("AuthorId", "Auth1")));
-
-        assertTrue(this.mvc.perform(get("/editAuthor/AuthorId"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("editAuthor"))
-                .andExpect(model().attributeExists("author"))
                 .andReturn()
                 .getResponse()
                 .getContentAsString()
@@ -67,41 +49,66 @@ public class AuthorControllerTest {
     }
 
     @Test
-    @DisplayName("Redirect после POST")
-    void postEditAuthor() throws Exception {
-        this.mvc.perform(post("/editAuthor/TestID"))
-                .andExpect(redirectedUrl("/editAuthor/TestID"));
+    @DisplayName("Тест получение автора по ID")
+    void getBookById() throws Exception {
+        when(authorService.findById(anyString())).thenReturn(Optional.of(new Author("Test1", "test")));
 
+        assertTrue(this.mvc.perform(get("/authorApi/id"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString()
+                .contains("Test1"));
+    }
+
+    @Test
+    @DisplayName("Добавление автора")
+    void create() throws Exception {
+        when(authorService.saveAuthor(any(Author.class))).thenReturn(new Author("TestId", "Test"));
+
+        assertTrue(this.mvc.perform(post("/authorApi/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"id\":\"Id\",\"name\":\"xxx\"}"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString()
+                .contains("Test"));
         verify(authorService, times(1)).saveAuthor(any(Author.class));
     }
 
 
     @Test
-    @DisplayName("Удаление автора")
-    void deleteAuthorTest() throws Exception {
-        when(authorService.findById(anyString()))
-                .thenReturn(Optional.of(new Author("TestId", "test")));
+    @DisplayName("Update автора")
+    void update() throws Exception {
+        when(authorService.findById(anyString())).thenReturn(Optional.of(new Author("Test1", "test")));
 
-        this.mvc.perform(get("/deleteAuthor?id=TestId"))
-                .andExpect(redirectedUrl("/authorList"));
+        when(authorService.saveAuthor(any(Author.class))).thenReturn(new Author("Test1", "test"));
+
+        assertTrue(this.mvc.perform(put("/authorApi/TestID")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"id\":\"Id\",\"name\":\"xxx\"}"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString()
+                .contains("Test1"));
+
+        verify(authorService, times(1)).saveAuthor(any(Author.class));
+    }
+
+    @Test
+    @DisplayName("Удаление автора")
+    void deleteBookTest() throws Exception {
+        when(authorService.findById(anyString())).thenReturn(Optional.of(new Author("Test1", "test")));
+
+        this.mvc.perform(delete("/authorApi/TestId"))
+                .andExpect(status().isOk());
 
         verify(authorService, times(1)).findById("TestId");
         verify(authorService, times(1)).delete(any(Author.class));
     }
 
-    @Test
-    @DisplayName("Добавление автора")
-    void addAuthorTest() throws Exception {
-        when(authorService.saveAuthor(any(Author.class)))
-                .thenReturn(new Author("TestId", "test"));
-
-        this.mvc.perform(get("/addAuthor"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("editAuthor"))
-                .andExpect(model().attributeExists("author"));
-
-        verify(authorService, times(1)).saveAuthor(any(Author.class));
-    }
 
 
     private List<Author> getTestAuthors() {
