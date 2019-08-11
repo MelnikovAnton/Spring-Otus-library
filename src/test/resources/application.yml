@@ -3,8 +3,15 @@ logging:
     org.springframework.data.mongodb.core.ReactiveMongoTemplate: DEBUG
 
 
-spring:
-  data:
-    mongodb:
-      port: 0
-      database: library
+#spring:
+#  data:
+#    mongodb:
+#      port: 0
+#      database: library
+
+#spring:
+#  data:
+#    mongodb:
+#      uri: mongodb://localhost
+#      port: 27017
+#      database: library

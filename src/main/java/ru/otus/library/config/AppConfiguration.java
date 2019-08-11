@@ -7,6 +7,7 @@ import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
@@ -25,14 +26,7 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 @Configuration
 public class AppConfiguration {
 
-    private static final String CHANGELOGS_PACKAGE = "ru.otus.library.changelog";
 
-    @Bean
-    public Mongock mongock(MongoProps mongoProps) {
-        com.mongodb.MongoClient mongoClient = new com.mongodb.MongoClient(new MongoClientURI(mongoProps.getUri()));
-        return new SpringMongockBuilder(mongoClient, mongoProps.getDatabase(), CHANGELOGS_PACKAGE)
-                .build();
-    }
 
     @Bean
     public MongoClient mongoClient() {

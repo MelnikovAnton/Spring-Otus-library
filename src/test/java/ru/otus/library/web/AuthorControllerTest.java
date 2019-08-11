@@ -29,10 +29,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("WebTest")
 public class AuthorControllerTest {
 
-    @Autowired
-    private MockMvc mvc;
-    @Autowired
-    private AuthorService authorService;
+//    @Autowired
+//    private MockMvc mvc;
+//    @Autowired
+//    private AuthorService authorService;
 
 //
 //    @Test

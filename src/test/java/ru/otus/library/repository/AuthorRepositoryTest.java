@@ -4,7 +4,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import ru.otus.library.model.Author;
@@ -16,20 +19,24 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AuthorRepositoryTest extends AbstractRepositoryTest {
+@DataMongoTest
+@ExtendWith(SpringExtension.class)
+class AuthorRepositoryTest /*extends AbstractRepositoryTest*/ {
 
     @Autowired
     private AuthorRepository authorRepository;
-    
+
     @Test
     @DisplayName("Вставка с получением ID")
     void insert() {
-        Mono<Author> mono = assertDoesNotThrow(() -> authorRepository.save(new Author("ewq")));
-        StepVerifier.create(mono)
-                .assertNext(author -> assertNotNull(author.getId()))
+        Mono<Author> authorMono = authorRepository.save(new Author("Author"));
+
+
+        StepVerifier
+                .create(authorMono)
+                .assertNext(a -> assertNotNull(a.getId()))
                 .expectComplete()
                 .verify();
-
     }
 //
 //    @Test
