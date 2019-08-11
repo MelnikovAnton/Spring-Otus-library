@@ -2,14 +2,12 @@ package ru.otus.library.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.otus.library.model.Book;
 import ru.otus.library.repository.BookRepository;
 import ru.otus.library.services.BookService;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,44 +17,37 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
 
     @Override
-    public Book saveBook(Book book) {
+    public Mono<Book> saveBook(Book book) {
         return bookRepository.save(book);
     }
 
     @Override
-    public List<Book> findBooksByTitle(String title) {
+    public Flux<Book> findBooksByTitle(String title) {
         return bookRepository.findByTitleContaining(title);
     }
 
     @Override
-    public List<Book> findBooksByAuthor(String author) {
+    public Flux<Book> findBooksByAuthor(String author) {
         return bookRepository.findByAuthorsNameContains(author);
     }
 
     @Override
-    public List<Book> findBooksByGenre(String genre) {
-        return bookRepository.findByGenresNameContains(genre);
+    public Flux<Book> findBooksByGenre(String genre) {
+        return  bookRepository.findByGenresNameContains(genre);
     }
 
     @Override
-    public Optional<Book> findById(String id) {
-        try {
+    public Mono<Book> findById(String id) {
             return bookRepository.findById(id);
-        } catch (EmptyResultDataAccessException e) {
-            log.warn("Return Empty result.", e);
-            return Optional.empty();
-        }
-
     }
 
     @Override
-    public String delete(Book book) {
-        bookRepository.delete(book);
-        return book.getId();
+    public Mono<Void> delete(String bookId) {
+        return bookRepository.deleteById(bookId);
     }
 
     @Override
-    public List<Book> findAll() {
+    public Flux<Book> findAll() {
         return bookRepository.findAll();
     }
 

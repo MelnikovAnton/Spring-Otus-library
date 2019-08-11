@@ -36,98 +36,98 @@ public class BookControllerTest {
     @Autowired
     private BookService bookService;
 
-    @Test
-    @DisplayName("View bookList есть и содержит список книг")
-    void bookList() throws Exception {
-        when(bookService.findAll()).thenReturn(getTestBooks());
-
-        assertTrue(this.mvc.perform(get("/"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("bookList"))
-                .andReturn()
-                .getResponse()
-                .getContentAsString()
-                .contains("<div id=\"app\">"));
-    }
-
-    @Test
-    @DisplayName("Тест получение списка книг")
-    void getBookList() throws Exception {
-
-        when(bookService.findAll()).thenReturn(getTestBooks());
-        assertTrue(this.mvc.perform(get("/bookApi/"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString()
-                .contains("Test1"));
-    }
-
-    @Test
-    @DisplayName("Тест получение книги по ID")
-    void getBookById() throws Exception {
-        when(bookService.findById(anyString())).thenReturn(Optional.of(new Book("Test1", "test")));
-
-        assertTrue(this.mvc.perform(get("/bookApi/id"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString()
-                .contains("Test1"));
-    }
-
-    @Test
-    @DisplayName("Добавление книги")
-    void create() throws Exception {
-        when(bookService.saveBook(any(Book.class))).thenReturn(new Book("TestId", "Test", "Test"));
-
-        assertTrue(this.mvc.perform(post("/bookApi/")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":\"Id\",\"title\":\"xxx\",\"contentPath\":\"xxx\",\"author\":[],\"genre\":[]}"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString()
-                .contains("Test"));
-        verify(bookService, times(1)).saveBook(any(Book.class));
-    }
-
-
-    @Test
-    @DisplayName("Update книги")
-    void update() throws Exception {
-        when(bookService.findById(anyString())).thenReturn(Optional.of(new Book("Test1", "test")));
-
-        when(bookService.saveBook(any(Book.class))).thenReturn(new Book("Test1", "test"));
-
-        assertTrue(this.mvc.perform(put("/bookApi/TestID")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":\"Id\",\"title\":\"xxx\",\"contentPath\":\"xxx\",\"author\":[],\"genre\":[]}"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString()
-                .contains("Test1"));
-
-        verify(bookService, times(1)).saveBook(any(Book.class));
-    }
-
-    @Test
-    @DisplayName("Удаление книги")
-    void deleteBookTest() throws Exception {
-        when(bookService.findById(anyString())).thenReturn(Optional.of(new Book("Test1", "test")));
-
-        this.mvc.perform(delete("/bookApi/TestId"))
-                .andExpect(status().isOk());
-
-        verify(bookService, times(1)).findById("TestId");
-        verify(bookService, times(1)).delete(any(Book.class));
-    }
-
-
-    private List<Book> getTestBooks() {
-        return List.of(new Book("id1", "Test1", "Test1"),
-                new Book("id1", "Test2", "Test2"),
-                new Book("id1", "Test3", "Test3"));
-    }
+//    @Test
+//    @DisplayName("View bookList есть и содержит список книг")
+//    void bookList() throws Exception {
+//        when(bookService.findAll()).thenReturn(getTestBooks());
+//
+//        assertTrue(this.mvc.perform(get("/"))
+//                .andExpect(status().isOk())
+//                .andExpect(view().name("bookList"))
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsString()
+//                .contains("<div id=\"app\">"));
+//    }
+//
+//    @Test
+//    @DisplayName("Тест получение списка книг")
+//    void getBookList() throws Exception {
+//
+//        when(bookService.findAll()).thenReturn(getTestBooks());
+//        assertTrue(this.mvc.perform(get("/bookApi/"))
+//                .andExpect(status().isOk())
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsString()
+//                .contains("Test1"));
+//    }
+//
+//    @Test
+//    @DisplayName("Тест получение книги по ID")
+//    void getBookById() throws Exception {
+//        when(bookService.findById(anyString())).thenReturn(Optional.of(new Book("Test1", "test")));
+//
+//        assertTrue(this.mvc.perform(get("/bookApi/id"))
+//                .andExpect(status().isOk())
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsString()
+//                .contains("Test1"));
+//    }
+//
+//    @Test
+//    @DisplayName("Добавление книги")
+//    void create() throws Exception {
+//        when(bookService.saveBook(any(Book.class))).thenReturn(new Book("TestId", "Test", "Test"));
+//
+//        assertTrue(this.mvc.perform(post("/bookApi/")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content("{\"id\":\"Id\",\"title\":\"xxx\",\"contentPath\":\"xxx\",\"author\":[],\"genre\":[]}"))
+//                .andExpect(status().isOk())
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsString()
+//                .contains("Test"));
+//        verify(bookService, times(1)).saveBook(any(Book.class));
+//    }
+//
+//
+//    @Test
+//    @DisplayName("Update книги")
+//    void update() throws Exception {
+//        when(bookService.findById(anyString())).thenReturn(Optional.of(new Book("Test1", "test")));
+//
+//        when(bookService.saveBook(any(Book.class))).thenReturn(new Book("Test1", "test"));
+//
+//        assertTrue(this.mvc.perform(put("/bookApi/TestID")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content("{\"id\":\"Id\",\"title\":\"xxx\",\"contentPath\":\"xxx\",\"author\":[],\"genre\":[]}"))
+//                .andExpect(status().isOk())
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsString()
+//                .contains("Test1"));
+//
+//        verify(bookService, times(1)).saveBook(any(Book.class));
+//    }
+//
+//    @Test
+//    @DisplayName("Удаление книги")
+//    void deleteBookTest() throws Exception {
+//        when(bookService.findById(anyString())).thenReturn(Optional.of(new Book("Test1", "test")));
+//
+//        this.mvc.perform(delete("/bookApi/TestId"))
+//                .andExpect(status().isOk());
+//
+//        verify(bookService, times(1)).findById("TestId");
+//        verify(bookService, times(1)).delete(any(Book.class));
+//    }
+//
+//
+//    private List<Book> getTestBooks() {
+//        return List.of(new Book("id1", "Test1", "Test1"),
+//                new Book("id1", "Test2", "Test2"),
+//                new Book("id1", "Test3", "Test3"));
+//    }
 }

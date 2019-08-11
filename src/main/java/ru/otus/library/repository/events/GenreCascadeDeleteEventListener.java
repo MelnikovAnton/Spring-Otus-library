@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventLis
 import org.springframework.data.mongodb.core.mapping.event.AfterDeleteEvent;
 import org.springframework.data.mongodb.core.mapping.event.AfterSaveEvent;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 import ru.otus.library.model.Genre;
 import ru.otus.library.repository.BookRepository;
 
@@ -19,8 +20,8 @@ public class GenreCascadeDeleteEventListener extends AbstractMongoEventListener<
     public void onAfterDelete(AfterDeleteEvent<Genre> event) {
         super.onAfterDelete(event);
         val source = event.getSource();
-        val id = source.get("_id").toString();
-        repository.removeGenreById(id);
+        val id = source.get("id").toString();
+          repository.removeGenreById(id);
     }
 
     @Override

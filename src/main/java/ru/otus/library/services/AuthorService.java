@@ -1,20 +1,19 @@
 package ru.otus.library.services;
 
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.otus.library.model.Author;
 
-import java.util.List;
-import java.util.Optional;
-
 public interface AuthorService {
-    Author saveAuthor(Author author);
+    Mono<Author> saveAuthor(Author author);
 
-    List<Author> findAuthorsByName(String name);
+    Flux<Author> findAuthorsByName(String name);
 
-    List<Author> findByBookId(String id);
+    Flux<Author> findByBookId(String id);
 
-    Optional<Author> findById(String id);
+    Mono<Author> findById(String id);
 
-    String delete(Author author);
+    Mono<Void> delete(String id);
 
-    List<Author> findAll();
+    Flux<Author> findAll();
 }

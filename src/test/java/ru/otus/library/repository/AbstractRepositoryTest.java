@@ -4,10 +4,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 @DataMongoTest
 @EnableConfigurationProperties
 @ComponentScan({"ru.otus.library.config", "ru.otus.library.repository"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@ActiveProfiles("RepositoryTest")
 public abstract class AbstractRepositoryTest {
 }

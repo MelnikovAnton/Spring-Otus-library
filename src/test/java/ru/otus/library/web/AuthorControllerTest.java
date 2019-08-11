@@ -34,86 +34,86 @@ public class AuthorControllerTest {
     @Autowired
     private AuthorService authorService;
 
-
-    @Test
-    @DisplayName("Тест получение списка авторов")
-    void getBookList() throws Exception {
-
-        when(authorService.findAll()).thenReturn(getTestAuthors());
-        assertTrue(this.mvc.perform(get("/authorApi/"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString()
-                .contains("Auth1"));
-    }
-
-    @Test
-    @DisplayName("Тест получение автора по ID")
-    void getBookById() throws Exception {
-        when(authorService.findById(anyString())).thenReturn(Optional.of(new Author("Test1", "test")));
-
-        assertTrue(this.mvc.perform(get("/authorApi/id"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString()
-                .contains("Test1"));
-    }
-
-    @Test
-    @DisplayName("Добавление автора")
-    void create() throws Exception {
-        when(authorService.saveAuthor(any(Author.class))).thenReturn(new Author("TestId", "Test"));
-
-        assertTrue(this.mvc.perform(post("/authorApi/")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":\"Id\",\"name\":\"xxx\"}"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString()
-                .contains("Test"));
-        verify(authorService, times(1)).saveAuthor(any(Author.class));
-    }
-
-
-    @Test
-    @DisplayName("Update автора")
-    void update() throws Exception {
-        when(authorService.findById(anyString())).thenReturn(Optional.of(new Author("Test1", "test")));
-
-        when(authorService.saveAuthor(any(Author.class))).thenReturn(new Author("Test1", "test"));
-
-        assertTrue(this.mvc.perform(put("/authorApi/TestID")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":\"Id\",\"name\":\"xxx\"}"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString()
-                .contains("Test1"));
-
-        verify(authorService, times(1)).saveAuthor(any(Author.class));
-    }
-
-    @Test
-    @DisplayName("Удаление автора")
-    void deleteBookTest() throws Exception {
-        when(authorService.findById(anyString())).thenReturn(Optional.of(new Author("Test1", "test")));
-
-        this.mvc.perform(delete("/authorApi/TestId"))
-                .andExpect(status().isOk());
-
-        verify(authorService, times(1)).findById("TestId");
-        verify(authorService, times(1)).delete(any(Author.class));
-    }
-
-
-
-    private List<Author> getTestAuthors() {
-        return List.of(new Author("Auth1"),
-                new Author("Auth2"),
-                new Author("Auth3"));
-    }
+//
+//    @Test
+//    @DisplayName("Тест получение списка авторов")
+//    void getBookList() throws Exception {
+//
+//        when(authorService.findAll()).thenReturn(getTestAuthors());
+//        assertTrue(this.mvc.perform(get("/authorApi/"))
+//                .andExpect(status().isOk())
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsString()
+//                .contains("Auth1"));
+//    }
+//
+//    @Test
+//    @DisplayName("Тест получение автора по ID")
+//    void getBookById() throws Exception {
+//        when(authorService.findById(anyString())).thenReturn(Optional.of(new Author("Test1", "test")));
+//
+//        assertTrue(this.mvc.perform(get("/authorApi/id"))
+//                .andExpect(status().isOk())
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsString()
+//                .contains("Test1"));
+//    }
+//
+//    @Test
+//    @DisplayName("Добавление автора")
+//    void create() throws Exception {
+//        when(authorService.saveAuthor(any(Author.class))).thenReturn(new Author("TestId", "Test"));
+//
+//        assertTrue(this.mvc.perform(post("/authorApi/")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content("{\"id\":\"Id\",\"name\":\"xxx\"}"))
+//                .andExpect(status().isOk())
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsString()
+//                .contains("Test"));
+//        verify(authorService, times(1)).saveAuthor(any(Author.class));
+//    }
+//
+//
+//    @Test
+//    @DisplayName("Update автора")
+//    void update() throws Exception {
+//        when(authorService.findById(anyString())).thenReturn(Optional.of(new Author("Test1", "test")));
+//
+//        when(authorService.saveAuthor(any(Author.class))).thenReturn(new Author("Test1", "test"));
+//
+//        assertTrue(this.mvc.perform(put("/authorApi/TestID")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content("{\"id\":\"Id\",\"name\":\"xxx\"}"))
+//                .andExpect(status().isOk())
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsString()
+//                .contains("Test1"));
+//
+//        verify(authorService, times(1)).saveAuthor(any(Author.class));
+//    }
+//
+//    @Test
+//    @DisplayName("Удаление автора")
+//    void deleteBookTest() throws Exception {
+//        when(authorService.findById(anyString())).thenReturn(Optional.of(new Author("Test1", "test")));
+//
+//        this.mvc.perform(delete("/authorApi/TestId"))
+//                .andExpect(status().isOk());
+//
+//        verify(authorService, times(1)).findById("TestId");
+//        verify(authorService, times(1)).delete(any(Author.class));
+//    }
+//
+//
+//
+//    private List<Author> getTestAuthors() {
+//        return List.of(new Author("Auth1"),
+//                new Author("Auth2"),
+//                new Author("Auth3"));
+//    }
 }

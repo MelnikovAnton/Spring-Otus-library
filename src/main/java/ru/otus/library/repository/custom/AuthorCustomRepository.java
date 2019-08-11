@@ -1,10 +1,9 @@
 package ru.otus.library.repository.custom;
 
+import reactor.core.publisher.Flux;
 import ru.otus.library.model.Author;
-
-import java.util.List;
 
 public interface AuthorCustomRepository {
 
-    List<Author> findByBookId(String BookId);
+    Flux<Author> findByBookId(String BookId);
 }

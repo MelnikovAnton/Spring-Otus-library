@@ -1,4 +1,4 @@
-package ru.otus.library.services;
+package ru.otus.library.repository;
 
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -10,10 +10,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
-import ru.otus.library.repository.AuthorRepository;
-import ru.otus.library.repository.BookRepository;
-import ru.otus.library.repository.CommentRepository;
-import ru.otus.library.repository.GenreRepository;
 
 
 /*
@@ -27,7 +23,7 @@ import ru.otus.library.repository.GenreRepository;
 @EnableAutoConfiguration(exclude = {EmbeddedMongoAutoConfiguration.class,
         MongoAutoConfiguration.class,
         MongoDataAutoConfiguration.class})
-@ActiveProfiles("ServiceTest")
+@ActiveProfiles("RepositoryTest")
 @Profile("!Test")
 public class TestConfigServices {
 

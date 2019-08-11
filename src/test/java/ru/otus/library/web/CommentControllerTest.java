@@ -40,77 +40,77 @@ public class CommentControllerTest {
     private CommentService commentService;
   
   
-    @Test
-    @DisplayName("Тест получение списка комментариев")
-    void getBookList() throws Exception {
-
-        when(commentService.findAll()).thenReturn(List.of(new Comment(new Book(), "Comment1")));
-        assertTrue(this.mvc.perform(get("/commentApi/"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString()
-                .contains("Comment1"));
-    }
-
-    @Test
-    @DisplayName("Тест получение комментария по ID книги")
-    void getBookById() throws Exception {
-        when(bookService.findById(anyString())).thenReturn(Optional.of(new Book("title","Test")));
-        when(commentService.findCommentsByBook(any(Book.class))).thenReturn(List.of(new Comment(new Book(), "Comment1")));
-        assertTrue(this.mvc.perform(get("/commentApi/id"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString()
-                .contains("Comment1"));
-    }
-
-    @Test
-    @DisplayName("Добавление комментария")
-    void create() throws Exception {
-        when(commentService.saveComment(any(Comment.class))).thenReturn(new Comment(new Book(), "Test"));
-
-        assertTrue(this.mvc.perform(post("/commentApi/")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":\"Id\",\"comment\":\"xxx\"}"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString()
-                .contains("Test"));
-        verify(commentService, times(1)).saveComment(any(Comment.class));
-    }
-
-
-    @Test
-    @DisplayName("Update комментария")
-    void update() throws Exception {
-        when(commentService.findById(anyString())).thenReturn(Optional.of(new Comment(new Book(), "test")));
-
-        when(commentService.saveComment(any(Comment.class))).thenReturn(new Comment(new Book(), "test"));
-
-        assertTrue(this.mvc.perform(put("/commentApi/TestID")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":\"Id\",\"comment\":\"xxx\"}"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString()
-                .contains("test"));
-
-        verify(commentService, times(1)).saveComment(any(Comment.class));
-    }
-
-    @Test
-    @DisplayName("Удаление комментария")
-    void deleteBookTest() throws Exception {
-        when(commentService.findById(anyString())).thenReturn(Optional.of(new Comment(new Book(), "test")));
-
-        this.mvc.perform(delete("/commentApi/TestId"))
-                .andExpect(status().isOk());
-
-        verify(commentService, times(1)).findById("TestId");
-        verify(commentService, times(1)).delete(any(Comment.class));
-    }
+//    @Test
+//    @DisplayName("Тест получение списка комментариев")
+//    void getBookList() throws Exception {
+//
+//        when(commentService.findAll()).thenReturn(List.of(new Comment(new Book(), "Comment1")));
+//        assertTrue(this.mvc.perform(get("/commentApi/"))
+//                .andExpect(status().isOk())
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsString()
+//                .contains("Comment1"));
+//    }
+//
+//    @Test
+//    @DisplayName("Тест получение комментария по ID книги")
+//    void getBookById() throws Exception {
+//        when(bookService.findById(anyString())).thenReturn(Optional.of(new Book("title","Test")));
+//        when(commentService.findCommentsByBook(any(Book.class))).thenReturn(List.of(new Comment(new Book(), "Comment1")));
+//        assertTrue(this.mvc.perform(get("/commentApi/id"))
+//                .andExpect(status().isOk())
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsString()
+//                .contains("Comment1"));
+//    }
+//
+//    @Test
+//    @DisplayName("Добавление комментария")
+//    void create() throws Exception {
+//        when(commentService.saveComment(any(Comment.class))).thenReturn(new Comment(new Book(), "Test"));
+//
+//        assertTrue(this.mvc.perform(post("/commentApi/")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content("{\"id\":\"Id\",\"comment\":\"xxx\"}"))
+//                .andExpect(status().isOk())
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsString()
+//                .contains("Test"));
+//        verify(commentService, times(1)).saveComment(any(Comment.class));
+//    }
+//
+//
+//    @Test
+//    @DisplayName("Update комментария")
+//    void update() throws Exception {
+//        when(commentService.findById(anyString())).thenReturn(Optional.of(new Comment(new Book(), "test")));
+//
+//        when(commentService.saveComment(any(Comment.class))).thenReturn(new Comment(new Book(), "test"));
+//
+//        assertTrue(this.mvc.perform(put("/commentApi/TestID")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content("{\"id\":\"Id\",\"comment\":\"xxx\"}"))
+//                .andExpect(status().isOk())
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsString()
+//                .contains("test"));
+//
+//        verify(commentService, times(1)).saveComment(any(Comment.class));
+//    }
+//
+//    @Test
+//    @DisplayName("Удаление комментария")
+//    void deleteBookTest() throws Exception {
+//        when(commentService.findById(anyString())).thenReturn(Optional.of(new Comment(new Book(), "test")));
+//
+//        this.mvc.perform(delete("/commentApi/TestId"))
+//                .andExpect(status().isOk());
+//
+//        verify(commentService, times(1)).findById("TestId");
+//        verify(commentService, times(1)).delete(any(Comment.class));
+//    }
 }

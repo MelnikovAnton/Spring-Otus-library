@@ -1,13 +1,12 @@
 package ru.otus.library.repository;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import reactor.core.publisher.Flux;
 import ru.otus.library.model.Genre;
 import ru.otus.library.repository.custom.GenreCustomRepository;
 
-import java.util.List;
+public interface GenreRepository extends ReactiveMongoRepository<Genre, String>, GenreCustomRepository {
 
-public interface GenreRepository extends MongoRepository<Genre, String>, GenreCustomRepository {
-
-    List<Genre> findByNameContainingIgnoreCase(String name);
+    Flux<Genre> findByNameContainingIgnoreCase(String name);
 
 }

@@ -2,14 +2,14 @@ package ru.otus.library.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.otus.library.model.Genre;
 import ru.otus.library.repository.GenreRepository;
 import ru.otus.library.services.GenreService;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,38 +19,32 @@ public class GenreServiceImpl implements GenreService {
     private final GenreRepository genreRepository;
 
     @Override
-    public Genre saveGenre(Genre genre) {
+    public Mono<Genre> saveGenre(Genre genre) {
         return genreRepository.save(genre);
     }
 
     @Override
-    public List<Genre> findGenresByName(String name) {
+    public Flux<Genre> findGenresByName(String name) {
         return genreRepository.findByNameContainingIgnoreCase(name);
     }
 
     @Override
-    public Optional<Genre> findById(String id) {
-        try {
+    public Mono<Genre> findById(String id) {
             return genreRepository.findById(id);
-        } catch (EmptyResultDataAccessException e) {
-            log.warn("Return Empty result.", e);
-            return Optional.empty();
-        }
     }
 
     @Override
-    public String delete(Genre genre) {
-        genreRepository.delete(genre);
-        return genre.getId();
+    public Mono<Void> delete(String genreId) {
+       return genreRepository.deleteById(genreId);
     }
 
     @Override
-    public List<Genre> findAll() {
+    public Flux<Genre> findAll() {
         return genreRepository.findAll();
     }
 
     @Override
-    public List<Genre> findByBookId(String id) {
+    public Flux<Genre> findByBookId(String id) {
         return genreRepository.findByBookId(id);
     }
 }

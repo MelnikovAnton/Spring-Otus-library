@@ -36,84 +36,84 @@ public class GenreControllerTest {
     private GenreService genreService;
 
 
-    @Test
-    @DisplayName("Тест получение списка жанров")
-    void getBookList() throws Exception {
-
-        when(genreService.findAll()).thenReturn(getTestGenres());
-        assertTrue(this.mvc.perform(get("/genreApi/"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString()
-                .contains("Genre1"));
-    }
-
-    @Test
-    @DisplayName("Тест получение жанра по ID")
-    void getBookById() throws Exception {
-        when(genreService.findById(anyString())).thenReturn(Optional.of(new Genre("Test1", "test")));
-
-        assertTrue(this.mvc.perform(get("/genreApi/id"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString()
-                .contains("Test1"));
-    }
-
-    @Test
-    @DisplayName("Добавление жанра")
-    void create() throws Exception {
-        when(genreService.saveGenre(any(Genre.class))).thenReturn(new Genre("TestId", "Test"));
-
-        assertTrue(this.mvc.perform(post("/genreApi/")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":\"Id\",\"name\":\"xxx\"}"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString()
-                .contains("Test"));
-        verify(genreService, times(1)).saveGenre(any(Genre.class));
-    }
-
-
-    @Test
-    @DisplayName("Update жанра")
-    void update() throws Exception {
-        when(genreService.findById(anyString())).thenReturn(Optional.of(new Genre("Test1", "test")));
-
-        when(genreService.saveGenre(any(Genre.class))).thenReturn(new Genre("Test1", "test"));
-
-        assertTrue(this.mvc.perform(put("/genreApi/TestID")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":\"Id\",\"name\":\"xxx\"}"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString()
-                .contains("Test1"));
-
-        verify(genreService, times(1)).saveGenre(any(Genre.class));
-    }
-
-    @Test
-    @DisplayName("Удаление жанра")
-    void deleteBookTest() throws Exception {
-        when(genreService.findById(anyString())).thenReturn(Optional.of(new Genre("Test1", "test")));
-
-        this.mvc.perform(delete("/genreApi/TestId"))
-                .andExpect(status().isOk());
-
-        verify(genreService, times(1)).findById("TestId");
-        verify(genreService, times(1)).delete(any(Genre.class));
-    }
-
-
-    private List<Genre> getTestGenres() {
-        return List.of(new Genre("Genre1"),
-                new Genre("Genre2"),
-                new Genre("Genre3"));
-    }
+//    @Test
+//    @DisplayName("Тест получение списка жанров")
+//    void getBookList() throws Exception {
+//
+//        when(genreService.findAll()).thenReturn(getTestGenres());
+//        assertTrue(this.mvc.perform(get("/genreApi/"))
+//                .andExpect(status().isOk())
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsString()
+//                .contains("Genre1"));
+//    }
+//
+//    @Test
+//    @DisplayName("Тест получение жанра по ID")
+//    void getBookById() throws Exception {
+//        when(genreService.findById(anyString())).thenReturn(Optional.of(new Genre("Test1", "test")));
+//
+//        assertTrue(this.mvc.perform(get("/genreApi/id"))
+//                .andExpect(status().isOk())
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsString()
+//                .contains("Test1"));
+//    }
+//
+//    @Test
+//    @DisplayName("Добавление жанра")
+//    void create() throws Exception {
+//        when(genreService.saveGenre(any(Genre.class))).thenReturn(new Genre("TestId", "Test"));
+//
+//        assertTrue(this.mvc.perform(post("/genreApi/")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content("{\"id\":\"Id\",\"name\":\"xxx\"}"))
+//                .andExpect(status().isOk())
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsString()
+//                .contains("Test"));
+//        verify(genreService, times(1)).saveGenre(any(Genre.class));
+//    }
+//
+//
+//    @Test
+//    @DisplayName("Update жанра")
+//    void update() throws Exception {
+//        when(genreService.findById(anyString())).thenReturn(Optional.of(new Genre("Test1", "test")));
+//
+//        when(genreService.saveGenre(any(Genre.class))).thenReturn(new Genre("Test1", "test"));
+//
+//        assertTrue(this.mvc.perform(put("/genreApi/TestID")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content("{\"id\":\"Id\",\"name\":\"xxx\"}"))
+//                .andExpect(status().isOk())
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsString()
+//                .contains("Test1"));
+//
+//        verify(genreService, times(1)).saveGenre(any(Genre.class));
+//    }
+//
+//    @Test
+//    @DisplayName("Удаление жанра")
+//    void deleteBookTest() throws Exception {
+//        when(genreService.findById(anyString())).thenReturn(Optional.of(new Genre("Test1", "test")));
+//
+//        this.mvc.perform(delete("/genreApi/TestId"))
+//                .andExpect(status().isOk());
+//
+//        verify(genreService, times(1)).findById("TestId");
+//        verify(genreService, times(1)).delete(any(Genre.class));
+//    }
+//
+//
+//    private List<Genre> getTestGenres() {
+//        return List.of(new Genre("Genre1"),
+//                new Genre("Genre2"),
+//                new Genre("Genre3"));
+//    }
 }

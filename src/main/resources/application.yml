@@ -1,7 +1,9 @@
 logging:
   level:
-    #    root: TRACE
-    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+#    root: TRACE
+    org.springframework.data.mongodb.core.ReactiveMongoTemplate: DEBUG
+    web: debug
+
 server:
   error:
     whitelabel:
@@ -13,5 +15,6 @@ spring:
       uri: mongodb://localhost
       port: 27017
       database: library
+
   profiles:
     active: @profile@
