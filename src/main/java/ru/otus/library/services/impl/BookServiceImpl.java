@@ -50,9 +50,4 @@ public class BookServiceImpl implements BookService {
     public Flux<Book> findAll() {
         return bookRepository.findAll();
     }
-
-    @Override
-    public void addRelations(Book book) {
-        bookRepository.save(book);
-    }
 }

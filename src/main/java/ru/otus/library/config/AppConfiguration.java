@@ -29,7 +29,7 @@ public class AppConfiguration {
     }
 
 
-    @Bean("BookRestController")
+    @Bean("bookRestController")
     public RouterFunction<ServerResponse> bookRestEndpoint(BookService bookService) {
         return route()
                 .GET("/books", request -> ok()
@@ -51,7 +51,7 @@ public class AppConfiguration {
                 .build();
     }
 
-    @Bean("CommentsRestController")
+    @Bean("commentsRestController")
     public RouterFunction<ServerResponse> commentsRestEndpoint(CommentService commentService) {
         return route()
                 .GET("/comments", request -> ok()
@@ -73,7 +73,7 @@ public class AppConfiguration {
                 .build();
     }
 
-    @Bean("AuthorRestController")
+    @Bean("authorRestController")
     public RouterFunction<ServerResponse> authorsRestEndpoint(AuthorService authorService) {
         return route()
                 .GET("/authors", request -> ok()
@@ -96,7 +96,7 @@ public class AppConfiguration {
     }
 
 
-    @Bean("GenreRestController")
+    @Bean("genreRestController")
     public RouterFunction<ServerResponse> genresRestEndpoint(GenreService genreService) {
         return route()
                 .GET("/genres", request -> ok()

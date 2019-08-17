@@ -3,7 +3,9 @@ package ru.otus.library.web;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
+import org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -25,10 +27,14 @@ import ru.otus.library.services.GenreService;
 @EnableConfigurationProperties
 @ComponentScan(basePackages = {"ru.otus.library.services"
         , "ru.otus.library.repository"
-        , "ru.otus.library.controllers","ru.otus.library.controllers"})
+        , "ru.otus.library.controllers"
+        , "ru.otus.library.config"
+})
 @EnableAutoConfiguration(exclude = {EmbeddedMongoAutoConfiguration.class,
         MongoAutoConfiguration.class,
-        MongoDataAutoConfiguration.class})
+        MongoReactiveAutoConfiguration.class,
+        MongoDataAutoConfiguration.class,
+        MongoReactiveDataAutoConfiguration.class})
 @ActiveProfiles("WebTest")
 @Profile("!Test")
 public class TestConfigWeb {

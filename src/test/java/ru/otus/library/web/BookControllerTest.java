@@ -10,13 +10,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
 import ru.otus.library.services.BookService;
 
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -32,102 +38,102 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BookControllerTest {
 
     @Autowired
-    private MockMvc mvc;
+    private RouterFunction bookRestController;
     @Autowired
     private BookService bookService;
 
-//    @Test
-//    @DisplayName("View bookList есть и содержит список книг")
-//    void bookList() throws Exception {
-//        when(bookService.findAll()).thenReturn(getTestBooks());
-//
-//        assertTrue(this.mvc.perform(get("/"))
-//                .andExpect(status().isOk())
-//                .andExpect(view().name("bookList"))
-//                .andReturn()
-//                .getResponse()
-//                .getContentAsString()
-//                .contains("<div id=\"app\">"));
-//    }
-//
-//    @Test
-//    @DisplayName("Тест получение списка книг")
-//    void getBookList() throws Exception {
-//
-//        when(bookService.findAll()).thenReturn(getTestBooks());
-//        assertTrue(this.mvc.perform(get("/bookApi/"))
-//                .andExpect(status().isOk())
-//                .andReturn()
-//                .getResponse()
-//                .getContentAsString()
-//                .contains("Test1"));
-//    }
-//
-//    @Test
-//    @DisplayName("Тест получение книги по ID")
-//    void getBookById() throws Exception {
-//        when(bookService.findById(anyString())).thenReturn(Optional.of(new Book("Test1", "test")));
-//
-//        assertTrue(this.mvc.perform(get("/bookApi/id"))
-//                .andExpect(status().isOk())
-//                .andReturn()
-//                .getResponse()
-//                .getContentAsString()
-//                .contains("Test1"));
-//    }
-//
-//    @Test
-//    @DisplayName("Добавление книги")
-//    void create() throws Exception {
-//        when(bookService.saveBook(any(Book.class))).thenReturn(new Book("TestId", "Test", "Test"));
-//
-//        assertTrue(this.mvc.perform(post("/bookApi/")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content("{\"id\":\"Id\",\"title\":\"xxx\",\"contentPath\":\"xxx\",\"author\":[],\"genre\":[]}"))
-//                .andExpect(status().isOk())
-//                .andReturn()
-//                .getResponse()
-//                .getContentAsString()
-//                .contains("Test"));
-//        verify(bookService, times(1)).saveBook(any(Book.class));
-//    }
-//
-//
-//    @Test
-//    @DisplayName("Update книги")
-//    void update() throws Exception {
-//        when(bookService.findById(anyString())).thenReturn(Optional.of(new Book("Test1", "test")));
-//
-//        when(bookService.saveBook(any(Book.class))).thenReturn(new Book("Test1", "test"));
-//
-//        assertTrue(this.mvc.perform(put("/bookApi/TestID")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content("{\"id\":\"Id\",\"title\":\"xxx\",\"contentPath\":\"xxx\",\"author\":[],\"genre\":[]}"))
-//                .andExpect(status().isOk())
-//                .andReturn()
-//                .getResponse()
-//                .getContentAsString()
-//                .contains("Test1"));
-//
-//        verify(bookService, times(1)).saveBook(any(Book.class));
-//    }
-//
-//    @Test
-//    @DisplayName("Удаление книги")
-//    void deleteBookTest() throws Exception {
-//        when(bookService.findById(anyString())).thenReturn(Optional.of(new Book("Test1", "test")));
-//
-//        this.mvc.perform(delete("/bookApi/TestId"))
-//                .andExpect(status().isOk());
-//
-//        verify(bookService, times(1)).findById("TestId");
-//        verify(bookService, times(1)).delete(any(Book.class));
-//    }
-//
-//
-//    private List<Book> getTestBooks() {
-//        return List.of(new Book("id1", "Test1", "Test1"),
-//                new Book("id1", "Test2", "Test2"),
-//                new Book("id1", "Test3", "Test3"));
-//    }
+    @Test
+    @DisplayName("Тест получение списка книг")
+    void getBookList() {
+        when(bookService.findAll()).thenReturn(Flux.fromIterable(getTestBooks()));
+
+        WebTestClient client = WebTestClient
+                .bindToRouterFunction(bookRestController)
+                .build();
+
+        client.get()
+                .uri("/books")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(Book.class).hasSize(3).contains(getTestBooks().get(0));
+    }
+
+    @Test
+    @DisplayName("Тест получение книги по ID")
+    void getBookById() {
+        when(bookService.findById(anyString())).thenReturn(Mono.just(getTestBooks().get(0)));
+
+        WebTestClient client = WebTestClient
+                .bindToRouterFunction(bookRestController)
+                .build();
+
+        Book book = client.get()
+                .uri("/books/id")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Book.class)
+                .returnResult().getResponseBody();
+        assertEquals("id1", book.getId());
+    }
+
+    @Test
+    @DisplayName("Добавление книги")
+    void create() {
+        when(bookService.saveBook(any(Book.class))).thenReturn(Mono.just(getTestBooks().get(0)));
+
+        WebTestClient client = WebTestClient
+                .bindToRouterFunction(bookRestController)
+                .build();
+
+        Book book = client.post()
+                .uri("/books")
+                .body(Mono.just(new Book()), Book.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Book.class)
+                .returnResult().getResponseBody();
+
+        assertEquals("id1", book.getId());
+    }
+
+    @Test
+    @DisplayName("Update книги")
+    void update() {
+        when(bookService.saveBook(any(Book.class))).thenReturn(Mono.just(getTestBooks().get(0)));
+
+        WebTestClient client = WebTestClient
+                .bindToRouterFunction(bookRestController)
+                .build();
+
+        Book book = client.put()
+                .uri("/books/Test1")
+                .body(Mono.just(new Book()), Book.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Book.class)
+                .returnResult().getResponseBody();
+
+        assertEquals("id1", book.getId());
+    }
+
+    @Test
+    @DisplayName("Удаление книги")
+    void deleteBookTest() {
+        when(bookService.delete(anyString())).thenReturn(Mono.empty());
+
+        WebTestClient client = WebTestClient
+                .bindToRouterFunction(bookRestController)
+                .build();
+
+        client.delete()
+                .uri("/books/Test1")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    private List<Book> getTestBooks() {
+        return List.of(new Book("id1", "Test1", "Test1"),
+                new Book("id1", "Test2", "Test2"),
+                new Book("id1", "Test3", "Test3"));
+    }
 }

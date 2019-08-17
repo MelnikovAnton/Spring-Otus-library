@@ -6,25 +6,22 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Comment;
-import ru.otus.library.services.BookService;
 import ru.otus.library.services.CommentService;
 
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -33,84 +30,102 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CommentControllerTest {
 
     @Autowired
-    private MockMvc mvc;
-    @Autowired
-    private BookService bookService;
+    private RouterFunction commentsRestController;
     @Autowired
     private CommentService commentService;
-  
-  
-//    @Test
-//    @DisplayName("Тест получение списка комментариев")
-//    void getBookList() throws Exception {
-//
-//        when(commentService.findAll()).thenReturn(List.of(new Comment(new Book(), "Comment1")));
-//        assertTrue(this.mvc.perform(get("/commentApi/"))
-//                .andExpect(status().isOk())
-//                .andReturn()
-//                .getResponse()
-//                .getContentAsString()
-//                .contains("Comment1"));
-//    }
-//
-//    @Test
-//    @DisplayName("Тест получение комментария по ID книги")
-//    void getBookById() throws Exception {
-//        when(bookService.findById(anyString())).thenReturn(Optional.of(new Book("title","Test")));
-//        when(commentService.findCommentsByBook(any(Book.class))).thenReturn(List.of(new Comment(new Book(), "Comment1")));
-//        assertTrue(this.mvc.perform(get("/commentApi/id"))
-//                .andExpect(status().isOk())
-//                .andReturn()
-//                .getResponse()
-//                .getContentAsString()
-//                .contains("Comment1"));
-//    }
-//
-//    @Test
-//    @DisplayName("Добавление комментария")
-//    void create() throws Exception {
-//        when(commentService.saveComment(any(Comment.class))).thenReturn(new Comment(new Book(), "Test"));
-//
-//        assertTrue(this.mvc.perform(post("/commentApi/")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content("{\"id\":\"Id\",\"comment\":\"xxx\"}"))
-//                .andExpect(status().isOk())
-//                .andReturn()
-//                .getResponse()
-//                .getContentAsString()
-//                .contains("Test"));
-//        verify(commentService, times(1)).saveComment(any(Comment.class));
-//    }
-//
-//
-//    @Test
-//    @DisplayName("Update комментария")
-//    void update() throws Exception {
-//        when(commentService.findById(anyString())).thenReturn(Optional.of(new Comment(new Book(), "test")));
-//
-//        when(commentService.saveComment(any(Comment.class))).thenReturn(new Comment(new Book(), "test"));
-//
-//        assertTrue(this.mvc.perform(put("/commentApi/TestID")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content("{\"id\":\"Id\",\"comment\":\"xxx\"}"))
-//                .andExpect(status().isOk())
-//                .andReturn()
-//                .getResponse()
-//                .getContentAsString()
-//                .contains("test"));
-//
-//        verify(commentService, times(1)).saveComment(any(Comment.class));
-//    }
-//
-//    @Test
-//    @DisplayName("Удаление комментария")
-//    void deleteBookTest() throws Exception {
-//        when(commentService.findById(anyString())).thenReturn(Optional.of(new Comment(new Book(), "test")));
-//
-//        this.mvc.perform(delete("/commentApi/TestId"))
-//                .andExpect(status().isOk());
-//
-//        verify(commentService, times(1)).findById("TestId");
-//        verify(commentService, times(1)).delete(any(Comment.class));
-//    }
+
+
+    @Test
+    @DisplayName("Тест получение списка комментариев")
+    void getCommentList() {
+        when(commentService.findAll()).thenReturn(Flux.fromIterable(getTestComments()));
+
+        WebTestClient client = WebTestClient
+                .bindToRouterFunction(commentsRestController)
+                .build();
+
+        client.get()
+                .uri("/comments")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(Comment.class).hasSize(3).contains(getTestComments().get(0));
+    }
+
+    @Test
+    @DisplayName("Тест получение комментария по ID книги")
+    void getCommentByBookId() {
+        when(commentService.findCommentsByBook(anyString())).thenReturn(Flux.fromIterable(getTestComments()));
+
+        WebTestClient client = WebTestClient
+                .bindToRouterFunction(commentsRestController)
+                .build();
+
+        client.get()
+                .uri("/comments/id")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(Comment.class).hasSize(3).contains(getTestComments().get(1));
+    }
+
+    @Test
+    @DisplayName("Добавление комментария")
+    void create() {
+        when(commentService.saveComment(any(Comment.class))).thenReturn(Mono.just(getTestComments().get(0)));
+
+        WebTestClient client = WebTestClient
+                .bindToRouterFunction(commentsRestController)
+                .build();
+
+        Comment comment = client.post()
+                .uri("/comments")
+                .body(Mono.just(new Comment()), Comment.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Comment.class)
+                .returnResult().getResponseBody();
+
+        assertEquals("id1", comment.getId());
+    }
+
+    @Test
+    @DisplayName("Update комментария")
+    void update() {
+        when(commentService.saveComment(any(Comment.class))).thenReturn(Mono.just(getTestComments().get(0)));
+
+        WebTestClient client = WebTestClient
+                .bindToRouterFunction(commentsRestController)
+                .build();
+
+        Comment comment = client.put()
+                .uri("/comments/Test1")
+                .body(Mono.just(new Comment()), Comment.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Comment.class)
+                .returnResult().getResponseBody();
+
+        assertEquals("id1", comment.getId());
+    }
+
+    @Test
+    @DisplayName("Удаление комментария")
+    void deleteBookTest() throws Exception {
+        when(commentService.delete(anyString())).thenReturn(Mono.empty());
+
+        WebTestClient client = WebTestClient
+                .bindToRouterFunction(commentsRestController)
+                .build();
+
+        client.delete()
+                .uri("/comments/Test1")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    private List<Comment> getTestComments() {
+        Book book = new Book("id1", "Test1", "Test1");
+        return List.of(new Comment("id1", book, "comment1"),
+                new Comment("id", book, "comment2"),
+                new Comment("id2", book, "comment3"));
+    }
 }

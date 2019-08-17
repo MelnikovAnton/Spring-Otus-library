@@ -10,13 +10,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.otus.library.model.Genre;
 import ru.otus.library.services.GenreService;
 
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -31,89 +36,102 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class GenreControllerTest {
 
     @Autowired
-    private MockMvc mvc;
+    private RouterFunction genreRestController;
     @Autowired
     private GenreService genreService;
 
+    @Test
+    @DisplayName("Тест получение списка жанров")
+    void getGenreList() {
+        when(genreService.findAll()).thenReturn(Flux.fromIterable(getTestGenres()));
 
-//    @Test
-//    @DisplayName("Тест получение списка жанров")
-//    void getBookList() throws Exception {
-//
-//        when(genreService.findAll()).thenReturn(getTestGenres());
-//        assertTrue(this.mvc.perform(get("/genreApi/"))
-//                .andExpect(status().isOk())
-//                .andReturn()
-//                .getResponse()
-//                .getContentAsString()
-//                .contains("Genre1"));
-//    }
-//
-//    @Test
-//    @DisplayName("Тест получение жанра по ID")
-//    void getBookById() throws Exception {
-//        when(genreService.findById(anyString())).thenReturn(Optional.of(new Genre("Test1", "test")));
-//
-//        assertTrue(this.mvc.perform(get("/genreApi/id"))
-//                .andExpect(status().isOk())
-//                .andReturn()
-//                .getResponse()
-//                .getContentAsString()
-//                .contains("Test1"));
-//    }
-//
-//    @Test
-//    @DisplayName("Добавление жанра")
-//    void create() throws Exception {
-//        when(genreService.saveGenre(any(Genre.class))).thenReturn(new Genre("TestId", "Test"));
-//
-//        assertTrue(this.mvc.perform(post("/genreApi/")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content("{\"id\":\"Id\",\"name\":\"xxx\"}"))
-//                .andExpect(status().isOk())
-//                .andReturn()
-//                .getResponse()
-//                .getContentAsString()
-//                .contains("Test"));
-//        verify(genreService, times(1)).saveGenre(any(Genre.class));
-//    }
-//
-//
-//    @Test
-//    @DisplayName("Update жанра")
-//    void update() throws Exception {
-//        when(genreService.findById(anyString())).thenReturn(Optional.of(new Genre("Test1", "test")));
-//
-//        when(genreService.saveGenre(any(Genre.class))).thenReturn(new Genre("Test1", "test"));
-//
-//        assertTrue(this.mvc.perform(put("/genreApi/TestID")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content("{\"id\":\"Id\",\"name\":\"xxx\"}"))
-//                .andExpect(status().isOk())
-//                .andReturn()
-//                .getResponse()
-//                .getContentAsString()
-//                .contains("Test1"));
-//
-//        verify(genreService, times(1)).saveGenre(any(Genre.class));
-//    }
-//
-//    @Test
-//    @DisplayName("Удаление жанра")
-//    void deleteBookTest() throws Exception {
-//        when(genreService.findById(anyString())).thenReturn(Optional.of(new Genre("Test1", "test")));
-//
-//        this.mvc.perform(delete("/genreApi/TestId"))
-//                .andExpect(status().isOk());
-//
-//        verify(genreService, times(1)).findById("TestId");
-//        verify(genreService, times(1)).delete(any(Genre.class));
-//    }
-//
-//
-//    private List<Genre> getTestGenres() {
-//        return List.of(new Genre("Genre1"),
-//                new Genre("Genre2"),
-//                new Genre("Genre3"));
-//    }
+        WebTestClient client = WebTestClient
+                .bindToRouterFunction(genreRestController)
+                .build();
+
+        client.get()
+                .uri("/genres")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(Genre.class).hasSize(3).contains(getTestGenres().get(0));
+    }
+
+    @Test
+    @DisplayName("Тест получение жанра по ID")
+    void getGenreById() {
+        when(genreService.findById(anyString())).thenReturn(Mono.just(new Genre("Test1", "test")));
+
+        WebTestClient client = WebTestClient
+                .bindToRouterFunction(genreRestController)
+                .build();
+
+        Genre genre = client.get()
+                .uri("/genres/id")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Genre.class)
+                .returnResult().getResponseBody();
+        assertEquals("Test1", genre.getId());
+    }
+
+    @Test
+    @DisplayName("Добавление жанра")
+    void create() {
+        when(genreService.saveGenre(any(Genre.class))).thenReturn(Mono.just(new Genre("TestId", "Test")));
+
+        WebTestClient client = WebTestClient
+                .bindToRouterFunction(genreRestController)
+                .build();
+
+        Genre genre = client.post()
+                .uri("/genres")
+                .body(Mono.just(new Genre()), Genre.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Genre.class)
+                .returnResult().getResponseBody();
+
+        assertEquals("TestId", genre.getId());
+    }
+
+    @Test
+    @DisplayName("Update жанра")
+    void update() {
+        when(genreService.saveGenre(any(Genre.class))).thenReturn(Mono.just(new Genre("Test1", "test")));
+
+        WebTestClient client = WebTestClient
+                .bindToRouterFunction(genreRestController)
+                .build();
+
+        Genre genre = client.put()
+                .uri("/genres/Test1")
+                .body(Mono.just(new Genre()), Genre.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Genre.class)
+                .returnResult().getResponseBody();
+
+        assertEquals("Test1", genre.getId());
+    }
+
+    @Test
+    @DisplayName("Удаление жанра")
+    void delete()  {
+        when(genreService.delete(anyString())).thenReturn(Mono.empty());
+
+        WebTestClient client = WebTestClient
+                .bindToRouterFunction(genreRestController)
+                .build();
+
+        client.delete()
+                .uri("/genres/Test1")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    private List<Genre> getTestGenres() {
+        return List.of(new Genre("Genre1"),
+                new Genre("Genre2"),
+                new Genre("Genre3"));
+    }
 }

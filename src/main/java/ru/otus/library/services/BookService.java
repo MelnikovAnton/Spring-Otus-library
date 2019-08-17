@@ -18,6 +18,4 @@ public interface BookService {
     Mono<Void> delete(String bookId);
 
     Flux<Book> findAll();
-
-    void addRelations(Book book);
 }
