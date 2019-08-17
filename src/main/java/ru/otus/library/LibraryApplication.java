@@ -14,10 +14,6 @@ public class LibraryApplication {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext ctx = SpringApplication.run(LibraryApplication.class, args);
-        Mono<Author> author = ctx.getBean(AuthorService.class).saveAuthor(new Author("Test"));
-
-        System.out.println("!!!!!!!!!!!!!!!!!!!!");
-        System.out.println(author.block());
     }
 
 }

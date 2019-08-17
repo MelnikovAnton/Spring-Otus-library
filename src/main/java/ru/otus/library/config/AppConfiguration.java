@@ -1,13 +1,9 @@
 package ru.otus.library.config;
 
-import com.github.cloudyrock.mongock.Mongock;
-import com.github.cloudyrock.mongock.SpringMongockBuilder;
-import com.mongodb.MongoClientURI;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
@@ -25,7 +21,6 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 
 @Configuration
 public class AppConfiguration {
-
 
 
     @Bean

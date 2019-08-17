@@ -24,8 +24,8 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
         val query = Query.query(Criteria.where("_id").is(id));
         val update = new Update().pull("authors", query);
         Mono<UpdateResult> updateResult = mongoTemplate.updateMulti(new Query(), update, Book.class);
-        UpdateResult result = updateResult.block();
-        log.info("removed {} authors from books {}.", result.getModifiedCount(), result.getMatchedCount());
+        updateResult.subscribe(result ->
+                log.info("removed {} authors from books {}.", result.getModifiedCount(), result.getMatchedCount()));
     }
 
     @Override
@@ -33,8 +33,8 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
         val query = Query.query(Criteria.where("_id").is(id));
         val update = new Update().pull("genres", query);
         Mono<UpdateResult> updateResult = mongoTemplate.updateMulti(new Query(), update, Book.class);
-        UpdateResult result = updateResult.block();
-        log.info("removed {} genres from books {}.", result.getModifiedCount(), result.getMatchedCount());
+        updateResult.subscribe(result ->
+                log.info("removed {} genres from books {}.", result.getModifiedCount(), result.getMatchedCount()));
     }
 
     @Override
@@ -42,8 +42,8 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
         val query = Query.query(Criteria.where("authors").elemMatch(Criteria.where("_id").is(author.getId())));
         val update = new Update().set("authors.$.name", author.getName());
         Mono<UpdateResult> updateResult = mongoTemplate.updateMulti(query, update, Book.class);
-        UpdateResult result = updateResult.block();
-        log.info("Updated {} authors from books {}.", result.getModifiedCount(), result.getMatchedCount());
+        updateResult.subscribe(result ->
+                log.info("Updated {} authors from books {}.", result.getModifiedCount(), result.getMatchedCount()));
     }
 
     @Override
@@ -51,8 +51,8 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
         val query = Query.query(Criteria.where("genres").elemMatch(Criteria.where("_id").is(genre.getId())));
         val update = new Update().set("genres.$.name", genre.getName());
         Mono<UpdateResult> updateResult = mongoTemplate.updateMulti(query, update, Book.class);
-        UpdateResult result = updateResult.block();
-        log.info("Updated {} genres from books {}.", result.getModifiedCount(), result.getMatchedCount());
+        updateResult.subscribe(result ->
+                log.info("Updated {} genres from books {}.", result.getModifiedCount(), result.getMatchedCount()));
     }
 
 }

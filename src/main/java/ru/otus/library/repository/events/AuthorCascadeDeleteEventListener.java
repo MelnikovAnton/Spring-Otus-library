@@ -2,6 +2,7 @@ package ru.otus.library.repository.events;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.bson.Document;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.mongodb.core.mapping.event.AfterDeleteEvent;
 import org.springframework.data.mongodb.core.mapping.event.AfterSaveEvent;

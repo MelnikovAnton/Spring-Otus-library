@@ -5,14 +5,16 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Comment;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class CommentRepositoryTest extends AbstractRepositoryTest {
 
@@ -21,61 +23,72 @@ class CommentRepositoryTest extends AbstractRepositoryTest {
     @Autowired
     private BookRepository bookRepository;
 
-//    @TestFactory
-//    @DisplayName("Добавление коментария")
-//    List<DynamicTest> insert() {
-//        DynamicTest correct = DynamicTest.dynamicTest("Добавление коментария и чтение к существующей книге", () -> {
-//            Book book = bookRepository.findAll().get(0);
-//            Comment comment = new Comment();
-//            comment.setBook(book);
-//            assertDoesNotThrow(() -> commentRepository.save(comment));
-//
-//            Optional<Comment> result = commentRepository.findById(comment.getId());
-//            assertTrue(result.isPresent());
-//            assertEquals(comment, result.get());
-//        });
-//        DynamicTest commentWithoutBook = DynamicTest.dynamicTest("Добавление коментария без книги", () -> {
-//            Comment comment = new Comment();
-//            assertThrows(RuntimeException.class, () -> commentRepository.save(comment));
-//            assertNull(comment.getId());
-//        });
-//        DynamicTest commentWithWrongBook = DynamicTest.dynamicTest("Добавление коментария к несуществующей книге", () -> {
-//            Book book = new Book();
-//            book.setId("WrongId");
-//            Comment comment = new Comment();
-//            comment.setBook(book);
-//            assertThrows(RuntimeException.class, () -> commentRepository.save(comment));
-//            assertNull(comment.getId());
-//        });
-//
-//        return List.of(correct, commentWithoutBook, commentWithWrongBook);
-//    }
-//
-//    @TestFactory
-//    @DisplayName("Получение коментария по книге")
-//    List<DynamicTest> findByBook() {
-//        DynamicTest comment1 = DynamicTest.dynamicTest("ID получен из БД", () -> {
-//            String bookId = bookRepository.findAll().get(0).getId();
-//            List<Comment> comments = assertDoesNotThrow(() -> commentRepository.findByBookId(bookId));
-//            assertTrue(comments.get(0).getId().matches("[a-f\\d]{24}"));
-//        });
-//        DynamicTest comment2 = DynamicTest.dynamicTest("ID нет в базе", () -> {
-//            List<Comment> comment = assertDoesNotThrow(() -> commentRepository.findByBookId("WrongId"));
-//            assertTrue(comment.isEmpty());
-//        });
-//        return Arrays.asList(comment1, comment2);
-//    }
-//
-//    @Test
-//    @DisplayName("Комментарий удаляется при удалении книги")
-//    void deleteBookAndComment(){
-//        Book book = bookRepository.findAll().get(0);
-//        List<Comment> comments = commentRepository.findByBookId(book.getId());
-//        bookRepository.delete(book);
-//        System.out.println(comments);
-//        comments.forEach(c->
-//                assertTrue(commentRepository
-//                        .findById(c.getId()).isEmpty()));
-//    }
+    @Test
+    @DisplayName("Добавление коментария")
+    void insert() {
+
+        Book testBook = new Book("BookID", "Book1", "content");
+
+        Book book = bookRepository.save(testBook).block();
+
+        Comment comment = new Comment();
+        comment.setBook(book);
+        Mono<Comment> commentMono = commentRepository.save(comment);
+
+        StepVerifier
+                .create(commentMono)
+                .assertNext(c -> assertNotNull(c.getId()))
+                .expectComplete()
+                .verify();
+    }
+
+    @TestFactory
+    @DisplayName("Получение коментария по книге")
+    List<DynamicTest> findByBook() {
+        Book testBook = new Book("BookID", "Book1", "content");
+
+        Book book = bookRepository.save(testBook).block();
+
+        Comment testComment = new Comment();
+        testComment.setBook(book);
+
+        Comment comment = commentRepository.save(testComment).block();
+
+        DynamicTest comment1 = DynamicTest.dynamicTest("ID есть в БД", () -> {
+            Flux<Comment> commentFlux = commentRepository.findByBookId("BookID");
+            StepVerifier
+                    .create(commentFlux)
+                    .expectNext(comment)
+                    .verifyComplete();
+        });
+        DynamicTest comment2 = DynamicTest.dynamicTest("ID нет в базе", () -> {
+            Flux<Comment> commentFlux = commentRepository.findByBookId("WrongId");
+            StepVerifier
+                    .create(commentFlux)
+                    .verifyComplete();
+        });
+        return Arrays.asList(comment1, comment2);
+    }
+
+    @Test
+    @DisplayName("Комментарий удаляется при удалении книги")
+    void deleteBookAndComment() {
+        Book testBook = new Book("BookID", "Book1", "content");
+
+        Book book = bookRepository.save(testBook).block();
+
+        Comment testComment = new Comment();
+        testComment.setBook(book);
+
+        Comment comment = commentRepository.save(testComment).block();
+
+        bookRepository.deleteById("BookID").block();
+
+        Flux<Comment> commentFlux = commentRepository.findByBookId("BookID");
+        StepVerifier
+                .create(commentFlux)
+                .verifyComplete();
+
+    }
 
 }

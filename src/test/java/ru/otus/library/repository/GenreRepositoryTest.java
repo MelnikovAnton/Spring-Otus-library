@@ -5,14 +5,16 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Genre;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class GenreRepositoryTest extends AbstractRepositoryTest {
 
@@ -21,46 +23,83 @@ class GenreRepositoryTest extends AbstractRepositoryTest {
     @Autowired
     private BookRepository bookRepository;
 
-//    @Test
-//    @DisplayName("Вставка с получением ID")
-//    void insert() {
-//        Genre genre = new Genre("ewq");
-//        assertDoesNotThrow(() -> genreRepository.save(genre));
-//
-//        Optional<Genre> result = assertDoesNotThrow(() -> genreRepository.findById(genre.getId()));
-//        assertTrue(result.isPresent());
-//        assertEquals(genre, result.get());
-//    }
-//
-//    @Test
-//    @DisplayName("Поиск по имени жанра")
-//    void findGenresByName() {
-//        List<Genre> genres = assertDoesNotThrow(() -> genreRepository.findByNameContainingIgnoreCase("enre"));
-//        assertEquals(genres.size(), 3);
-//    }
-//
-//    @TestFactory
-//    @DisplayName("Поиск по Id книги")
-//    List<DynamicTest> findByBookId() {
-//        DynamicTest auth1 = DynamicTest.dynamicTest("ID получен из БД", () -> {
-//            String bookId = bookRepository.findAll().get(0).getId();
-//            List<Genre> authors = assertDoesNotThrow(() -> genreRepository.findByBookId(bookId));
-//            assertEquals(1, authors.size());
-//            assertTrue(authors.get(0).getId().matches("[a-f\\d]{24}"));
-//        });
-//        DynamicTest auth2 = DynamicTest.dynamicTest("ID нет в БД", () -> {
-//            List<Genre> authors = assertDoesNotThrow(() -> genreRepository.findByBookId("WrongId"));
-//            assertTrue(authors.isEmpty());
-//        });
-//        return Arrays.asList(auth1, auth2);
-//    }
-//
-//    @Test
-//    @DisplayName("Удаление жанра из книг")
-//    void deleteAuthorFromBook() {
-//        Genre genre = assertDoesNotThrow(() -> genreRepository.findAll().get(0));
-//        assertDoesNotThrow(() -> genreRepository.delete(genre));
-//        List<Book> books = bookRepository.findByGenresContains(genre);
-//        assertTrue(books.isEmpty());
-//    }
+    @Test
+    @DisplayName("Вставка с получением ID")
+    void insert() {
+        Mono<Genre> genreMono = genreRepository.save(new Genre("Genre"));
+
+        StepVerifier
+                .create(genreMono)
+                .assertNext(a -> assertNotNull(a.getId()))
+                .expectComplete()
+                .verify();
+    }
+
+    @TestFactory
+    @DisplayName("Поиск по имени жанра")
+    List<DynamicTest> findGenresByName() {
+        List<Genre> genres = genreRepository.saveAll(getTestGenres()).collectList().block();
+        DynamicTest noGenres = DynamicTest.dynamicTest("Жанра нет", () -> {
+            Flux<Genre> genreFlux = genreRepository.findByNameContainingIgnoreCase("a");
+
+            StepVerifier
+                    .create(genreFlux)
+                    .expectNextCount(0)
+                    .verifyComplete();
+        });
+        DynamicTest existsGenre = DynamicTest.dynamicTest("Жанр есть", () -> {
+            Flux<Genre> genreFlux = genreRepository.findByNameContainingIgnoreCase("g");
+
+            StepVerifier
+                    .create(genreFlux)
+                    .expectNextCount(3)
+                    .verifyComplete();
+        });
+
+        return Arrays.asList(noGenres, existsGenre);
+    }
+
+    @Test
+    @DisplayName("Поиск по Id книги")
+    void findByBookId() {
+        Genre genre = genreRepository.save(new Genre("TestID", "Genre")).block();
+
+        Book testBook = new Book("BookID", "Book1", "content");
+        testBook.addGenre(genre);
+
+        Book book = bookRepository.save(testBook).block();
+
+        Flux<Genre> authorFlux = genreRepository.findByBookId(book.getId());
+
+        StepVerifier
+                .create(authorFlux)
+                .expectNext(genre)
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Удаление жанра из книг")
+    void deleteAuthorFromBook() {
+        Genre genre = genreRepository.save(new Genre("TestID", "Genre")).block();
+
+        Book testBook = new Book("BookID", "Book1", "content");
+        testBook.addGenre(genre);
+
+        Book book = bookRepository.save(testBook).block();
+
+        genreRepository.deleteById("TestID").block();
+
+        Flux<Book> bookFlux = bookRepository.findByGenresContains(Mono.just(genre));
+
+        StepVerifier
+                .create(bookFlux)
+                .verifyComplete();
+    }
+
+    private List<Genre> getTestGenres() {
+        return List.of(new Genre("Genre1"),
+                new Genre("Genre3"),
+                new Genre("Genre3"));
+    }
+
 }
