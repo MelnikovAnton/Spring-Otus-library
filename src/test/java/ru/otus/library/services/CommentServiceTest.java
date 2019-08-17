@@ -11,6 +11,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Comment;
 import ru.otus.library.repository.CommentRepository;
@@ -26,77 +29,85 @@ import static org.mockito.Mockito.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("ServiceTest")
-class CommentServiceTest {
+class  CommentServiceTest {
 
     @Autowired
     private CommentRepository commentRepository;
     @Autowired
     private CommentService commentService;
 
-//    @Test
-//    void saveComment() {
-//        Comment comment = new Comment();
-//
-//        doAnswer(inv -> {
-//            Comment c = inv.getArgument(0);
-//            c.setId("1");
-//            return c;
-//        }).when(commentRepository).save(any(Comment.class));
-//
-//        Comment c = assertDoesNotThrow(() -> commentService.saveComment(comment));
-//        assertEquals(c, comment);
-//        assertEquals("1", c.getId());
-//    }
-//
-//    @Test
-//    void findCommentsByBook() {
-//        Book book = new Book("Test", "Test");
-//        book.setId("1");
-//        when(commentRepository.findByBookId(anyString())).thenReturn(getTestComments());
-//        assertEquals(getTestComments(), commentService.findCommentsByBook(book));
-//    }
-//
-//
-//    @Test
-//    void findAll() {
-//        when(commentRepository.findAll()).thenReturn(getTestComments());
-//
-//        List<Comment> comments = assertDoesNotThrow(() -> commentService.findAll());
-//        assertEquals(getTestComments(), comments);
-//    }
-//
-//    @TestFactory
-//    @DisplayName("Поиск по ID")
-//    List<DynamicTest> findById() {
-//        DynamicTest isPresent = DynamicTest.dynamicTest("Коментарий найден", () -> {
-//            when(commentRepository.findById(anyString())).thenReturn(Optional.of(new Comment()));
-//            Optional<Comment> genre = commentService.findById("1");
-//            assertTrue(genre.isPresent());
-//        });
-//        DynamicTest isNotPresent = DynamicTest.dynamicTest("Коментарий не найден", () -> {
-//            doThrow(new EmptyResultDataAccessException(1)).when(commentRepository).findById(anyString());
-//            Optional<Comment> genre = assertDoesNotThrow(() -> commentService.findById("1"));
-//            assertTrue(genre.isEmpty());
-//        });
-//        return Arrays.asList(isPresent, isNotPresent);
-//    }
-//
-//    @Test
-//    void delete() {
-//        doAnswer(invocation -> {
-//            Comment c = invocation.getArgument(0);
-//            assertEquals("1", c.getId());
-//            return null;
-//        }).when(commentRepository).delete(any(Comment.class));
-//
-//        Comment comment = new Comment();
-//        comment.setId("1");
-//
-//        assertDoesNotThrow(() -> commentService.delete(comment));
-//    }
-//
-//    private List<Comment> getTestComments() {
-//        return List.of(new Comment(), new Comment(), new Comment());
-//    }
+    @Test
+    void saveComment() {
+        Comment comment = new Comment();
+
+        doAnswer(inv -> {
+            Comment c = inv.getArgument(0);
+            c.setId("1");
+            return Mono.just(c);
+        }).when(commentRepository).save(any(Comment.class));
+
+        Mono<Comment> commentMono = commentService.saveComment(comment);
+
+        StepVerifier
+                .create(commentMono)
+                .expectNextMatches(a -> "1".equals(a.getId()))
+                .expectComplete()
+                .verify();
+    }
+
+    @Test
+    void findCommentsByBook() {
+        when(commentRepository.findByBookId(anyString())).thenReturn(Flux.fromIterable(getTestComments()));
+
+        Flux<Comment> commentFlux = commentService.findCommentsByBook("bookId");
+
+        StepVerifier
+                .create(commentFlux)
+                .expectNextCount(3)
+                .verifyComplete();
+    }
+
+
+    @Test
+    void findAll() {
+        when(commentRepository.findAll()).thenReturn(Flux.fromIterable(getTestComments()));
+
+        Flux<Comment> commentFlux = commentService.findAll();
+
+        StepVerifier
+                .create(commentFlux)
+                .expectNextCount(3)
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Поиск по ID")
+    void findById() {
+      Comment comment= new Comment();
+      comment.setComment("TestComment");
+      when(commentRepository.findById(anyString())).thenReturn(Mono.just(comment));
+
+        Mono<Comment> commentMono = commentService.findById("id");
+
+        StepVerifier
+                .create(commentMono)
+                .expectNextMatches(c->"TestComment".equals(c.getComment()))
+                .verifyComplete();
+    }
+
+    @Test
+    void delete() {
+        doAnswer(invocation -> {
+            String c = invocation.getArgument(0);
+            assertEquals("test", c);
+            return Mono.just(Void.TYPE);
+        }).when(commentRepository).deleteById(anyString());
+
+        commentService.delete("test");
+    }
+
+    private List<Comment> getTestComments() {
+        return List.of(new Comment(), new Comment(), new Comment());
+    }
 
 }
