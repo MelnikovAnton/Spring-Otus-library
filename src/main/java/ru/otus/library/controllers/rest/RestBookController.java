@@ -13,7 +13,7 @@ import java.util.List;
 public class RestBookController {
     private final BookService bookService;
 
-    @GetMapping("books")
+    @GetMapping("/books")
     public List<Book> getBookList() {
         return bookService.findAll();
     }

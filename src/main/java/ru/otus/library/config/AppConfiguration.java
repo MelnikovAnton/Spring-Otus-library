@@ -5,6 +5,7 @@ import com.github.cloudyrock.mongock.SpringMongockBuilder;
 import com.mongodb.MongoClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -25,17 +26,19 @@ public class AppConfiguration {
                 .build();
     }
 
-    @Bean
-    public LocaleChangeInterceptor localeChangeInterceptor() {
-        LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
-        lci.setParamName("lang");
-        return lci;
-    }
+//    @Bean
+//    public LocaleChangeInterceptor localeChangeInterceptor() {
+//        LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
+//        lci.setParamName("lang");
+//        return lci;
+//    }
+//
+//    @Bean
+//    public LocaleResolver localeResolver() {
+//        final CookieLocaleResolver localeResolver = new CookieLocaleResolver();
+//        localeResolver.setDefaultLocale(new Locale("en", "US"));
+//        return localeResolver;
+//    }
 
-    @Bean
-    public LocaleResolver localeResolver() {
-        final CookieLocaleResolver localeResolver = new CookieLocaleResolver();
-        localeResolver.setDefaultLocale(new Locale("en", "US"));
-        return localeResolver;
-    }
+
 }

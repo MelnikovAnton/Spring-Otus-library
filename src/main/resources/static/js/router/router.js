@@ -4,6 +4,7 @@ import App from 'viewes/BookList.vue'
 import EditBook from 'viewes/EditBook.vue'
 import AuthorList from 'viewes/AuthorViewe.vue'
 import GenreList from "viewes/GenreViewe.vue"
+import LoginForm from "viewes/LoginForm.vue"
 
 Vue.use(VueRouter)
 
@@ -36,6 +37,12 @@ const routes = [
         path: '/genreList/',
         name: 'genreList',
         component: GenreList,
+        props: true
+    },
+    {
+        path: '/login/',
+        name: 'loginForm',
+        component: LoginForm,
         props: true
     }
 ]

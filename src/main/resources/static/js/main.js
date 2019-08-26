@@ -7,6 +7,7 @@ import i18n from "i18n/i18n";
 
 import App from 'viewes/App.vue'
 
+
 new Vue({
     render: a => a(App),
     store,

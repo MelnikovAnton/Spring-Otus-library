@@ -2,6 +2,7 @@
     <div class="container-fluid">
         <div class="row">
             <h2 class="col">{{ $t('title') }}</h2>
+            <a href="/logout" class="col btn">logout</a>
             <div class="col_2">
                 <div class="container text-center center-block">
                     <select v-model="locale">
