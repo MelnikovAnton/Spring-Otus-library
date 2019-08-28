@@ -14,7 +14,8 @@ const store = new Vuex.Store({
         bookItem: {},
         comments: [],
         aauthors: [],
-        agenres: []
+        agenres: [],
+        userAuth: {}
     },
     getters: {
         books: state => state.books,

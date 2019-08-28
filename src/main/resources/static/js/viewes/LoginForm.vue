@@ -16,14 +16,18 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-user"></i></span>
                             </div>
-                            <input type="text" class="form-control" id="username"  name="username" placeholder="username">
+                            <input type="text" class="form-control" id="username"  name="username"
+                                   v-model="credentials.username"
+                                   placeholder="username">
 
                         </div>
                         <div class="input-group form-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-key"></i></span>
                             </div>
-                            <input type="password" id="password" name="password" class="form-control" placeholder="Пароль">
+                            <input type="password" id="password" name="password" class="form-control"
+                                   v-model="credentials.password"
+                                   placeholder="Пароль">
                         </div>
                         <div class="row align-items-center remember">
                             <input type="checkbox" value="Remember Me">
@@ -47,65 +51,89 @@
 </template>
 
 <script>
+
+    import AuthApi from 'api/auth.js';
+
     export default {
         name: "loginForm",
+        created() {
+            this.authApi = new AuthApi()
+        },
+        data() {
+            return {
+                credentials: {
+                    username: null,
+                    password: null
+                }
+            }
+        },
         methods: {
-            login: function () {
+            login() {
+                console.log('will submit', this.credentials);
+                const promise = this.authApi.login(this.credentials.username, this.credentials.password);
+                promise.then((response) => {
+                    // success callback
+                    console.log('Login response', response);
 
+                    this.$store.dispatch(UserStateActions.setAuth, this.token);
+                }, response => {
+                    // error callback
+                    console.log('error', response);
+                });
             }
         }
     }
 </script>
 
-<style scoped>
+<!--<style scoped>-->
 
-    .social_icon{
-        position: absolute;
-        right: 20px;
-        top: -45px;
-    }
+<!--    .social_icon{-->
+<!--        position: absolute;-->
+<!--        right: 20px;-->
+<!--        top: -45px;-->
+<!--    }-->
 
-    .input-group-prepend span{
-        width: 50px;
-        background-color: #FFC312;
-        color: black;
-        border:0 !important;
-    }
+<!--    .input-group-prepend span{-->
+<!--        width: 50px;-->
+<!--        background-color: #FFC312;-->
+<!--        color: black;-->
+<!--        border:0 !important;-->
+<!--    }-->
 
-    input:focus{
-        outline: 0 0 0 0  !important;
-        box-shadow: 0 0 0 0 !important;
+<!--    input:focus{-->
+<!--        outline: 0 0 0 0  !important;-->
+<!--        box-shadow: 0 0 0 0 !important;-->
 
-    }
+<!--    }-->
 
-    .remember{
-        color: white;
-    }
+<!--    .remember{-->
+<!--        color: white;-->
+<!--    }-->
 
-    .remember input
-    {
-        width: 20px;
-        height: 20px;
-        margin-left: 15px;
-        margin-right: 5px;
-    }
+<!--    .remember input-->
+<!--    {-->
+<!--        width: 20px;-->
+<!--        height: 20px;-->
+<!--        margin-left: 15px;-->
+<!--        margin-right: 5px;-->
+<!--    }-->
 
-    .login_btn{
-        color: black;
-        background-color: #FFC312;
-        width: 100px;
-    }
+<!--    .login_btn{-->
+<!--        color: black;-->
+<!--        background-color: #FFC312;-->
+<!--        width: 100px;-->
+<!--    }-->
 
-    .login_btn:hover{
-        color: black;
-        background-color: white;
-    }
+<!--    .login_btn:hover{-->
+<!--        color: black;-->
+<!--        background-color: white;-->
+<!--    }-->
 
-    .links{
-        color: white;
-    }
+<!--    .links{-->
+<!--        color: white;-->
+<!--    }-->
 
-    .links a{
-        margin-left: 4px;
-    }
-</style>
+<!--    .links a{-->
+<!--        margin-left: 4px;-->
+<!--    }-->
+<!--</style>-->

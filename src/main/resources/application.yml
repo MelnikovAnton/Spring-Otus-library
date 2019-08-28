@@ -1,15 +1,12 @@
-#logging:
-#  level:
-##    root: TRACE
-##    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
-
 logging:
-  level:
+#  level:
+#    root: TRACE
     org:
       springframework:
-        security: trace
+        security: DEBUG
         boot:
           autoconfigure: INFO
+
 server:
   error:
     whitelabel:
