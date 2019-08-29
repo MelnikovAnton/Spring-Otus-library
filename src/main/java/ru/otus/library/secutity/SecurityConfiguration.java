@@ -16,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import ru.otus.library.secutity.services.CustomDetailsService;
 
 @Configuration
@@ -41,24 +42,24 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+        http.antMatcher("/**")
+                .authorizeRequests()
+                .antMatchers("/", "/login**", "/webjars/**").permitAll()
+                .anyRequest().authenticated()
+                .and().exceptionHandling()
+                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
+                .and()
+        .csrf().disable();
+
 //        http
 //                .antMatcher("/**")
 //                .authorizeRequests()
-//                .antMatchers("/","/favicon.ico", "/login**", "/js/**", "/error**").permitAll()
-//                .anyRequest().authenticated()
+//                .antMatchers("/favicon.ico","/js/**", "/error**").permitAll()
 //                .and().logout().logoutSuccessUrl("/").permitAll()
+//                .and().formLogin().loginPage("/login").successForwardUrl("/")
+//                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 //                .and()
 //                .csrf().disable();
-
-        http
-                .antMatcher("/**")
-                .authorizeRequests()
-                .antMatchers("/favicon.ico","/js/**", "/error**").permitAll()
-                .and().logout().logoutSuccessUrl("/").permitAll()
-                .and().formLogin().loginPage("/login").successForwardUrl("/")
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .csrf().disable();
     }
 
     @Override
@@ -81,13 +82,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return tokenServices;
     }
 
-    @Bean
-    public PrincipalExtractor principalExtractor() {
-        return map -> {
-            System.out.println("===========================================");
-            map.forEach((k,v)-> System.out.println(k+ " : " + v));
-
-            return customDetailsService.loadUserByUsername("admin");
-        };
-    }
+//    @Bean
+//    public PrincipalExtractor principalExtractor() {
+//        return map -> {
+//            System.out.println("===========================================");
+//            map.forEach((k,v)-> System.out.println(k+ " : " + v));
+//
+//            return customDetailsService.loadUserByUsername("admin");
+//        };
+//    }
 }

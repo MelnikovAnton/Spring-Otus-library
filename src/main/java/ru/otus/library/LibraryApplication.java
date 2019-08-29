@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 
 import java.sql.SQLException;
+import java.util.UUID;
 
 @SpringBootApplication(exclude = {
         org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class
@@ -23,7 +24,7 @@ public class LibraryApplication {
         ConfigurableApplicationContext ctx = SpringApplication.run(LibraryApplication.class, args);
         String p = ctx.getBean(PasswordEncoder.class).encode("password");
         System.out.println("PASSWORD:" + p);
-        Console.main(args);
+
     }
 
 }

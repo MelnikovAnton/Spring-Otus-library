@@ -78,9 +78,10 @@
                 }
             },
             doEdit() {
-                var bookId = this.$attrs.id;
+                const bookId = this.$attrs.id;
+                console.log(bookId)
                 this.bookId = bookId
-                this.getBookItem(bookId)
+                this.getBookItem(bookId).then(book=>console.log(book))
                 this.getItemCommentsAction(bookId)
             }
         },

@@ -74,8 +74,11 @@
                 promise.then((response) => {
                     // success callback
                     console.log('Login response', response);
+                    localStorage.setItem('accessToken',response.data.access_token)
+                    localStorage.setItem('refreshToken',response.data.refresh_token)
+                    this.$router.push('/')
 
-                    this.$store.dispatch(UserStateActions.setAuth, this.token);
+
                 }, response => {
                     // error callback
                     console.log('error', response);
@@ -85,55 +88,55 @@
     }
 </script>
 
-<!--<style scoped>-->
+<style scoped>
 
-<!--    .social_icon{-->
-<!--        position: absolute;-->
-<!--        right: 20px;-->
-<!--        top: -45px;-->
-<!--    }-->
+    .social_icon{
+        position: absolute;
+        right: 20px;
+        top: -45px;
+    }
 
-<!--    .input-group-prepend span{-->
-<!--        width: 50px;-->
-<!--        background-color: #FFC312;-->
-<!--        color: black;-->
-<!--        border:0 !important;-->
-<!--    }-->
+    .input-group-prepend span{
+        width: 50px;
+        background-color: #FFC312;
+        color: black;
+        border:0 !important;
+    }
 
-<!--    input:focus{-->
-<!--        outline: 0 0 0 0  !important;-->
-<!--        box-shadow: 0 0 0 0 !important;-->
+    input:focus{
+        outline: 0 0 0 0  !important;
+        box-shadow: 0 0 0 0 !important;
 
-<!--    }-->
+    }
 
-<!--    .remember{-->
-<!--        color: white;-->
-<!--    }-->
+    .remember{
+        color: white;
+    }
 
-<!--    .remember input-->
-<!--    {-->
-<!--        width: 20px;-->
-<!--        height: 20px;-->
-<!--        margin-left: 15px;-->
-<!--        margin-right: 5px;-->
-<!--    }-->
+    .remember input
+    {
+        width: 20px;
+        height: 20px;
+        margin-left: 15px;
+        margin-right: 5px;
+    }
 
-<!--    .login_btn{-->
-<!--        color: black;-->
-<!--        background-color: #FFC312;-->
-<!--        width: 100px;-->
-<!--    }-->
+    .login_btn{
+        color: black;
+        background-color: #FFC312;
+        width: 100px;
+    }
 
-<!--    .login_btn:hover{-->
-<!--        color: black;-->
-<!--        background-color: white;-->
-<!--    }-->
+    .login_btn:hover{
+        color: black;
+        background-color: white;
+    }
 
-<!--    .links{-->
-<!--        color: white;-->
-<!--    }-->
+    .links{
+        color: white;
+    }
 
-<!--    .links a{-->
-<!--        margin-left: 4px;-->
-<!--    }-->
-<!--</style>-->
+    .links a{
+        margin-left: 4px;
+    }
+</style>

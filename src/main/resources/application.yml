@@ -1,5 +1,5 @@
 logging:
-#  level:
+  level:
 #    root: TRACE
     org:
       springframework:
