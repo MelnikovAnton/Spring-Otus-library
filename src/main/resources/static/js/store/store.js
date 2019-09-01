@@ -4,7 +4,7 @@ import booksApi from 'api/books'
 import authorsApi from "api/authorsApi"
 import genresApi from "api/genresApi"
 import commentApi from "api/commentApi"
-import router from "router/router";
+import router from "router/router"
 
 Vue.use(Vuex);
 
@@ -133,7 +133,9 @@ const store = new Vuex.Store({
                 const result = await booksApi.get()
                 const data = await result.json()
                 commit('setBooks', result.data)
+
             } catch (e) {
+                console.error(e)
                 router.push('/login')
             }
         },
@@ -150,6 +152,7 @@ const store = new Vuex.Store({
                     commit('setBookItemMutation', data)
                 }
             } catch (e) {
+                console.error(e)
                 router.push('/login')
             }
         },
@@ -159,6 +162,7 @@ const store = new Vuex.Store({
                 const data = await result.json()
                 commit('updateBookMutation', data)
             } catch (e) {
+                console.error(e)
                 router.push('/login')
             }
         },
@@ -169,6 +173,7 @@ const store = new Vuex.Store({
                     commit('deleteBookMutation', book)
                 }
             } catch (e) {
+                console.error(e)
                 router.push('/login')
             }
         },
@@ -179,6 +184,7 @@ const store = new Vuex.Store({
                 console.log(data)
                 commit('setBookItemMutation', data)
             } catch (e) {
+                console.error(e)
                 router.push('/login')
             }
         },
@@ -188,15 +194,24 @@ const store = new Vuex.Store({
                 const data = await result.json()
                 commit('addAllAuthorsMutation', data)
             } catch (e) {
+                console.error(e)
                 router.push('/login')
             }
         },
         async getAllGenresAction({commit}) {
             try {
-                const result = await genresApi.get()
-                const data = await result.json()
-                commit('addAllGenresMutation', data)
+                //const result = await
+                genresApi.get()
+                    .then(resp => {
+                        console.log(resp)
+                        const data = resp.body
+                        console.log(data)
+                        commit('addAllGenresMutation', data)
+                    })
+                // const data = await result.json()
+
             } catch (e) {
+                console.error(e)
                 router.push('/login')
             }
         },
@@ -206,6 +221,7 @@ const store = new Vuex.Store({
                 const data = await result.json()
                 commit('addCommentsMutation', data)
             } catch (e) {
+                console.error(e)
                 router.push('/login')
             }
         },
@@ -216,6 +232,7 @@ const store = new Vuex.Store({
                     commit('deleteCommentMutation', comment)
                 }
             } catch (e) {
+                console.error(e)
                 router.push('/login')
             }
         },
@@ -227,6 +244,7 @@ const store = new Vuex.Store({
                     commit('addCommentMutation', data)
                 }
             } catch (e) {
+                console.error(e)
                 router.push('/login')
             }
         },
@@ -237,6 +255,7 @@ const store = new Vuex.Store({
                     commit('deleteAuthorMutation', author)
                 }
             } catch (e) {
+                console.error(e)
                 router.push('/login')
             }
         },
@@ -246,6 +265,7 @@ const store = new Vuex.Store({
                 const data = await result.json()
                 commit('updateAuthorsMutation', data)
             } catch (e) {
+                console.error(e)
                 router.push('/login')
             }
         },
@@ -257,6 +277,7 @@ const store = new Vuex.Store({
                     commit('addAuthorMutation', data)
                 }
             } catch (e) {
+                console.error(e)
                 router.push('/login')
             }
         },
@@ -268,6 +289,7 @@ const store = new Vuex.Store({
                     commit('deleteGenreMutation', genre)
                 }
             } catch (e) {
+                console.error(e)
                 router.push('/login')
             }
         },
@@ -277,6 +299,7 @@ const store = new Vuex.Store({
                 const data = await result.json()
                 commit('updateGenresMutation', data)
             } catch (e) {
+                console.error(e)
                 router.push('/login')
             }
         },
@@ -288,6 +311,7 @@ const store = new Vuex.Store({
                     commit('addGenreMutation', data)
                 }
             } catch (e) {
+                console.error(e)
                 router.push('/login')
             }
         },
@@ -296,5 +320,6 @@ const store = new Vuex.Store({
         }
     }
 })
+
 
 export default store

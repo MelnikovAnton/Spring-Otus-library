@@ -52,7 +52,9 @@
 
 <script>
 
-    import AuthApi from 'api/auth.js';
+    import AuthApi from 'api/authApi.js';
+
+    import jwt_decode from 'jwt-decode';
 
     export default {
         name: "loginForm",
@@ -73,11 +75,21 @@
                 const promise = this.authApi.login(this.credentials.username, this.credentials.password);
                 promise.then((response) => {
                     // success callback
-                    console.log('Login response', response);
                     localStorage.setItem('accessToken',response.data.access_token)
                     localStorage.setItem('refreshToken',response.data.refresh_token)
                     this.$router.push('/')
 
+                    const accessToken=jwt_decode(response.data.access_token)
+                    const refreshToken=jwt_decode(response.data.refresh_token)
+
+                    console.log(accessToken)
+                    console.log(refreshToken)
+
+                    let date= new Date(accessToken.exp*1000)
+
+
+                    console.log('expared: ',date)
+                    console.log('current: ',new Date())
 
                 }, response => {
                     // error callback

@@ -83,8 +83,8 @@ public class OAuth2Config
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory().withClient(clientid).secret(clientSecret).scopes("read", "write")
-                .authorizedGrantTypes("password", "refresh_token").accessTokenValiditySeconds(20)
-                .refreshTokenValiditySeconds(20000);
+                .authorizedGrantTypes("password", "refresh_token").accessTokenValiditySeconds(10)
+                .refreshTokenValiditySeconds(60);
 
     }
 }
