@@ -32,9 +32,9 @@
                             <input name="contentPath" type="text" v-model="bookItem.contentPath"/>
                         </td>
                         <td>
-                            <router-link :to="{name: 'home', props: {}}">cancel
+                            <router-link :to="{name: 'home', props: {}}">{{ $t('action.cancel') }}
                             </router-link>
-                            <button class="btn btn-primary" @click="save">Save</button>
+                            <button class="btn btn-primary" @click="save">{{ $t('action.save') }}</button>
                         </td>
                     </tr>
                     </tbody>

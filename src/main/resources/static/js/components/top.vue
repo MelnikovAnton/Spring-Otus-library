@@ -1,8 +1,8 @@
 <template>
     <div class="container-fluid">
         <div class="row">
-            <h2 class="col">{{ $t('title') }}</h2>
-            <a href="/logout" class="col btn">logout</a>
+            <h2 class="col">{{ $t('title' , {msg: username } ) }}</h2>
+            <div class="btn btn-link" @click="logout">logout</div>
             <div class="col_2">
                 <div class="container text-center center-block">
                     <select v-model="locale">
@@ -31,6 +31,9 @@
 </template>
 
 <script>
+
+    import jwt_decode from "jwt-decode";
+
     export default {
         data() {
             return {locale: 'ru'}
@@ -38,6 +41,19 @@
         watch: {
             locale(val) {
                 this.$i18n.locale = val
+            }
+        },
+        methods: {
+            logout() {
+                localStorage.removeItem('accessToken')
+                localStorage.removeItem('refreshToken')
+                this.$router.push('login')
+            }
+        },
+        computed: {
+            username() {
+                const accessToken = jwt_decode(localStorage.getItem('accessToken'))
+                return accessToken.user_name
             }
         }
     }
