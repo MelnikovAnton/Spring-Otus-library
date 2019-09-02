@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -31,7 +32,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder encoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 
     @Override
@@ -43,14 +44,31 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.antMatcher("/**")
-                .authorizeRequests()
-                .antMatchers("/", "/login**", "/webjars/**").permitAll()
-                .anyRequest().authenticated()
-                .and().exceptionHandling()
-                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
+        http
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .authorizeRequests().antMatchers(HttpMethod.GET, "/").permitAll()
                 .and()
-        .csrf().disable();
+                .authorizeRequests().antMatchers(HttpMethod.GET, "/authors/*", "/genres/*", "/books/*").hasRole("ADMIN")
+                .and()
+                .authorizeRequests().antMatchers(HttpMethod.PUT, "/authors/*", "/genres/*", "/books/*").hasRole("ADMIN")
+                .and()
+                .authorizeRequests().antMatchers(HttpMethod.POST, "/authors/*", "/genres/*", "/books/*").hasRole("ADMIN")
+                .and()
+                .authorizeRequests().antMatchers(HttpMethod.DELETE, "/authors/*", "/genres/*", "/books/*").hasRole("ANY")
+                .and()
+                .authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .anyRequest().authenticated();
+
+
+//        http.antMatcher("/**")
+//                .authorizeRequests()
+//                .antMatchers("/", "/login**", "/webjars/**").permitAll()
+//                .anyRequest().authenticated()
+//                .and().exceptionHandling()
+//                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
+//                .and()
+//        .csrf().disable();
 
 //        http
 //                .antMatcher("/**")

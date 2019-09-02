@@ -1,6 +1,5 @@
 package ru.otus.library;
 
-import org.h2.tools.Console;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,7 +21,10 @@ public class LibraryApplication {
 
     public static void main(String[] args) throws SQLException {
         ConfigurableApplicationContext ctx = SpringApplication.run(LibraryApplication.class, args);
-        String p = ctx.getBean(PasswordEncoder.class).encode("password");
+        PasswordEncoder encoder = ctx.getBean(PasswordEncoder.class);
+
+        System.out.println(encoder);
+        String p = ctx.getBean(PasswordEncoder.class).encode("secret");
         System.out.println("PASSWORD:" + p);
 
     }

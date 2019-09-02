@@ -29,22 +29,19 @@
                                    v-model="credentials.password"
                                    placeholder="Пароль">
                         </div>
-                        <div class="row align-items-center remember">
-                            <input type="checkbox" value="Remember Me">
-                        </div>
                         <div class="form-group">
                             <input type="submit" value="Войти" class="btn float-right login_btn" @click="login">
                         </div>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <div class="d-flex justify-content-center links">
-                        Don't have an account?<a href="#">Sign Up</a>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                        <a href="#">Forgot your password?</a>
-                    </div>
-                </div>
+<!--                <div class="card-footer">-->
+<!--                    <div class="d-flex justify-content-center links">-->
+<!--                        Don't have an account?<a href="#">Sign Up</a>-->
+<!--                    </div>-->
+<!--                    <div class="d-flex justify-content-center">-->
+<!--                        <a href="#">Forgot your password?</a>-->
+<!--                    </div>-->
+<!--                </div>-->
             </div>
         </div>
     </div>

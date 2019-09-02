@@ -20,7 +20,7 @@ public class OAuth2Config
         extends AuthorizationServerConfigurerAdapter {
 
     private String clientid = "client";
-    private String clientSecret = "secret";
+    private String clientSecret = "$2a$10$Ap08W3On2LngQRchgEavKemAtKyLgGqXpqaWXJJ05szvJi6FZgOaK";
     private String privateKey = "-----BEGIN RSA PRIVATE KEY-----\n" +
             "MIIEowIBAAKCAQEAx0nyi/9zq7SVcKBiJraKb2OQQDsVBoSwr/TL9Y2EWvq+kMrs\n" +
             "e8E/ygE+eKxKUx0Cpi6Lz5Up+z5YH5SXBHDM2Y4+gob7qhh5rtABoZPRzlZvxktN\n" +

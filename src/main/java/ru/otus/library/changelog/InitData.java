@@ -4,13 +4,17 @@ import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
 import com.mongodb.client.MongoDatabase;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Comment;
 import ru.otus.library.model.Genre;
+import ru.otus.library.secutity.model.Role;
+import ru.otus.library.secutity.model.UserEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @ChangeLog(order = "001")
 public class InitData {
@@ -46,6 +50,25 @@ public class InitData {
         books.forEach(b -> template.save(new Comment(b, "comment2")));
         books.forEach(b -> template.save(new Comment(b, "comment3")));
     }
+
+    @ChangeSet(order = "005", id = "initUsers", author = "MelnikovAnton", runAlways = true)
+    public void initUsers(MongoTemplate template) {
+        UserEntity admin = new UserEntity();
+        admin.setUsername("admin");
+        admin.setPassword(new BCryptPasswordEncoder().encode("password"));
+        admin.setRoles(Set.of(Role.ROLE_ADMIN));
+
+        template.save(admin);
+
+        UserEntity user = new UserEntity();
+        user.setUsername("user");
+        user.setPassword(new BCryptPasswordEncoder().encode("password"));
+        user.setRoles(Set.of(Role.ROLE_USER));
+
+        template.save(user);
+    }
+
+
 
 
     private List<Author> getAuthors() {

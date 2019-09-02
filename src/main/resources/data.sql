@@ -1,4 +1,0 @@
-INSERT INTO USERS (ID, USERNAME,PASSWORD) VALUES (1, 'admin','password');
-INSERT INTO USERS (ID, USERNAME,PASSWORD) VALUES (2, 'user','password');
-
-insert into USER_ROLE (USER_ID, ROLES) VALUES (1,'ADMIN') , (2,'USER');
