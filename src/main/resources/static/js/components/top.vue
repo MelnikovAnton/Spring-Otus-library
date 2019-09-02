@@ -2,6 +2,7 @@
     <div class="container-fluid">
         <div class="row">
             <h2 class="col">{{ $t('title') }}</h2>
+             <div class="btn btn-link" @click="logout">logout</div>
             <div class="col_2">
                 <div class="container text-center center-block">
                     <select v-model="locale">
@@ -38,6 +39,11 @@
             locale(val) {
                 this.$i18n.locale = val
             }
-        }
+        },
+         methods: {
+                    logout() {
+                       window.location.href = '/logout'
+                    }
+                }
     }
 </script>
