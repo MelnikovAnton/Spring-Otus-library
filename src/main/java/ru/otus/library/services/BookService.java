@@ -1,5 +1,6 @@
 package ru.otus.library.services;
 
+import org.springframework.security.access.prepost.PostFilter;
 import ru.otus.library.model.Book;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface BookService {
     Optional<Book> findById(String id);
 
     String delete(Book book);
-
+    @PostFilter("hasPermission(filterObject, 'READ')")
     List<Book> findAll();
 
     void addRelations(Book book);

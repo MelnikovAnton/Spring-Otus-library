@@ -1,5 +1,6 @@
 package ru.otus.library;
 
+import org.h2.tools.Console;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -26,6 +27,8 @@ public class LibraryApplication {
         System.out.println(encoder);
         String p = ctx.getBean(PasswordEncoder.class).encode("secret");
         System.out.println("PASSWORD:" + p);
+
+        Console.main(args);
 
     }
 

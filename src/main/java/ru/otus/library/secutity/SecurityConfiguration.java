@@ -23,7 +23,7 @@ import ru.otus.library.secutity.services.CustomDetailsService;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
@@ -49,41 +49,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers(HttpMethod.GET, "/").permitAll()
                 .and()
-                .authorizeRequests().antMatchers(HttpMethod.GET, "/authors/*", "/genres/*", "/books/*").hasRole("ADMIN")
-                .and()
-                .authorizeRequests().antMatchers(HttpMethod.PUT, "/authors/*", "/genres/*", "/books/*").hasRole("ADMIN")
-                .and()
-                .authorizeRequests().antMatchers(HttpMethod.POST, "/authors/*", "/genres/*", "/books/*").hasRole("ADMIN")
-                .and()
-                .authorizeRequests().antMatchers(HttpMethod.DELETE, "/authors/*", "/genres/*", "/books/*").hasRole("ANY")
-                .and()
-                .authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .authorizeRequests().antMatchers("/authors*", "/genres*", "/books*","comments*").authenticated()
                 .anyRequest().authenticated();
-
-
-//        http.antMatcher("/**")
-//                .authorizeRequests()
-//                .antMatchers("/", "/login**", "/webjars/**").permitAll()
-//                .anyRequest().authenticated()
-//                .and().exceptionHandling()
-//                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
-//                .and()
-//        .csrf().disable();
-
-//        http
-//                .antMatcher("/**")
-//                .authorizeRequests()
-//                .antMatchers("/favicon.ico","/js/**", "/error**").permitAll()
-//                .and().logout().logoutSuccessUrl("/").permitAll()
-//                .and().formLogin().loginPage("/login").successForwardUrl("/")
-//                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .csrf().disable();
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/login","/favicon.ico","/");
+        web.ignoring().antMatchers("/login","/");
     }
 
     @Override
@@ -101,13 +73,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return tokenServices;
     }
 
-//    @Bean
-//    public PrincipalExtractor principalExtractor() {
-//        return map -> {
-//            System.out.println("===========================================");
-//            map.forEach((k,v)-> System.out.println(k+ " : " + v));
-//
-//            return customDetailsService.loadUserByUsername("admin");
-//        };
-//    }
 }

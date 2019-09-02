@@ -20,11 +20,7 @@ public class BookController {
     @GetMapping("/*")
     public String getBookList(Model model/*, @AuthenticationPrincipal User user*/) {
         model.addAttribute("isDevMode", "dev".equals(isDev));
-       model.addAttribute("user", null);
         return "bookList";
     }
-//    @PostMapping("/**")
-//    public void testLogin(HttpServletRequest req){
-//        System.out.println(req);
-//    }
+
 }
