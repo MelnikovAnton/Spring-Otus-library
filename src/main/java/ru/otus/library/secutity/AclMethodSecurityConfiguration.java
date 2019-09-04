@@ -11,11 +11,11 @@ import org.springframework.security.config.annotation.method.configuration.Globa
 public class AclMethodSecurityConfiguration extends GlobalMethodSecurityConfiguration {
     @SuppressWarnings("SpringJavaAutowiredFieldsWarningInspection")
     @Autowired
-    MethodSecurityExpressionHandler defaultMethodSecurityExpressionHandler;
+    MethodSecurityExpressionHandler oAuth2MethodSecurityExpressionHandler;
 
     @Override
     protected MethodSecurityExpressionHandler createExpressionHandler() {
-        return defaultMethodSecurityExpressionHandler;
+        return oAuth2MethodSecurityExpressionHandler;
     }
 
 }

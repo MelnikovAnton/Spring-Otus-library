@@ -1,6 +1,5 @@
 package ru.otus.library.secutity;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.ehcache.EhCacheFactoryBean;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.annotation.Bean;
@@ -10,23 +9,20 @@ import org.springframework.security.access.expression.method.MethodSecurityExpre
 import org.springframework.security.acls.AclPermissionCacheOptimizer;
 import org.springframework.security.acls.AclPermissionEvaluator;
 import org.springframework.security.acls.domain.*;
-import org.springframework.security.acls.jdbc.BasicLookupStrategy;
-import org.springframework.security.acls.jdbc.JdbcMutableAclService;
-import org.springframework.security.acls.jdbc.LookupStrategy;
+import org.springframework.security.acls.model.AclCache;
+import org.springframework.security.acls.model.AclService;
 import org.springframework.security.acls.model.PermissionGrantingStrategy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecurityExpressionHandler;
+import ru.otus.library.util.OAuth2ExHandler;
 
-import javax.sql.DataSource;
 import java.util.Objects;
 
 @Configuration
 public class AclConfig {
-    @SuppressWarnings("SpringJavaAutowiredFieldsWarningInspection")
-    @Autowired
-    private DataSource dataSource;
 
     @Bean
-    public EhCacheBasedAclCache aclCache() {
+    public AclCache aclCache() {
         return new EhCacheBasedAclCache(
                 Objects.requireNonNull(aclEhCacheFactoryBean().getObject()),
                 permissionGrantingStrategy(),
@@ -58,22 +54,23 @@ public class AclConfig {
     }
 
     @Bean
-    public MethodSecurityExpressionHandler defaultMethodSecurityExpressionHandler() {
-        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
-        AclPermissionEvaluator permissionEvaluator = new AclPermissionEvaluator(aclService());
+    public MethodSecurityExpressionHandler methodSecurityExpressionHandler(AclService aclService) {
+        DefaultMethodSecurityExpressionHandler expressionHandler = new OAuth2MethodSecurityExpressionHandler();
+        AclPermissionEvaluator permissionEvaluator = new AclPermissionEvaluator(aclService);
         expressionHandler.setPermissionEvaluator(permissionEvaluator);
-        expressionHandler.setPermissionCacheOptimizer(new AclPermissionCacheOptimizer(aclService()));
+        expressionHandler.setPermissionCacheOptimizer(new AclPermissionCacheOptimizer(aclService));
         return expressionHandler;
     }
 
-    @Bean
-    public LookupStrategy lookupStrategy() {
-        return new BasicLookupStrategy(dataSource, aclCache(), aclAuthorizationStrategy(), new ConsoleAuditLogger());
-    }
+//    @Bean
+//    public LookupStrategy lookupStrategy() {
+//        return new BasicLookupStrategy(dataSource, aclCache(), aclAuthorizationStrategy(), new ConsoleAuditLogger());
+//    }
 
-    @Bean
-    public JdbcMutableAclService aclService() {
-        return new JdbcMutableAclService(dataSource, lookupStrategy(), aclCache());
-    }
+//    @Bean
+//    public AclService aclService() {
+//        return new JdbcMutableAclService(dataSource, lookupStrategy(), aclCache());
+//    }
+
 
 }
