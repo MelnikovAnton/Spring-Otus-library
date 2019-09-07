@@ -9,9 +9,6 @@ import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Comment;
 import ru.otus.library.model.Genre;
-import ru.otus.library.secutity.acl.domain.MongoAcl;
-import ru.otus.library.secutity.acl.domain.MongoSid;
-import ru.otus.library.secutity.acl.domain.ObjectPermission;
 import ru.otus.library.secutity.model.Role;
 import ru.otus.library.secutity.model.UserEntity;
 
@@ -54,47 +51,21 @@ public class InitData {
         books.forEach(b -> template.save(new Comment(b, "comment3")));
     }
 
-       @ChangeSet(order = "005", id = "initUsers", author = "MelnikovAnton", runAlways = true)
+    @ChangeSet(order = "005", id = "initUsers", author = "MelnikovAnton", runAlways = true)
     public void initUsers(MongoTemplate template) {
         UserEntity admin = new UserEntity();
         admin.setUsername("admin");
-        admin.setPassword(new BCryptPasswordEncoder().encode("password"));
+        admin.setPassword("password");
         admin.setRoles(Set.of(Role.ROLE_ADMIN));
 
         template.save(admin);
 
         UserEntity user = new UserEntity();
         user.setUsername("user");
-        user.setPassword(new BCryptPasswordEncoder().encode("password"));
+        user.setPassword("password");
         user.setRoles(Set.of(Role.ROLE_USER));
 
         template.save(user);
-    }
-
-
-    @ChangeSet(order = "006", id = "initAcls", author = "MelnikovAnton", runAlways = true)
-    public void initAcls(MongoTemplate template) {
-        MongoAcl acl = new MongoAcl();
-        acl.setClassName(Book.class.getName());
-        acl.setInstanceId(template.findAll(Book.class).get(0).getId());
-
-        MongoSid sid = new MongoSid();
-        sid.setName("admin");
-        sid.setPrincipal(true);
-
-        acl.setOwner(sid);
-        acl.setInheritPermissions(false);
-
-        ObjectPermission perm = new ObjectPermission(sid, true);
-perm.setAuditFailure(true);
-perm.setAuditSuccess(true);
-perm.setPermission(1);
-
-
-
-        acl.getPermissions().add(perm);
-
-        template.save(acl);
     }
 
 
