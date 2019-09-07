@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ru.otus.library.secutity.acl2.domain;
+package ru.otus.library.secutity.acl.domain;
 
 import org.springframework.util.Assert;
 

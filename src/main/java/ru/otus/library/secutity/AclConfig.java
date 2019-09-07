@@ -19,9 +19,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecurityExpressionHandler;
 import ru.otus.library.secutity.acl.MongoLookupStrategy;
 
-import ru.otus.library.secutity.acl2.dao.AclRepository;
-import ru.otus.library.secutity.acl2.mongodb.BasicLookupStrategy;
-import ru.otus.library.secutity.acl2.mongodb.MongoDBMutableAclService;
+import ru.otus.library.secutity.acl.dao.AclRepository;
+import ru.otus.library.secutity.acl.mongodb.BasicLookupStrategy;
+import ru.otus.library.secutity.acl.mongodb.MongoDBMutableAclService;
 
 
 import java.util.Objects;
