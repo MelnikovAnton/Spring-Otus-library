@@ -3,9 +3,11 @@ package ru.otus.library.services.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.stereotype.Service;
 import ru.otus.library.model.Genre;
 import ru.otus.library.repository.GenreRepository;
+import ru.otus.library.secutity.AclCreationUtil;
 import ru.otus.library.services.GenreService;
 
 import java.util.List;
@@ -17,10 +19,13 @@ import java.util.Optional;
 public class GenreServiceImpl implements GenreService {
 
     private final GenreRepository genreRepository;
+    private final AclCreationUtil aclCreationUtil;
 
     @Override
     public Genre saveGenre(Genre genre) {
-        return genreRepository.save(genre);
+        Genre savedGenre = genreRepository.save(genre);
+        aclCreationUtil.createDefaultAcl(new ObjectIdentityImpl(savedGenre));
+        return savedGenre;
     }
 
     @Override

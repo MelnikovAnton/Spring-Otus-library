@@ -4,7 +4,7 @@ logging:
 #    root: TRACE
     org:
       springframework:
-        security: DEBUG
+        security: INFO
         boot:
           autoconfigure: INFO
         data.mongodb.core.MongoTemplate: DEBUG
