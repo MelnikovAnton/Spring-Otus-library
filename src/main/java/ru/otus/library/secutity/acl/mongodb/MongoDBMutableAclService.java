@@ -178,7 +178,8 @@ public class MongoDBMutableAclService extends MongoDBAclService implements Mutab
     private AclImpl createDenyAcl(ObjectIdentity oid,List<Sid> sids){
         BasicLookupStrategy strategy = (BasicLookupStrategy) lookupStrategy;
         AclImpl acl = new AclImpl(oid, UUID.randomUUID().toString(), strategy.getAclAuthorizationStrategy(), strategy.getGrantingStrategy(), null,
-                sids, false, new PrincipalSid("admin"));
+                sids, false, sids.get(0));
+
         sids.forEach(sid->{
             acl.insertAce(acl.getEntries().size(), new CumulativePermission(),sid,false);
         });

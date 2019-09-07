@@ -5,10 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
-import org.springframework.security.acls.domain.PrincipalSid;
-import org.springframework.security.acls.model.*;
+import org.springframework.security.acls.model.ObjectIdentity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,11 +15,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
-import ru.otus.library.secutity.acl.MongoMutableAclService;
-import ru.otus.library.secutity.acl.mongodb.MongoDBMutableAclService;
+import ru.otus.library.model.Comment;
+import ru.otus.library.model.Genre;
+import ru.otus.library.secutity.AclCreationUtil;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @SpringBootApplication(exclude = {
         org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class
@@ -33,50 +35,49 @@ public class LibraryApplication {
 
     public static void main(String[] args) throws SQLException {
         ConfigurableApplicationContext ctx = SpringApplication.run(LibraryApplication.class, args);
+
         PasswordEncoder encoder = ctx.getBean(PasswordEncoder.class);
-
-        System.out.println(encoder);
-        String p = ctx.getBean(PasswordEncoder.class).encode("secret");
-        System.out.println("PASSWORD:" + p);
-
-        MongoDBMutableAclService aclService = ctx.getBean(MongoDBMutableAclService.class);
-
-        MongoTemplate template = ctx.getBean(MongoTemplate.class);
-        Book book = template.findAll(Book.class).get(0);
-
-
-ObjectIdentity oid = new ObjectIdentityImpl(book);
-        System.out.println(oid);
-
-        PrincipalSid admin = new PrincipalSid("admin");
-
         AuthenticationManager authManager = ctx.getBean(AuthenticationManager.class);
 
+        AclCreationUtil util = ctx.getBean(AclCreationUtil.class);
+
+        MongoTemplate template = ctx.getBean(MongoTemplate.class);
+
+
+       manualAuthenticate(authManager,encoder);
+
+        List<ObjectIdentity> oids = getAllObjects(template);
+        oids.forEach(util::createDefaultAcl);
+
+    }
+
+    private static List<ObjectIdentity> getAllObjects(MongoTemplate template){
+        List<ObjectIdentity> objects = template.findAll(Book.class)
+                .stream()
+                .map(ObjectIdentityImpl::new)
+                .collect(Collectors.toList());
+        objects.addAll(template.findAll(Author.class)
+                .stream()
+                .map(ObjectIdentityImpl::new)
+                .collect(Collectors.toList()));
+        objects.addAll(template.findAll(Genre.class)
+                .stream()
+                .map(ObjectIdentityImpl::new)
+                .collect(Collectors.toList()));
+        objects.addAll(template.findAll(Comment.class)
+                .stream()
+                .map(ObjectIdentityImpl::new)
+                .collect(Collectors.toList()));
+
+        return objects;
+    }
+
+    private static void manualAuthenticate(AuthenticationManager authManager,PasswordEncoder encoder){
         UsernamePasswordAuthenticationToken authReq
-                = new UsernamePasswordAuthenticationToken("admin", "password");
+                = new UsernamePasswordAuthenticationToken("admin", encoder.encode("password"));
         Authentication auth = authManager.authenticate(authReq);
         SecurityContext sc = SecurityContextHolder.getContext();
         sc.setAuthentication(auth);
-
-        MutableAcl acl = aclService.createAcl(oid);
-        acl.setOwner(admin);
-
-
-        acl.insertAce(acl.getEntries().size(), BasePermission.READ, admin, true);
-        acl.insertAce(acl.getEntries().size(), BasePermission.ADMINISTRATION, admin, true);
-// обновить ACL в БД aclService.updateAcl(acl);
-
-        aclService.updateAcl(acl);
-
-//        PrincipalSid adm = new PrincipalSid("admin");
-//        Sid owner = acl.getOwner();
-//
-//        boolean isOwner = owner.equals(adm);
-//
-//        List<AccessControlEntry> aces = acl.getEntries();
-//
-//        boolean granted = acl.isGranted(List.of(BasePermission.READ), List.of(adm), false);
-//        System.out.println(granted);
     }
 
 }

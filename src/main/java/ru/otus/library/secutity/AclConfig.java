@@ -10,19 +10,15 @@ import org.springframework.security.access.expression.method.MethodSecurityExpre
 import org.springframework.security.acls.AclPermissionCacheOptimizer;
 import org.springframework.security.acls.AclPermissionEvaluator;
 import org.springframework.security.acls.domain.*;
-
 import org.springframework.security.acls.jdbc.LookupStrategy;
 import org.springframework.security.acls.model.AclCache;
 import org.springframework.security.acls.model.AclService;
 import org.springframework.security.acls.model.PermissionGrantingStrategy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecurityExpressionHandler;
-import ru.otus.library.secutity.acl.MongoLookupStrategy;
-
 import ru.otus.library.secutity.acl.dao.AclRepository;
 import ru.otus.library.secutity.acl.mongodb.BasicLookupStrategy;
 import ru.otus.library.secutity.acl.mongodb.MongoDBMutableAclService;
-
 
 import java.util.Objects;
 
@@ -72,16 +68,15 @@ public class AclConfig {
     }
 
     @Bean
-    public LookupStrategy lookupStrategy(MongoTemplate mongoTemplate)  {
+    public LookupStrategy lookupStrategy(MongoTemplate mongoTemplate) {
         return new BasicLookupStrategy(mongoTemplate, aclCache(), aclAuthorizationStrategy(), permissionGrantingStrategy());
     }
 
 
     @Bean
-    public AclService aclService(LookupStrategy lookupStrategy, AclRepository aclRepository)  {
-        return new MongoDBMutableAclService(aclRepository,lookupStrategy, aclCache());
+    public AclService aclService(LookupStrategy lookupStrategy, AclRepository aclRepository) {
+        return new MongoDBMutableAclService(aclRepository, lookupStrategy, aclCache());
     }
-
 
 
 //    @Bean
