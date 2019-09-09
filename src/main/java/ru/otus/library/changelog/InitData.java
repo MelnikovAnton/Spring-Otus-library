@@ -3,7 +3,10 @@ package ru.otus.library.changelog;
 import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
 import com.mongodb.client.MongoDatabase;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Comment;
@@ -15,8 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+@Component
 @ChangeLog(order = "001")
 public class InitData {
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     private final List<Genre> genres = new ArrayList<>();
     private final List<Author> authors = new ArrayList<>();
@@ -54,14 +61,14 @@ public class InitData {
     public void initUsers(MongoTemplate template) {
         UserEntity admin = new UserEntity();
         admin.setUsername("admin");
-        admin.setPassword("password");
+        admin.setPassword("$2a$10$kBqoMjEtLzYCAlQGAlVTnekUmSwOkuUtMCoanS1BwHyVhLxJXqPLi");
         admin.setRoles(Set.of(Role.ROLE_ADMIN));
 
         template.save(admin);
 
         UserEntity user = new UserEntity();
         user.setUsername("user");
-        user.setPassword("password");
+        user.setPassword("$2a$10$kBqoMjEtLzYCAlQGAlVTnekUmSwOkuUtMCoanS1BwHyVhLxJXqPLi");
         user.setRoles(Set.of(Role.ROLE_USER));
 
         template.save(user);

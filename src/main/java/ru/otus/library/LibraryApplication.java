@@ -19,21 +19,21 @@ import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Comment;
 import ru.otus.library.model.Genre;
+import ru.otus.library.security.model.UserEntity;
 import ru.otus.library.security.util.AclCreationUtil;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@SpringBootApplication(exclude = {
+@SpringBootApplication(/*exclude = {
         org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class
-})
+}*/)
 @EnableAuthorizationServer
 @EnableResourceServer
 public class LibraryApplication {
 
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         ConfigurableApplicationContext ctx = SpringApplication.run(LibraryApplication.class, args);
 
         PasswordEncoder encoder = ctx.getBean(PasswordEncoder.class);
@@ -42,16 +42,17 @@ public class LibraryApplication {
         AclCreationUtil util = ctx.getBean(AclCreationUtil.class);
 
         MongoTemplate template = ctx.getBean(MongoTemplate.class);
+        upgradePasswords(template, encoder);
 
-
-       manualAuthenticate(authManager,encoder);
+        System.out.println(encoder.encode("password"));
+        manualAuthenticate(authManager, encoder);
 
         List<ObjectIdentity> oids = getAllObjects(template);
         oids.forEach(util::createDefaultAcl);
 
     }
 
-    private static List<ObjectIdentity> getAllObjects(MongoTemplate template){
+    private static List<ObjectIdentity> getAllObjects(MongoTemplate template) {
         List<ObjectIdentity> objects = template.findAll(Book.class)
                 .stream()
                 .map(ObjectIdentityImpl::new)
@@ -72,12 +73,21 @@ public class LibraryApplication {
         return objects;
     }
 
-    private static void manualAuthenticate(AuthenticationManager authManager,PasswordEncoder encoder){
+    private static void manualAuthenticate(AuthenticationManager authManager, PasswordEncoder encoder) {
         UsernamePasswordAuthenticationToken authReq
                 = new UsernamePasswordAuthenticationToken("admin", encoder.encode("password"));
         Authentication auth = authManager.authenticate(authReq);
         SecurityContext sc = SecurityContextHolder.getContext();
         sc.setAuthentication(auth);
+    }
+
+    private static void upgradePasswords(MongoTemplate template, PasswordEncoder encoder) {
+        List<UserEntity> users = template.findAll(UserEntity.class);
+        users.forEach(user -> {
+            user.setPassword(encoder.encode("password"));
+            template.save(user);
+        });
+
     }
 
 }

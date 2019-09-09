@@ -6,12 +6,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
@@ -28,13 +31,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder encoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 
     @Override
     @Autowired
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(customDetailsService).passwordEncoder(encoder());
+        auth.authenticationProvider(authProvider());
     }
 
     @Override
@@ -67,6 +70,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         tokenServices.setClientId("client");
         tokenServices.setClientSecret("secret");
         return tokenServices;
+    }
+
+    @Bean
+    public AuthenticationProvider authProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(customDetailsService);
+        authProvider.setPasswordEncoder(encoder());
+        return authProvider;
     }
 
 }
