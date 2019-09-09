@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ru.otus.library.secutity.acl.mongodb;
+package ru.otus.library.security.acl.mongodb;
 
 import lombok.Getter;
 import org.springframework.data.domain.Sort;
@@ -24,8 +24,8 @@ import org.springframework.security.acls.jdbc.LookupStrategy;
 import org.springframework.security.acls.model.*;
 import org.springframework.security.util.FieldUtils;
 import org.springframework.util.Assert;
-import ru.otus.library.secutity.acl.domain.DomainObjectPermission;
-import ru.otus.library.secutity.acl.domain.MongoAcl;
+import ru.otus.library.security.acl.domain.DomainObjectPermission;
+import ru.otus.library.security.acl.domain.MongoAcl;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;

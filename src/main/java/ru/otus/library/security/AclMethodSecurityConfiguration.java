@@ -1,4 +1,4 @@
-package ru.otus.library.secutity;
+package ru.otus.library.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

@@ -136,7 +136,13 @@ const store = new Vuex.Store({
 
             } catch (e) {
                 console.error(e)
-                router.push('/login')
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async addBookAction({commit, state}, book) {
@@ -153,7 +159,13 @@ const store = new Vuex.Store({
                 }
             } catch (e) {
                 console.error(e)
-                router.push('/login')
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async updateBookAction({commit}, book) {
@@ -163,7 +175,13 @@ const store = new Vuex.Store({
                 commit('updateBookMutation', data)
             } catch (e) {
                 console.error(e)
-                router.push('/login')
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async removeBookAction({commit}, book) {
@@ -174,7 +192,13 @@ const store = new Vuex.Store({
                 }
             } catch (e) {
                 console.error(e)
-                router.push('/login')
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async getBookItem({commit}, bookId) {
@@ -185,7 +209,13 @@ const store = new Vuex.Store({
                 commit('setBookItemMutation', data)
             } catch (e) {
                 console.error(e)
-                router.push('/login')
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async getAllAuthorsAction({commit}) {
@@ -195,7 +225,13 @@ const store = new Vuex.Store({
                 commit('addAllAuthorsMutation', data)
             } catch (e) {
                 console.error(e)
-                router.push('/login')
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async getAllGenresAction({commit}) {
@@ -212,7 +248,13 @@ const store = new Vuex.Store({
 
             } catch (e) {
                 console.error(e)
-                router.push('/login')
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async getItemCommentsAction({commit}, bookid) {
@@ -222,7 +264,13 @@ const store = new Vuex.Store({
                 commit('addCommentsMutation', data)
             } catch (e) {
                 console.error(e)
-                router.push('/login')
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async removeCommentAction({commit}, comment) {
@@ -233,7 +281,13 @@ const store = new Vuex.Store({
                 }
             } catch (e) {
                 console.error(e)
-                router.push('/login')
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async addCommentAction({commit}, comment) {
@@ -245,7 +299,13 @@ const store = new Vuex.Store({
                 }
             } catch (e) {
                 console.error(e)
-                router.push('/login')
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async removeAuthorAction({commit}, author) {
@@ -256,7 +316,13 @@ const store = new Vuex.Store({
                 }
             } catch (e) {
                 console.error(e)
-                router.push('/login')
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async updateAuthorAction({commit}, author) {
@@ -266,7 +332,13 @@ const store = new Vuex.Store({
                 commit('updateAuthorsMutation', data)
             } catch (e) {
                 console.error(e)
-                router.push('/login')
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async addAuthorAction({commit}, author) {
@@ -278,7 +350,13 @@ const store = new Vuex.Store({
                 }
             } catch (e) {
                 console.error(e)
-                router.push('/login')
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
 
@@ -290,7 +368,13 @@ const store = new Vuex.Store({
                 }
             } catch (e) {
                 console.error(e)
-                router.push('/login')
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async updateGenreAction({commit}, genre) {
@@ -300,7 +384,13 @@ const store = new Vuex.Store({
                 commit('updateGenresMutation', data)
             } catch (e) {
                 console.error(e)
-                router.push('/login')
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async addGenreAction({commit}, genre) {
@@ -312,7 +402,13 @@ const store = new Vuex.Store({
                 }
             } catch (e) {
                 console.error(e)
-                router.push('/login')
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async clearBookItem({commit}) {

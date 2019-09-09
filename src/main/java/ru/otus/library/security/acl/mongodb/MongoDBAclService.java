@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ru.otus.library.secutity.acl.mongodb;
+package ru.otus.library.security.acl.mongodb;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +21,8 @@ import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.security.acls.jdbc.LookupStrategy;
 import org.springframework.security.acls.model.*;
 import org.springframework.util.Assert;
-import ru.otus.library.secutity.acl.dao.AclRepository;
-import ru.otus.library.secutity.acl.domain.MongoAcl;
+import ru.otus.library.security.acl.dao.AclRepository;
+import ru.otus.library.security.acl.domain.MongoAcl;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;

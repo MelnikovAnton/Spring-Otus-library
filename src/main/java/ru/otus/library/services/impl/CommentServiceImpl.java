@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Comment;
 import ru.otus.library.repository.CommentRepository;
-import ru.otus.library.secutity.AclCreationUtil;
+import ru.otus.library.security.util.AclCreationUtil;
 import ru.otus.library.services.CommentService;
 
 import java.util.List;

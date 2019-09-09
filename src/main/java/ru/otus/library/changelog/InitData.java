@@ -4,13 +4,12 @@ import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
 import com.mongodb.client.MongoDatabase;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Comment;
 import ru.otus.library.model.Genre;
-import ru.otus.library.secutity.model.Role;
-import ru.otus.library.secutity.model.UserEntity;
+import ru.otus.library.security.model.Role;
+import ru.otus.library.security.model.UserEntity;
 
 import java.util.ArrayList;
 import java.util.List;

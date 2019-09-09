@@ -1,4 +1,4 @@
-package ru.otus.library.secutity;
+package ru.otus.library.security;
 
 import org.springframework.cache.ehcache.EhCacheFactoryBean;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
@@ -16,9 +16,9 @@ import org.springframework.security.acls.model.AclService;
 import org.springframework.security.acls.model.PermissionGrantingStrategy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecurityExpressionHandler;
-import ru.otus.library.secutity.acl.dao.AclRepository;
-import ru.otus.library.secutity.acl.mongodb.BasicLookupStrategy;
-import ru.otus.library.secutity.acl.mongodb.MongoDBMutableAclService;
+import ru.otus.library.security.acl.dao.AclRepository;
+import ru.otus.library.security.acl.mongodb.BasicLookupStrategy;
+import ru.otus.library.security.acl.mongodb.MongoDBMutableAclService;
 
 import java.util.Objects;
 

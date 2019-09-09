@@ -1,4 +1,4 @@
-package ru.otus.library.secutity.model;
+package ru.otus.library.security.model;
 
 import org.springframework.security.core.GrantedAuthority;
 

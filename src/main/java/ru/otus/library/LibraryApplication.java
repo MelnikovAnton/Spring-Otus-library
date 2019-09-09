@@ -19,7 +19,7 @@ import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Comment;
 import ru.otus.library.model.Genre;
-import ru.otus.library.secutity.AclCreationUtil;
+import ru.otus.library.security.util.AclCreationUtil;
 
 import java.sql.SQLException;
 import java.util.List;

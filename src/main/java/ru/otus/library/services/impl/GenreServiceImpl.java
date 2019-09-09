@@ -7,7 +7,7 @@ import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.stereotype.Service;
 import ru.otus.library.model.Genre;
 import ru.otus.library.repository.GenreRepository;
-import ru.otus.library.secutity.AclCreationUtil;
+import ru.otus.library.security.util.AclCreationUtil;
 import ru.otus.library.services.GenreService;
 
 import java.util.List;

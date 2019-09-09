@@ -1,4 +1,4 @@
-package ru.otus.library.secutity;
+package ru.otus.library.security.util;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
