@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
@@ -57,6 +58,10 @@ public class OAuth2Config
 
     private final AuthenticationManager authenticationManager;
 
+    private final PasswordEncoder passwordEncoder;
+
+
+
     @Bean
     public JwtAccessTokenConverter tokenEnhancer() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
@@ -79,7 +84,7 @@ public class OAuth2Config
     }
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory().withClient(clientid).secret(clientSecret).scopes("read", "write")
+        clients.inMemory().withClient(clientid).secret(passwordEncoder.encode(clientSecret)).scopes("read", "write")
                 .authorizedGrantTypes("password", "refresh_token").accessTokenValiditySeconds(3600)
                 .refreshTokenValiditySeconds(36000);
 

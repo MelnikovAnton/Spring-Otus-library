@@ -75,7 +75,7 @@ public class LibraryApplication {
 
     private static void manualAuthenticate(AuthenticationManager authManager, PasswordEncoder encoder) {
         UsernamePasswordAuthenticationToken authReq
-                = new UsernamePasswordAuthenticationToken("admin", encoder.encode("password"));
+                = new UsernamePasswordAuthenticationToken("admin", "password");
         Authentication auth = authManager.authenticate(authReq);
         SecurityContext sc = SecurityContextHolder.getContext();
         sc.setAuthentication(auth);
