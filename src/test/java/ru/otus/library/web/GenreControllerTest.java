@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,8 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -37,11 +38,13 @@ public class GenreControllerTest {
 
 
     @Test
+    @WithMockUser(username = "admin", password = "password")
     @DisplayName("Тест получение списка жанров")
-    void getBookList() throws Exception {
+    void getGenreList() throws Exception {
 
         when(genreService.findAll()).thenReturn(getTestGenres());
-        assertTrue(this.mvc.perform(get("/genreApi/"))
+        assertTrue(this.mvc.perform(get("/genres/")
+                .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -50,11 +53,13 @@ public class GenreControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", password = "password")
     @DisplayName("Тест получение жанра по ID")
-    void getBookById() throws Exception {
+    void getGenreById() throws Exception {
         when(genreService.findById(anyString())).thenReturn(Optional.of(new Genre("Test1", "test")));
 
-        assertTrue(this.mvc.perform(get("/genreApi/id"))
+        assertTrue(this.mvc.perform(get("/genres/id")
+                .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -63,11 +68,13 @@ public class GenreControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", password = "password")
     @DisplayName("Добавление жанра")
     void create() throws Exception {
         when(genreService.saveGenre(any(Genre.class))).thenReturn(new Genre("TestId", "Test"));
 
-        assertTrue(this.mvc.perform(post("/genreApi/")
+        assertTrue(this.mvc.perform(post("/genres/")
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"id\":\"Id\",\"name\":\"xxx\"}"))
                 .andExpect(status().isOk())
@@ -80,13 +87,15 @@ public class GenreControllerTest {
 
 
     @Test
+    @WithMockUser(username = "admin", password = "password")
     @DisplayName("Update жанра")
     void update() throws Exception {
         when(genreService.findById(anyString())).thenReturn(Optional.of(new Genre("Test1", "test")));
 
         when(genreService.saveGenre(any(Genre.class))).thenReturn(new Genre("Test1", "test"));
 
-        assertTrue(this.mvc.perform(put("/genreApi/TestID")
+        assertTrue(this.mvc.perform(put("/genres/TestID")
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"id\":\"Id\",\"name\":\"xxx\"}"))
                 .andExpect(status().isOk())
@@ -99,11 +108,12 @@ public class GenreControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", password = "password")
     @DisplayName("Удаление жанра")
-    void deleteBookTest() throws Exception {
+    void deleteGenreTest() throws Exception {
         when(genreService.findById(anyString())).thenReturn(Optional.of(new Genre("Test1", "test")));
 
-        this.mvc.perform(delete("/genreApi/TestId"))
+        this.mvc.perform(delete("/genres/TestId").with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk());
 
         verify(genreService, times(1)).findById("TestId");

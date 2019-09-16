@@ -30,5 +30,5 @@ export default {
         edit: 'Genre edit',
         list: 'Genre List'
     },
-    title: 'Library'
+    title: 'Hello %{msg}'
 }

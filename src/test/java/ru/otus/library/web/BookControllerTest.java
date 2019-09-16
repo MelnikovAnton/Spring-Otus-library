@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -37,6 +39,7 @@ public class BookControllerTest {
     private BookService bookService;
 
     @Test
+    @WithMockUser(username = "admin", password = "password")
     @DisplayName("View bookList есть и содержит список книг")
     void bookList() throws Exception {
         when(bookService.findAll()).thenReturn(getTestBooks());
@@ -51,11 +54,13 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", password = "password")
     @DisplayName("Тест получение списка книг")
     void getBookList() throws Exception {
 
         when(bookService.findAll()).thenReturn(getTestBooks());
-        assertTrue(this.mvc.perform(get("/bookApi/"))
+        assertTrue(this.mvc.perform(get("/books/")
+                .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -64,11 +69,13 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", password = "password")
     @DisplayName("Тест получение книги по ID")
     void getBookById() throws Exception {
         when(bookService.findById(anyString())).thenReturn(Optional.of(new Book("Test1", "test")));
 
-        assertTrue(this.mvc.perform(get("/bookApi/id"))
+        assertTrue(this.mvc.perform(get("/books/id")
+                .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -77,11 +84,13 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", password = "password")
     @DisplayName("Добавление книги")
     void create() throws Exception {
         when(bookService.saveBook(any(Book.class))).thenReturn(new Book("TestId", "Test", "Test"));
 
-        assertTrue(this.mvc.perform(post("/bookApi/")
+        assertTrue(this.mvc.perform(post("/books/")
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"id\":\"Id\",\"title\":\"xxx\",\"contentPath\":\"xxx\",\"author\":[],\"genre\":[]}"))
                 .andExpect(status().isOk())
@@ -94,13 +103,15 @@ public class BookControllerTest {
 
 
     @Test
+    @WithMockUser(username = "admin", password = "password")
     @DisplayName("Update книги")
     void update() throws Exception {
         when(bookService.findById(anyString())).thenReturn(Optional.of(new Book("Test1", "test")));
 
         when(bookService.saveBook(any(Book.class))).thenReturn(new Book("Test1", "test"));
 
-        assertTrue(this.mvc.perform(put("/bookApi/TestID")
+        assertTrue(this.mvc.perform(put("/books/TestID")
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"id\":\"Id\",\"title\":\"xxx\",\"contentPath\":\"xxx\",\"author\":[],\"genre\":[]}"))
                 .andExpect(status().isOk())
@@ -113,11 +124,13 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", password = "password")
     @DisplayName("Удаление книги")
     void deleteBookTest() throws Exception {
         when(bookService.findById(anyString())).thenReturn(Optional.of(new Book("Test1", "test")));
 
-        this.mvc.perform(delete("/bookApi/TestId"))
+        this.mvc.perform(delete("/books/TestId")
+                .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk());
 
         verify(bookService, times(1)).findById("TestId");

@@ -1,11 +1,21 @@
 logging:
+  file: log/log.log
   level:
-    #    root: TRACE
-    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+#    root: TRACE
+    org:
+      springframework:
+        security: TRACE
+        boot:
+          autoconfigure: INFO
+        data.mongodb.core.MongoTemplate: DEBUG
+
 server:
   error:
     whitelabel:
       enabled: false
+
+
+
 
 spring:
   data:
@@ -15,3 +25,11 @@ spring:
       database: library
   profiles:
     active: @profile@
+
+
+security:
+  oauth2:
+    client:
+      client-id: client
+      client-secret: secret
+

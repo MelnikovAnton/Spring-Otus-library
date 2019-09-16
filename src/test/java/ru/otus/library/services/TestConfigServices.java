@@ -15,6 +15,7 @@ import ru.otus.library.repository.AuthorRepository;
 import ru.otus.library.repository.BookRepository;
 import ru.otus.library.repository.CommentRepository;
 import ru.otus.library.repository.GenreRepository;
+import ru.otus.library.security.util.AclCreationUtil;
 
 
 /*
@@ -40,5 +41,7 @@ public class TestConfigServices {
     public AuthorRepository authorRepository;
     @MockBean
     public CommentRepository commentRepository;
+    @MockBean
+    public AclCreationUtil aclCreationUtil;
 
 }

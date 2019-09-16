@@ -4,6 +4,7 @@ import booksApi from 'api/books'
 import authorsApi from "api/authorsApi"
 import genresApi from "api/genresApi"
 import commentApi from "api/commentApi"
+import router from "router/router"
 
 Vue.use(Vuex);
 
@@ -14,7 +15,8 @@ const store = new Vuex.Store({
         bookItem: {},
         comments: [],
         aauthors: [],
-        agenres: []
+        agenres: [],
+        userAuth: {}
     },
     getters: {
         books: state => state.books,
@@ -127,101 +129,286 @@ const store = new Vuex.Store({
     },
     actions: {
         async getAllBookAction({commit}) {
-            const result = await booksApi.get()
-            const data = await result.json()
-            commit('setBooks', data)
+            try {
+                const result = await booksApi.get()
+                const data = await result.json()
+                commit('setBooks', result.data)
+
+            } catch (e) {
+                console.error(e)
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
+            }
         },
         async addBookAction({commit, state}, book) {
-            const result = await booksApi.add(book)
-            const data = await result.json()
-            const index = state.books.findIndex(item => item.id === data.id)
+            try {
+                const result = await booksApi.add(book)
+                const data = await result.json()
+                const index = state.books.findIndex(item => item.id === data.id)
 
-            if (index > -1) {
-                commit('updateBookMutation', data)
-            } else {
-                commit('addBookMutation', data)
-                commit('setBookItemMutation', data)
+                if (index > -1) {
+                    commit('updateBookMutation', data)
+                } else {
+                    commit('addBookMutation', data)
+                    commit('setBookItemMutation', data)
+                }
+            } catch (e) {
+                console.error(e)
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async updateBookAction({commit}, book) {
-            const result = await booksApi.update(book)
-            const data = await result.json()
-            commit('updateBookMutation', data)
+            try {
+                const result = await booksApi.update(book)
+                const data = await result.json()
+                commit('updateBookMutation', data)
+            } catch (e) {
+                console.error(e)
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
+            }
         },
         async removeBookAction({commit}, book) {
-            const result = await booksApi.remove(book.id)
-            if (result.ok) {
-                commit('deleteBookMutation', book)
+            try {
+                const result = await booksApi.remove(book.id)
+                if (result.ok) {
+                    commit('deleteBookMutation', book)
+                }
+            } catch (e) {
+                console.error(e)
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async getBookItem({commit}, bookId) {
-            const result = await booksApi.get(bookId)
-            const data = await result.json()
-            commit('setBookItemMutation', data)
+            try {
+                const result = await booksApi.get(bookId)
+                const data = await result.json()
+                console.log(data)
+                commit('setBookItemMutation', data)
+            } catch (e) {
+                console.error(e)
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
+            }
         },
         async getAllAuthorsAction({commit}) {
-            const result = await authorsApi.get()
-            const data = await result.json()
-            commit('addAllAuthorsMutation', data)
+            try {
+                const result = await authorsApi.get()
+                const data = await result.json()
+                commit('addAllAuthorsMutation', data)
+            } catch (e) {
+                console.error(e)
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
+            }
         },
         async getAllGenresAction({commit}) {
-            const result = await genresApi.get()
-            const data = await result.json()
-            commit('addAllGenresMutation', data)
+            try {
+                //const result = await
+                genresApi.get()
+                    .then(resp => {
+                        console.log(resp)
+                        const data = resp.body
+                        console.log(data)
+                        commit('addAllGenresMutation', data)
+                    })
+                // const data = await result.json()
+
+            } catch (e) {
+                console.error(e)
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
+            }
         },
         async getItemCommentsAction({commit}, bookid) {
-            const result = await commentApi.get(bookid)
-            const data = await result.json()
-            commit('addCommentsMutation', data)
+            try {
+                const result = await commentApi.get(bookid)
+                const data = await result.json()
+                commit('addCommentsMutation', data)
+            } catch (e) {
+                console.error(e)
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
+            }
         },
         async removeCommentAction({commit}, comment) {
-            const result = await commentApi.remove(comment.id)
-            if (result.ok) {
-                commit('deleteCommentMutation', comment)
+            try {
+                const result = await commentApi.remove(comment.id)
+                if (result.ok) {
+                    commit('deleteCommentMutation', comment)
+                }
+            } catch (e) {
+                console.error(e)
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async addCommentAction({commit}, comment) {
-            const result = await commentApi.add(comment)
-            if (result.ok) {
-                const data = await result.json()
-                commit('addCommentMutation', data)
+            try {
+                const result = await commentApi.add(comment)
+                if (result.ok) {
+                    const data = await result.json()
+                    commit('addCommentMutation', data)
+                }
+            } catch (e) {
+                console.error(e)
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async removeAuthorAction({commit}, author) {
-            const result = await authorsApi.remove(author.id)
-            if (result.ok) {
-                commit('deleteAuthorMutation', author)
+            try {
+                const result = await authorsApi.remove(author.id)
+                if (result.ok) {
+                    commit('deleteAuthorMutation', author)
+                }
+            } catch (e) {
+                console.error(e)
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async updateAuthorAction({commit}, author) {
-            const result = await authorsApi.update(author)
-            const data = await result.json()
-            commit('updateAuthorsMutation', data)
+            try {
+                const result = await authorsApi.update(author)
+                const data = await result.json()
+                commit('updateAuthorsMutation', data)
+            } catch (e) {
+                console.error(e)
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
+            }
         },
         async addAuthorAction({commit}, author) {
-            const result = await authorsApi.add(author)
-            if (result.ok) {
-                const data = await result.json()
-                commit('addAuthorMutation', data)
+            try {
+                const result = await authorsApi.add(author)
+                if (result.ok) {
+                    const data = await result.json()
+                    commit('addAuthorMutation', data)
+                }
+            } catch (e) {
+                console.error(e)
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
 
         async removeGenreAction({commit}, genre) {
-            const result = await genresApi.remove(genre.id)
-            if (result.ok) {
-                commit('deleteGenreMutation', genre)
+            try {
+                const result = await genresApi.remove(genre.id)
+                if (result.ok) {
+                    commit('deleteGenreMutation', genre)
+                }
+            } catch (e) {
+                console.error(e)
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async updateGenreAction({commit}, genre) {
-            const result = await genresApi.update(genre)
-            const data = await result.json()
-            commit('updateGenresMutation', data)
+            try {
+                const result = await genresApi.update(genre)
+                const data = await result.json()
+                commit('updateGenresMutation', data)
+            } catch (e) {
+                console.error(e)
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
+            }
         },
         async addGenreAction({commit}, genre) {
-            const result = await genresApi.add(genre)
-            if (result.ok) {
-                const data = await result.json()
-                commit('addGenreMutation', data)
+            try {
+                const result = await genresApi.add(genre)
+                if (result.ok) {
+                    const data = await result.json()
+                    commit('addGenreMutation', data)
+                }
+            } catch (e) {
+                console.error(e)
+                if (e.status === 403) {
+                    alert('доступ запрещен')
+                }
+                if (e.status === 401) {
+                    alert('необходимо авторизоваться')
+                    router.push('/login')
+                }
             }
         },
         async clearBookItem({commit}) {
@@ -229,5 +416,6 @@ const store = new Vuex.Store({
         }
     }
 })
+
 
 export default store

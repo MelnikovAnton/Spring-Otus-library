@@ -1,6 +1,6 @@
 <template>
     <div>
-        <top></top>
+        <top v-if="this.$route.name !== 'loginForm'"></top>
         <router-view></router-view>
     </div>
 </template>
