@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import ru.otus.library.integration.BookIntegrationService;
 import ru.otus.library.model.Book;
 import ru.otus.library.services.BookService;
 
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RestBookController {
     private final BookService bookService;
+
 
     @GetMapping("/books")
     public List<Book> getBookList() {
@@ -31,7 +33,7 @@ public class RestBookController {
 
     @PostMapping("books")
     public Book create(@RequestBody Book book) {
-        return bookService.saveBook(book);
+        return  bookService.saveBook(book);
     }
 
     @PutMapping("books/{id}")
@@ -45,8 +47,6 @@ public class RestBookController {
     @DeleteMapping("books/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public void delete(@PathVariable String id) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(auth.getPrincipal());
         Book book = bookService.findById(id).orElseThrow(() -> new RuntimeException("no book with id " + id));
         bookService.delete(book);
     }

@@ -2,9 +2,11 @@ package ru.otus.library.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.stereotype.Service;
+import ru.otus.library.integration.BookIntegrationService;
 import ru.otus.library.model.Book;
 import ru.otus.library.repository.BookRepository;
 import ru.otus.library.security.util.AclCreationUtil;
@@ -13,17 +15,25 @@ import ru.otus.library.services.BookService;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@Service("bookService")
 @RequiredArgsConstructor
 @Slf4j
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
     private final AclCreationUtil aclCreationUtil;
+    private final BookIntegrationService bookIntegrationService;
+
 
     @Override
     public Book saveBook(Book book) {
-        Book savedBook = bookRepository.save(book);
+        log.info("Save book " + book);
+//        Book b =
+                bookIntegrationService.createBook(book);
+//        System.out.println(b);
+
+
+       Book savedBook = bookRepository.save(book);
         aclCreationUtil.createDefaultAcl(new ObjectIdentityImpl(savedBook));
         return savedBook;
     }

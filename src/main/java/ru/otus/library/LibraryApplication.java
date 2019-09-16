@@ -5,6 +5,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.integration.annotation.IntegrationComponentScan;
+import org.springframework.integration.channel.DirectChannel;
+import org.springframework.integration.channel.PublishSubscribeChannel;
+import org.springframework.integration.config.EnableIntegration;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.PollableChannel;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.security.acls.model.ObjectIdentity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,6 +36,8 @@ import java.util.stream.Collectors;
 }*/)
 @EnableAuthorizationServer
 @EnableResourceServer
+@EnableIntegration
+@IntegrationComponentScan
 public class LibraryApplication {
 
 
@@ -49,6 +57,13 @@ public class LibraryApplication {
 
         List<ObjectIdentity> oids = getAllObjects(template);
         oids.forEach(util::createDefaultAcl);
+
+
+
+//     -------------------   Integartion Tests
+        PublishSubscribeChannel chanel = ctx.getBean("outBookChannel", PublishSubscribeChannel.class);
+        chanel.subscribe(m-> System.out.println("MAIN "+m));
+
 
     }
 
