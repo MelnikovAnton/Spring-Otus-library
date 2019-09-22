@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Comment;
 import ru.otus.library.repository.CommentRepository;
-import ru.otus.library.security.util.AclCreationUtil;
+import ru.otus.library.security.util.AclEditService;
 import ru.otus.library.services.CommentService;
 
 import java.util.List;
@@ -21,12 +21,12 @@ import java.util.Optional;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-    private final AclCreationUtil aclCreationUtil;
+    private final AclEditService aclEditService;
 
     @Override
     public Comment saveComment(Comment comment) {
         Comment savedComment = commentRepository.save(comment);
-        aclCreationUtil.createDefaultAcl(new ObjectIdentityImpl(savedComment));
+        aclEditService.createDefaultAcl(new ObjectIdentityImpl(savedComment));
         return savedComment;
 
     }

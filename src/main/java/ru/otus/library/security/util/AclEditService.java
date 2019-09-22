@@ -13,37 +13,51 @@ import org.springframework.security.acls.model.ObjectIdentity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AclCreationUtil {
+public class AclEditService {
 
     private final MutableAclService aclService;
-
 
     private final GrantedAuthoritySid ROLE_ADMIN = new GrantedAuthoritySid("ROLE_ADMIN");
     private final GrantedAuthoritySid ROLE_USER = new GrantedAuthoritySid("ROLE_USER");
 
-    public Book createAclForBook(Book book){
-        log.info("Create ACL for book {}",book);
+    public Book createAclForBook(Book book) {
+        log.info("Create ACL for book {}", book);
         createDefaultAcl(new ObjectIdentityImpl(book));
         return book;
     }
 
-    public Book deleteAclForBook(Book book){
-        log.info("Delete ACL for book {}",book);
-       deleteAcl(new ObjectIdentityImpl(book));
-       return book;
+    public Book deleteAclForBook(Book book) {
+        log.info("Delete ACL for book {}", book);
+        deleteAcl(new ObjectIdentityImpl(book));
+        return book;
     }
 
-    public void deleteAcl(ObjectIdentity oid){
-        aclService.deleteAcl(oid,false);
+    public Author createAclForAuthor(Author author) {
+        log.info("Create ACL for author {}", author);
+        createDefaultAcl(new ObjectIdentityImpl(author));
+        return author;
+    }
+
+    public Author deleteAclForAuthor(Author author) {
+        log.info("Delete ACL for Author {}", author);
+        deleteAcl(new ObjectIdentityImpl(author));
+        return author;
+    }
+
+
+
+    private void deleteAcl(ObjectIdentity oid) {
+        aclService.deleteAcl(oid, false);
     }
 
     public void createDefaultAcl(ObjectIdentity oid) {
-        MutableAcl acl=null;
+        MutableAcl acl = null;
         try {
             acl = aclService.createAcl(oid);
         } catch (AlreadyExistsException e) {

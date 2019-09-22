@@ -2,14 +2,11 @@ package ru.otus.library.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.stereotype.Service;
 import ru.otus.library.integration.BookIntegrationService;
 import ru.otus.library.model.Book;
 import ru.otus.library.repository.BookRepository;
-import ru.otus.library.security.util.AclCreationUtil;
 import ru.otus.library.services.BookService;
 
 import java.util.List;

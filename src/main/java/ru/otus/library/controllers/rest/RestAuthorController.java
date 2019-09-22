@@ -1,6 +1,8 @@
 package ru.otus.library.controllers.rest;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.library.model.Author;
 import ru.otus.library.services.AuthorService;
@@ -9,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class RestAuthorController {
 
     private final AuthorService authorService;
@@ -37,9 +40,11 @@ public class RestAuthorController {
     }
 
     @DeleteMapping("/authors/{id}")
+    @ResponseStatus(code = HttpStatus.OK)
     public void delete(@PathVariable String id) {
         Author author = authorService.findById(id).orElseThrow(() -> new RuntimeException("no Author with id " + id));
-        authorService.delete(author);
+        String deletedId = authorService.delete(author);
+        log.info("Deleted author with id {}",deletedId);
     }
 
 }

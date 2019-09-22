@@ -2,11 +2,13 @@ package ru.otus.library.controllers.rest;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.resource.HttpResource;
 import ru.otus.library.integration.BookIntegrationService;
 import ru.otus.library.model.Book;
 import ru.otus.library.services.BookService;
@@ -46,6 +48,7 @@ public class RestBookController {
 
     @DeleteMapping("books/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(code = HttpStatus.OK)
     public void delete(@PathVariable String id) {
         Book book = bookService.findById(id).orElseThrow(() -> new RuntimeException("no book with id " + id));
         bookService.delete(book);

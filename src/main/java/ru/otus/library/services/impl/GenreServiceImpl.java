@@ -7,7 +7,7 @@ import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.stereotype.Service;
 import ru.otus.library.model.Genre;
 import ru.otus.library.repository.GenreRepository;
-import ru.otus.library.security.util.AclCreationUtil;
+import ru.otus.library.security.util.AclEditService;
 import ru.otus.library.services.GenreService;
 
 import java.util.List;
@@ -19,12 +19,12 @@ import java.util.Optional;
 public class GenreServiceImpl implements GenreService {
 
     private final GenreRepository genreRepository;
-    private final AclCreationUtil aclCreationUtil;
+    private final AclEditService aclEditService;
 
     @Override
     public Genre saveGenre(Genre genre) {
         Genre savedGenre = genreRepository.save(genre);
-        aclCreationUtil.createDefaultAcl(new ObjectIdentityImpl(savedGenre));
+        aclEditService.createDefaultAcl(new ObjectIdentityImpl(savedGenre));
         return savedGenre;
     }
 

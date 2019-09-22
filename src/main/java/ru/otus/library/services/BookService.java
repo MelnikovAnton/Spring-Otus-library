@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BookService {
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     Book saveBook(Book book);
     @PostFilter("hasPermission(filterObject, 'READ')")
     List<Book> findBooksByTitle(String title);
