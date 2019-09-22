@@ -55,12 +55,6 @@ public class LibraryApplication {
         oids.forEach(util::createDefaultAcl);
 
 
-
-//     -------------------   Integartion Tests
-//        PublishSubscribeChannel chanel = ctx.getBean("outBookChannel", PublishSubscribeChannel.class);
-//        chanel.subscribe(m-> System.out.println("MAIN "+m));
-
-
     }
 
     private static List<ObjectIdentity> getAllObjects(MongoTemplate template) {

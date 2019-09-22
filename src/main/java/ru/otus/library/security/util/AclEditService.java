@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
+import ru.otus.library.model.Genre;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +51,17 @@ public class AclEditService {
         return author;
     }
 
+    public Genre createAclForGenre(Genre genre) {
+        log.info("Create ACL for genre {}", genre);
+        createDefaultAcl(new ObjectIdentityImpl(genre));
+        return genre;
+    }
+
+    public Genre deleteAclForGenre(Genre genre) {
+        log.info("Delete ACL for Genre {}", genre);
+        deleteAcl(new ObjectIdentityImpl(genre));
+        return genre;
+    }
 
 
     private void deleteAcl(ObjectIdentity oid) {

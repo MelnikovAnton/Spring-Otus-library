@@ -49,7 +49,23 @@ public class IntegrationConfig {
                 .get();
     }
 
+    // Genre Flow
+    @Bean
+    public IntegrationFlow saveGenreFlow() {
+        return IntegrationFlows.from("inGenreChannel")
+                .handle("genreRepository", "save")
+                .handle("aclEditService", "createAclForGenre")
+                .channel("outGenreChannel")
+                .get();
+    }
 
+    @Bean
+    public IntegrationFlow deleteGenreFlow() {
+        return IntegrationFlows.from("inDellGenreChannel")
+                .handle("aclEditService", "deleteAclForGenre")
+                .handle("genreRepository", "delete")
+                .get();
+    }
 
     // BookChannels
     @Bean
@@ -85,6 +101,21 @@ public class IntegrationConfig {
         return MessageChannels.publishSubscribe().get();
     }
 
+    //Genre Channels
+    @Bean
+    public DirectChannel inGenreChannel() {
+        return MessageChannels.direct().get();
+    }
+
+    @Bean
+    public DirectChannel outGenreChannel() {
+        return MessageChannels.direct().get();
+    }
+
+    @Bean
+    public PublishSubscribeChannel inDellGenreChannel() {
+        return MessageChannels.publishSubscribe().get();
+    }
 
 
 }

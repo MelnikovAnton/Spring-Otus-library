@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.stereotype.Service;
+import ru.otus.library.integration.GenreIntegrationService;
 import ru.otus.library.model.Genre;
 import ru.otus.library.repository.GenreRepository;
 import ru.otus.library.security.util.AclEditService;
@@ -19,13 +20,12 @@ import java.util.Optional;
 public class GenreServiceImpl implements GenreService {
 
     private final GenreRepository genreRepository;
-    private final AclEditService aclEditService;
+    private final GenreIntegrationService genreIntegrationService;
 
     @Override
     public Genre saveGenre(Genre genre) {
-        Genre savedGenre = genreRepository.save(genre);
-        aclEditService.createDefaultAcl(new ObjectIdentityImpl(savedGenre));
-        return savedGenre;
+        log.info("Save Genre {}", genre);
+        return genreIntegrationService.createGenre(genre);
     }
 
     @Override
@@ -45,7 +45,8 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public String delete(Genre genre) {
-        genreRepository.delete(genre);
+        log.info("Delete Genre {}", genre);
+        genreIntegrationService.deleteGenre(genre);
         return genre.getId();
     }
 
