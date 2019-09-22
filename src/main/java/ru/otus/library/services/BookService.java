@@ -4,7 +4,6 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import ru.otus.library.model.Book;
-import ru.otus.library.util.CustomLog;
 
 import java.util.List;
 import java.util.Optional;

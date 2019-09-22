@@ -21,21 +21,13 @@ import java.util.Optional;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
-    private final AclCreationUtil aclCreationUtil;
     private final BookIntegrationService bookIntegrationService;
 
 
     @Override
     public Book saveBook(Book book) {
         log.info("Save book " + book);
-//        Book b =
-                bookIntegrationService.createBook(book);
-//        System.out.println(b);
-
-
-       Book savedBook = bookRepository.save(book);
-        aclCreationUtil.createDefaultAcl(new ObjectIdentityImpl(savedBook));
-        return savedBook;
+        return bookIntegrationService.createBook(book);
     }
 
     @Override
@@ -66,7 +58,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public String delete(Book book) {
-        bookRepository.delete(book);
+        log.info("Delete book " + book);
+        bookIntegrationService.deleteBook(book);
         return book.getId();
     }
 

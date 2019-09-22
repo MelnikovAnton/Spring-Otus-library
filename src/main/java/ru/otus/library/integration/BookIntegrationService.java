@@ -9,4 +9,7 @@ public interface BookIntegrationService {
 
     @Gateway(requestChannel = "inBookChannel", replyChannel = "outBookChannel")
     Book createBook(Book book);
+
+    @Gateway(requestChannel = "inDellBookChannel")
+    void deleteBook(Book book);
 }

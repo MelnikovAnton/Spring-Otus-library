@@ -61,8 +61,8 @@ public class LibraryApplication {
 
 
 //     -------------------   Integartion Tests
-        PublishSubscribeChannel chanel = ctx.getBean("outBookChannel", PublishSubscribeChannel.class);
-        chanel.subscribe(m-> System.out.println("MAIN "+m));
+//        PublishSubscribeChannel chanel = ctx.getBean("outBookChannel", PublishSubscribeChannel.class);
+//        chanel.subscribe(m-> System.out.println("MAIN "+m));
 
 
     }
