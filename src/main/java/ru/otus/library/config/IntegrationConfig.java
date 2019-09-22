@@ -67,6 +67,25 @@ public class IntegrationConfig {
                 .get();
     }
 
+    // Comment Flow
+    @Bean
+    public IntegrationFlow saveCommentFlow() {
+        return IntegrationFlows.from("inCommentChannel")
+                .handle("commentRepository", "save")
+                .handle("aclEditService", "createAclForComment")
+                .channel("outCommentChannel")
+                .get();
+    }
+
+    @Bean
+    public IntegrationFlow deleteCommentFlow() {
+        return IntegrationFlows.from("inDellCommentChannel")
+                .handle("aclEditService", "deleteAclForComment")
+                .handle("commentRepository", "delete")
+                .get();
+    }
+
+
     // BookChannels
     @Bean
     public DirectChannel inBookChannel() {
@@ -117,5 +136,20 @@ public class IntegrationConfig {
         return MessageChannels.publishSubscribe().get();
     }
 
+    //Comments Channels
+    @Bean
+    public DirectChannel inCommentChannel() {
+        return MessageChannels.direct().get();
+    }
+
+    @Bean
+    public DirectChannel outCommentChannel() {
+        return MessageChannels.direct().get();
+    }
+
+    @Bean
+    public PublishSubscribeChannel inDellCommentChannel() {
+        return MessageChannels.publishSubscribe().get();
+    }
 
 }

@@ -2,7 +2,6 @@ package ru.otus.library.integration;
 
 import org.springframework.integration.annotation.Gateway;
 import org.springframework.integration.annotation.MessagingGateway;
-import ru.otus.library.model.Author;
 import ru.otus.library.model.Genre;
 
 @MessagingGateway
