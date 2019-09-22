@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import ru.otus.library.integration.GenreIntegrationService;
 import ru.otus.library.model.Genre;
 import ru.otus.library.repository.GenreRepository;
 
@@ -31,6 +32,9 @@ class GenreServiceTest {
     private GenreRepository genreRepository;
     @Autowired
     private GenreService genreService;
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Autowired
+    private GenreIntegrationService genreIntegrationService;
 
     @Test
     void saveGenre() {
@@ -40,7 +44,7 @@ class GenreServiceTest {
             Genre g = inv.getArgument(0);
             g.setId("1");
             return g;
-        }).when(genreRepository).save(any(Genre.class));
+        }).when(genreIntegrationService).createGenre(any(Genre.class));
 
         Genre g = assertDoesNotThrow(() -> genreService.saveGenre(genre));
         assertEquals(g, genre);
@@ -84,7 +88,7 @@ class GenreServiceTest {
             Genre g = invocation.getArgument(0);
             assertEquals("1", g.getId());
             return null;
-        }).when(genreRepository).delete(any(Genre.class));
+        }).when(genreIntegrationService).deleteGenre(any(Genre.class));
 
         Genre genre = new Genre("Test");
         genre.setId("1");

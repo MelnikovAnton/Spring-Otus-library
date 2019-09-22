@@ -7,10 +7,10 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import ru.otus.library.integration.CommentIntegrationService;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Comment;
 import ru.otus.library.repository.CommentRepository;
@@ -32,6 +32,9 @@ class CommentServiceTest {
     private CommentRepository commentRepository;
     @Autowired
     private CommentService commentService;
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Autowired
+    private CommentIntegrationService commentIntegrationService;
 
     @Test
     void saveComment() {
@@ -41,7 +44,7 @@ class CommentServiceTest {
             Comment c = inv.getArgument(0);
             c.setId("1");
             return c;
-        }).when(commentRepository).save(any(Comment.class));
+        }).when(commentIntegrationService).createComment(any(Comment.class));
 
         Comment c = assertDoesNotThrow(() -> commentService.saveComment(comment));
         assertEquals(c, comment);
@@ -87,7 +90,7 @@ class CommentServiceTest {
             Comment c = invocation.getArgument(0);
             assertEquals("1", c.getId());
             return null;
-        }).when(commentRepository).delete(any(Comment.class));
+        }).when(commentIntegrationService).deleteComment(any(Comment.class));
 
         Comment comment = new Comment();
         comment.setId("1");
