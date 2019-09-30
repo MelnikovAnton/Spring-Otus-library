@@ -11,6 +11,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import ru.otus.library.integration.AuthorIntegrationService;
+import ru.otus.library.integration.BookIntegrationService;
 import ru.otus.library.model.Author;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Genre;
@@ -38,6 +40,10 @@ class BookServiceTest {
     @MockBean
     private GenreService genreService;
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Autowired
+    private BookIntegrationService bookIntegrationService;
+
     @Test
     @DisplayName("Сохранение книги без автора и жанра")
     void saveBook() {
@@ -47,12 +53,11 @@ class BookServiceTest {
             Book b = (Book) invocation.getArgument(0);
             b.setId("1");
             return b;
-        }).when(bookRepository).save(any(Book.class));
+        }).when(bookIntegrationService).createBook(any(Book.class));
 
         Book b = assertDoesNotThrow(() -> bookService.saveBook(book));
         assertEquals(book, b);
 
-        verify(bookRepository, times(1)).save(any(Book.class));
         verify(authorService, never()).saveAuthor(any(Author.class));
         verify(genreService, never()).saveGenre(any(Genre.class));
     }
@@ -65,7 +70,7 @@ class BookServiceTest {
             Book b = (Book) invocation.getArgument(0);
             b.setId("1");
             return b;
-        }).when(bookRepository).save(any(Book.class));
+        }).when(bookIntegrationService).createBook(any(Book.class));
 
         Book book = new Book("test", "test");
         book.addGenre(new Genre("Test"));
@@ -73,8 +78,6 @@ class BookServiceTest {
 
         Book b = assertDoesNotThrow(() -> bookService.saveBook(book));
         assertEquals(book, b);
-
-        verify(bookRepository, times(1)).save(any(Book.class));
     }
 
     @Test
@@ -138,7 +141,7 @@ class BookServiceTest {
             Book a = invocation.getArgument(0);
             assertEquals("1", a.getId());
             return null;
-        }).when(bookRepository).delete(any(Book.class));
+        }).when(bookIntegrationService).deleteBook(any(Book.class));
 
         Book book = new Book("Test", "Test");
         book.setId("1");

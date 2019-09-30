@@ -5,6 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.integration.annotation.IntegrationComponentScan;
+import org.springframework.integration.config.EnableIntegration;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.security.acls.model.ObjectIdentity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,7 +22,7 @@ import ru.otus.library.model.Book;
 import ru.otus.library.model.Comment;
 import ru.otus.library.model.Genre;
 import ru.otus.library.security.model.UserEntity;
-import ru.otus.library.security.util.AclCreationUtil;
+import ru.otus.library.security.util.AclEditService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +32,8 @@ import java.util.stream.Collectors;
 }*/)
 @EnableAuthorizationServer
 @EnableResourceServer
+@EnableIntegration
+@IntegrationComponentScan
 public class LibraryApplication {
 
 
@@ -39,7 +43,7 @@ public class LibraryApplication {
         PasswordEncoder encoder = ctx.getBean(PasswordEncoder.class);
         AuthenticationManager authManager = ctx.getBean(AuthenticationManager.class);
 
-        AclCreationUtil util = ctx.getBean(AclCreationUtil.class);
+        AclEditService util = ctx.getBean(AclEditService.class);
 
         MongoTemplate template = ctx.getBean(MongoTemplate.class);
         upgradePasswords(template, encoder);
@@ -49,6 +53,7 @@ public class LibraryApplication {
 
         List<ObjectIdentity> oids = getAllObjects(template);
         oids.forEach(util::createDefaultAcl);
+
 
     }
 

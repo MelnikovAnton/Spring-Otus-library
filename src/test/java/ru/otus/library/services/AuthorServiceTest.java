@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import ru.otus.library.integration.AuthorIntegrationService;
 import ru.otus.library.model.Author;
 import ru.otus.library.repository.AuthorRepository;
 
@@ -29,6 +30,9 @@ class AuthorServiceTest {
     private AuthorRepository authorRepository;
     @Autowired
     private AuthorService authorService;
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Autowired
+    private AuthorIntegrationService authorIntegrationService;
 
     @Test
     void saveAuthor() {
@@ -38,7 +42,7 @@ class AuthorServiceTest {
             Author a = inv.getArgument(0);
             a.setId("1");
             return a;
-        }).when(authorRepository).save(any(Author.class));
+        }).when(authorIntegrationService).createAuthor(any(Author.class));
 
         Author a = assertDoesNotThrow(() -> authorService.saveAuthor(author));
         assertEquals(a, author);
@@ -75,7 +79,7 @@ class AuthorServiceTest {
             Author a = invocation.getArgument(0);
             assertEquals("1", a.getId());
             return null;
-        }).when(authorRepository).delete(any(Author.class));
+        }).when(authorIntegrationService).deleteAuthor(any(Author.class));
 
         Author author = new Author("Test");
         author.setId("1");

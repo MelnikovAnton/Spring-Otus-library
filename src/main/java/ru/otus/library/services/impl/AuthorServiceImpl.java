@@ -3,11 +3,10 @@ package ru.otus.library.services.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.stereotype.Service;
+import ru.otus.library.integration.AuthorIntegrationService;
 import ru.otus.library.model.Author;
 import ru.otus.library.repository.AuthorRepository;
-import ru.otus.library.security.util.AclCreationUtil;
 import ru.otus.library.services.AuthorService;
 
 import java.util.List;
@@ -19,13 +18,12 @@ import java.util.Optional;
 public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository authorRepository;
-    private final AclCreationUtil aclCreationUtil;
+    private final AuthorIntegrationService authorIntegrationService;
 
     @Override
     public Author saveAuthor(Author author) {
-        Author savedAuthor = authorRepository.save(author);
-        aclCreationUtil.createDefaultAcl(new ObjectIdentityImpl(savedAuthor));
-        return savedAuthor;
+        log.info("Save Author {}", author);
+        return authorIntegrationService.createAuthor(author);
     }
 
     @Override
@@ -45,7 +43,8 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public String delete(Author author) {
-        authorRepository.delete(author);
+        log.info("Delete Author {}", author);
+        authorIntegrationService.deleteAuthor(author);
         return author.getId();
     }
 

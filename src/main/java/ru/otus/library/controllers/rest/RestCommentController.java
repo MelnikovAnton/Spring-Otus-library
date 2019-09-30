@@ -1,6 +1,7 @@
 package ru.otus.library.controllers.rest;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Comment;
@@ -42,6 +43,7 @@ public class RestCommentController {
     }
 
     @DeleteMapping("comments/{id}")
+    @ResponseStatus(code = HttpStatus.OK)
     public void delete(@PathVariable String id) {
         Comment comment = commentService.findById(id).orElseThrow(() -> new RuntimeException("no comment with id " + id));
         commentService.delete(comment);

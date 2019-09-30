@@ -1,13 +1,13 @@
 logging:
-  file: log/log.log
+#  file: log/log.log
   level:
-#    root: TRACE
+    root: INFO
     org:
       springframework:
-        security: TRACE
+        security: WARN
         boot:
           autoconfigure: INFO
-        data.mongodb.core.MongoTemplate: DEBUG
+        data.mongodb.core.MongoTemplate: INFO
 
 server:
   error:
