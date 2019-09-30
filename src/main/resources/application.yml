@@ -1,5 +1,5 @@
 logging:
-#  file: log/log.log
+  file: log/log.log
   level:
     root: INFO
     org:
@@ -14,6 +14,23 @@ server:
     whitelabel:
       enabled: false
 
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - metrics
+          - health
+          - logfile
+          - shutdown
+          - beans
+          - threaddump
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      enabled: true
 
 
 
